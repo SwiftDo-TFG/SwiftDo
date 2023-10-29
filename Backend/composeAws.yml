@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: nodenodito@69
       POSTGRES_DB: tfggtd
     ports:
-      - 5455:5432
+      - 5432:5432
 
 # volumes:
 #   todo-mysql-data:
