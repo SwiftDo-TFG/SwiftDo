@@ -2,9 +2,9 @@ const pg = require('pg')
 
 const pool = new pg.Pool({
     host: 'localhost',
-    user: 'postgresUser',
-    password: 'postgresPW',
-    database: 'postgresDB',
+    user: 'tfggtdUser',
+    password: 'nodenodito@69',
+    database: 'tfggtd',
     port: 5455,
     max: 20,
     idleTimeoutMillis: 30000,
