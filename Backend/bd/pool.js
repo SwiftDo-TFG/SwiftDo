@@ -1,9 +1,17 @@
-import { Pool } from 'pg'
+const pg = require('pg')
 
-//TODO Completar la conexion a la BBDD
-const pool = new Pool({});
+const pool = new pg.Pool({
+    host: 'localhost',
+    user: 'postgresUser',
+    password: 'postgresPW',
+    database: 'postgresDB',
+    port: 5455,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+});
 
-export const query = async (text, params) => {
+const query = async (text, params) => {
     const start = Date.now()
     const res = await pool.query(text, params)
     const duration = Date.now() - start
@@ -11,7 +19,7 @@ export const query = async (text, params) => {
     return res
 }
 
-export const getClient = async () => {
+const getClient = async () => {
     const client = await pool.connect()
     const query = client.query
     const release = client.release
@@ -38,3 +46,5 @@ export const getClient = async () => {
     }
     return client
 }
+
+module.exports = {query, getClient}

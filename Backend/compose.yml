@@ -1,0 +1,28 @@
+services:
+  backend:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run start"
+    ports:
+      - 127.0.0.1:3000:3000
+    working_dir: /Backend
+    volumes:
+      - ./:/Backend
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: todos
+
+  db:
+    image: postgres
+    # volumes:
+    #   - todo-mysql-data:/var/lib/mysql
+    environment:
+      POSTGRES_USER: postgresUser
+      POSTGRES_PASSWORD: postgresPW
+      POSTGRES_DB: postgresDB
+    ports:
+      - 127.0.0.1:5455:5432
+
+# volumes:
+#   todo-mysql-data:
