@@ -6,6 +6,7 @@ const port = 3000;
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const taskRouter = require('./routes/task');
 
 const app = express();
 
