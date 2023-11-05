@@ -32,4 +32,20 @@ taskService.modificateTask = async (task)=>{
     })
 }
 
+taskService.findTaskById = async (id)=>{
+    const res = await db.query('SELECT * FROM tasks WHERE task_id = $1', [id])
+
+    if(res.rows.length != 1){
+        throw new Error('The task does not exist');
+    }
+
+    return res.rows[0];
+}
+
+taskService.findTaskByUserId = async (id)=>{
+    const res = await db.query('SELECT * FROM tasks WHERE user_id = $1', [id])
+
+    return res.rows;
+}
+
 module.exports = taskService;

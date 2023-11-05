@@ -29,4 +29,31 @@ router.post('/newTask', async (req, res)=>{
     }
 })
 
-module.exports = router;
+router.get('/:id', async (req, res)=>{
+    const id = req.params.id;
+    console.log(id);
+  
+    try {
+      const task = await taskService.findTaskById(id);
+      res.send(task);
+    } catch (error) {
+      console.log('[Exception]:',error.message)
+      res.sendStatus(404);
+    }
+  })
+
+  router.get('/taskByUserId/:id', async (req, res)=>{
+    const id = req.params.id;
+    console.log(id);
+  
+    try {
+      const task = await taskService.findTaskByUserId(id);
+      res.send(task);
+    } catch (error) {
+      console.log('[Exception]:',error.message)
+      res.sendStatus(404);
+    }
+  })
+  
+  module.exports = router;
+  
