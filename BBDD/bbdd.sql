@@ -23,14 +23,14 @@ CREATE TABLE areas_contexts (
 
 CREATE TABLE tasks (
     task_id serial PRIMARY KEY,
-    user_id INTEGER REFERENCES "users" (user_id),
+    user_id INTEGER REFERENCES "users" (user_id) NOT NULL,
     context_id INTEGER REFERENCES "areas_contexts" (context_id),
     project_id INTEGER REFERENCES "projects" (project_id),
-    title VARCHAR,
+    title VARCHAR NOT NULL,
     description VARCHAR,
     state VARCHAR,
     verification_list VARCHAR,
-    important_fixed VARCHAR,
+    important_fixed BOOLEAN,
     date_added DATE,
     date_completed DATE,
     date_limit DATE,
