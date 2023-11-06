@@ -10,7 +10,7 @@ let task = {
     description: "Intento de crear una nueva tarea para meter en la BD",
     state: "Initiate",
     verification_list: "",
-    important_fixed: "true",
+    important_fixed: true,
     date_added: Date.now(),
     date_completed: Date.now(),
     date_limit: Date.now(),
@@ -18,15 +18,26 @@ let task = {
     num_version: 1
 }
 
-router.post('/newTask', async (req, res)=>{
+router.post('/newtask', async (req, res)=>{
     try{
-        // const data_task = req.body;
-        const t = taskService.createTask(task);
+        const data_task = req.body;
+        const t = taskService.createTask(data_task);
         res.send(t);
     }catch(err){
         console.log('[Exception]:',err.message)
         res.sendStatus(404);
     }
+})
+
+router.post('/modifytask', async (req, res)=>{
+  try{
+      const data_task = req.body;
+      const t = taskService.modificateTask(data_task);
+      res.send(t);
+  }catch(err){
+      console.log('[Exception]:',err.message)
+      res.sendStatus(404);
+  }
 })
 
 router.get('/:id', async (req, res)=>{
