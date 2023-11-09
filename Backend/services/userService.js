@@ -34,12 +34,17 @@ userService.login = async (userData) => {
     const userPass = userData.password;
 
     const res = await db.query('SELECT password FROM users WHERE email = $1', [userEmail]);
-    const hashpassw = res.rows[0].password;
 
+    if(res.rowCount === 1){
+        const hashpassw = res.rows[0].password;
+        const match = await bcrypt.compare(userPass, hashpassw);
+    
+        if(match){
+            return res.rows[0].user_id;
+        }
+    }
 
-    const match = await bcrypt.compare(userPass, hashpassw);
-
-    return match;
+    return -1;
 }
 
 //Aux functions
