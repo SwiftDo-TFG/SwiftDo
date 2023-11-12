@@ -1,6 +1,9 @@
 const path = require('path') // has path and __dirname
 const express = require('express')
 const oauthServer = require('../oauth/server.js')
+const db = require('../bd/pool.js')
+var	Request = oauthServer.Request;
+var	Response = oauthServer.Response;
 
 // const DebugControl = require('../utilities/debug.js')
 
@@ -36,13 +39,12 @@ router.post('/authorize', (req, res, next) => {
     return next()
 }, oauthServer.authorize({
     authenticateHandler: {
-        handle: req => {
-            console.log('Authenticate Handler')
-            console.log(Object.keys(req.body).map(k => ({ name: k, value: req.body[k] })))
-            return req.body.user
-        }
+      handle: req => {
+        console.log("Estamos autorizando", req.body.user)
+        return req.body.user
+      }
     }
-}))
+  }))
 
 router.post('/token', (req, res, next) => {
     console.log('Token')
