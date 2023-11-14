@@ -6,22 +6,29 @@
 const db = require('../bd/pool.js');
 const crypto = require('crypto')
 
+//TODO LIMPIEZA DE CODIGO Y REVOKE ACCESS TOKEN
+
 /*
  * Get access token.
  */
 
-module.exports.getAccessToken = function (bearerToken) {
-  return db.query('SELECT access_token, access_token_expires_on, client_id, refresh_token, refresh_token_expires_on, user_id FROM oauth_tokens WHERE access_token = $1', [bearerToken])
-    .then(function (result) {
-      var token = result.rows[0];
+module.exports.getAccessToken = async function (accessToken) {
+  console.log("GET ACCESS TOKEN", accessToken)
 
-      return {
-        accessToken: token.access_token,
-        client: { id: token.client_id },
-        expires: token.expires,
-        user: { id: token.userId }, // could be any object
-      };
-    });
+  const result = await db.query('SELECT access_token, access_token_expires_at, refresh_token, refresh_token_expires_at, client_id, user_id FROM oauth_tokens WHERE access_token = $1', [accessToken])
+  if(result.rowCount === 1){
+    const token = result.rows[0];
+    console.log("GET ACCESS TOKEN TOKEN", token)
+
+    return {
+      accessToken: token.access_token,
+      client: { id: token.client_id },
+      accessTokenExpiresAt  : token.access_token_expires_at,
+      user: { id: token.user_id }, // could be any object
+    };
+  }
+  
+  return false;
 };
 
 /**
@@ -40,7 +47,7 @@ module.exports.getClient = function* (clientId, clientSecret) {
       }
 
       return {
-        clientId: oAuthClient.client_id,
+        id: oAuthClient.client_id,
         clientSecret: oAuthClient.client_secret,
         redirectUris: [oAuthClient.redirect_uri],
         grants: [oAuthClient.grants], // the list of OAuth2 grant types that should be allowed
@@ -74,17 +81,32 @@ module.exports.getUser = function* (username, password) {
  * Save token.
  */
 
-module.exports.saveAccessToken = function* (token, client, user) {
-  return db.query('INSERT INTO oauth_tokens(access_token, access_token_expires_on, client_id, refresh_token, refresh_token_expires_on, user_id) VALUES ($1, $2, $3, $4)', [
+module.exports.saveToken = async function (token, client, user) {
+  console.log("SAVE ACCESS TOKEN", token, client, user)
+  //TODO MIRAR SI PONEMOS refresh_token, refresh_token_expires_on
+  const result = await db.query('INSERT INTO oauth_tokens(access_token, access_token_expires_at, refresh_token, refresh_token_expires_at, client_id, user_id) VALUES ($1, $2, $3, $4, $5, $6)', [
     token.accessToken,
-    token.accessTokenExpiresOn,
-    client.id,
+    token.accessTokenExpiresAt,
     token.refreshToken,
-    token.refreshTokenExpiresOn,
+    token.accessTokenExpiresAt,
+    client.id,
     user.id
-  ]).then(function (result) {
-    return result.rowCount ? result.rows[0] : false; // TODO return object with client: {id: clientId} and user: {id: userId} defined
-  });
+  ])
+  console.log("SAVE ACCESS TOKEN", result.rowCount)
+
+  if(result.rowCount){
+    return {
+      accessToken: token.accessToken,
+      accessTokenExpiresAt: token.accessTokenExpiresAt,
+      refreshToken: token.refreshToken,
+      refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+      scope: undefined,
+      client: {id: client.id},
+      user: {id: user.id}
+    }
+  }
+
+  return false; // TODO return object with client: {id: clientId} and user: {id: userId} defined
 };
 
 
@@ -99,7 +121,7 @@ module.exports.saveAuthorizationCode = async function (code, client, user) {
     code.authorizationCode,
     code.expiresAt,
     code.redirectUri,
-    client.clientId,
+    client.id,
     user.user
   ])
   
@@ -117,7 +139,7 @@ module.exports.saveAuthorizationCode = async function (code, client, user) {
 }
 
 
-module.exports.generateAuthorizationCode = function (client, user, scope) {
+module.exports.generateAuthorizationCode = async function (client, user, scope) {
   console.log("GENERANDO el AUTH CODE", client, user, scope)
 
   const seed = crypto.randomBytes(256)
@@ -130,28 +152,27 @@ module.exports.generateAuthorizationCode = function (client, user, scope) {
 }
 
 
-module.exports.getAuthorizationCode = function () {
-  console.log("BUSCANDO EL AUTH CODE")
+module.exports.getAuthorizationCode = async function (authorizationCode) {
+  const result = await db.query('SELECT * FROM oauth_authcode WHERE authorization_code = $1', [authorizationCode])
+  const authcode = result.rows[0]
+  console.log("AUTH CODE RECUPERADO", authcode);
+  console.log("EXPIRATION DATE", authcode.expires_at)
 
+  return {
+    authorizationCode: authcode.authorization_code,
+    expiresAt: authcode.expires_at,
+    redirectUri: authcode.redirect_uri,
+    scope: undefined,
+    client: {id: authcode.client_id}, // with 'id' property
+    user: {id: authcode.user_id}
+  }
 }
 
-module.exports.revokeAuthorizationCode = function() {
-  /* This is where we delete codes */
-  log({
-    title: 'Revoke Authorization Code',
-    parameters: [
-      { name: 'authorizationCode', value: authorizationCode },
-    ],
-  })
-  db.authorizationCode = { // DB Delete in this in memory example :)
-    authorizationCode: '', // A string that contains the code
-    expiresAt: new Date(), // A date when the code expires
-    redirectUri: '', // A string of where to redirect to with this code
-    client: null, // See the client section
-    user: null, // Whatever you want... This is where you can be flexible with the protocol
-  }
-  const codeWasFoundAndDeleted = true  // Return true if code found and deleted, false otherwise
-  return new Promise(resolve => resolve(codeWasFoundAndDeleted))
+module.exports.revokeAuthorizationCode = async function(code) {
+  console.log("REVOKE AUTH CODE", code)
+  const result = await db.query('DELETE FROM oauth_authcode WHERE authorization_code = $1', [code.authorizationCode]);
+
+  return result.rowCount === 1;
 }
 
 module.exports.verifyScope= function(token, scope){

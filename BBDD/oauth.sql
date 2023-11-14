@@ -28,17 +28,6 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
---
--- Name: oauth_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace:
---
-
-CREATE TABLE oauth_tokens (
-    access_token text NOT NULL PRIMARY KEY,
-    access_token_expires_at timestamp without time zone NOT NULL,
-    client_id text NOT NULL,
-    user_id uuid NOT NULL
-);
-
 
 --
 -- Name: oauth_clients; Type: TABLE; Schema: public; Owner: -; Tablespace:
@@ -64,20 +53,19 @@ CREATE TABLE oauth_authcode (
     user_id INTEGER REFERENCES "users" (user_id) NOT NULL 
 );
 
---
--- Name: oauth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
---
-
-ALTER TABLE ONLY oauth_tokens
-    ADD CONSTRAINT oauth_tokens_pkey PRIMARY KEY (id);
-
 
 --
--- Name: oauth_clients_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: oauth_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
-ALTER TABLE ONLY oauth_clients
-    ADD CONSTRAINT oauth_clients_pkey PRIMARY KEY (client_id, client_secret);
+CREATE TABLE oauth_tokens (
+    access_token text NOT NULL PRIMARY KEY,
+    access_token_expires_at timestamp without time zone NOT NULL,
+    refresh_token text NOT NULL,
+    refresh_token_expires_at timestamp without time zone NOT NULL,
+    client_id INTEGER REFERENCES "oauth_clients" (client_id) NOT NULL,
+    user_id INTEGER REFERENCES "users" (user_id) NOT NULL 
+);
 
 
 INSERT INTO public.oauth_clients(client_id, client_secret, redirect_uri, grants)
