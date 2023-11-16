@@ -1,12 +1,5 @@
-
-/**
- * Module dependencies.
- */
-
 const db = require('../bd/pool.js');
 const crypto = require('crypto')
-
-//TODO LIMPIEZA DE CODIGO Y REVOKE ACCESS TOKEN
 
 /*
  * Get access token.
@@ -50,7 +43,7 @@ module.exports.getClient = function* (clientId, clientSecret) {
         id: oAuthClient.client_id,
         clientSecret: oAuthClient.client_secret,
         redirectUris: [oAuthClient.redirect_uri],
-        grants: [oAuthClient.grants], // the list of OAuth2 grant types that should be allowed
+        grants: oAuthClient.grants.split(','), // the list of OAuth2 grant types that should be allowed
       };
     });
 };
@@ -59,23 +52,26 @@ module.exports.getClient = function* (clientId, clientSecret) {
  * Get refresh token.
  */
 
-module.exports.getRefreshToken = function* (bearerToken) {
-  return db.query('SELECT access_token, access_token_expires_on, client_id, refresh_token, refresh_token_expires_on, user_id FROM oauth_tokens WHERE refresh_token = $1', [bearerToken])
-    .then(function (result) {
-      return result.rowCount ? result.rows[0] : false;
-    });
+module.exports.getRefreshToken = async function (bearerToken) {
+  console.log("REFRESH TOKEN", bearerToken)
+
+  const result = await db.query('SELECT access_token, access_token_expires_at, client_id, refresh_token, refresh_token_expires_at, client_id, user_id FROM oauth_tokens WHERE refresh_token = $1', [bearerToken])
+    
+  if(result.rowCount === 1){
+    const token = result.rows[0];
+
+    return {
+      refreshToken: token.refresh_token,
+      refreshTokenExpiresAt  : token.refresh_token_expires_at,
+      scope: undefined,
+      client: { id: token.client_id },
+      user: { id: token.user_id }, // could be any object
+    };
+  }
+
+
 };
 
-/*
- * Get user.
- */
-
-module.exports.getUser = function* (username, password) {
-  return db.query('SELECT id FROM users WHERE username = $1 AND password = $2', [username, password])
-    .then(function (result) {
-      return result.rowCount ? result.rows[0] : false;
-    });
-};
 
 /**
  * Save token.
@@ -109,6 +105,17 @@ module.exports.saveToken = async function (token, client, user) {
   return false; // TODO return object with client: {id: clientId} and user: {id: userId} defined
 };
 
+/**
+ * Revoke token.
+ */
+
+module.exports.revokeToken = async function(token){
+  console.log("REVOKE TOKEN", token)
+  const result = await db.query('DELETE FROM oauth_tokens WHERE refresh_token = $1', [token.refreshToken]);
+
+  return result.rowCount === 1;
+}
+
 
 /**
  * Save Auth code.
@@ -139,6 +146,9 @@ module.exports.saveAuthorizationCode = async function (code, client, user) {
 }
 
 
+/**
+ * Generate Auth Code .
+ */
 module.exports.generateAuthorizationCode = async function (client, user, scope) {
   console.log("GENERANDO el AUTH CODE", client, user, scope)
 
@@ -151,6 +161,9 @@ module.exports.generateAuthorizationCode = async function (client, user, scope) 
   return code
 }
 
+/**
+ * Get Auth Code .
+ */
 
 module.exports.getAuthorizationCode = async function (authorizationCode) {
   const result = await db.query('SELECT * FROM oauth_authcode WHERE authorization_code = $1', [authorizationCode])
@@ -168,24 +181,14 @@ module.exports.getAuthorizationCode = async function (authorizationCode) {
   }
 }
 
+/**
+ * Revoke Auth Code .
+ */
+
 module.exports.revokeAuthorizationCode = async function(code) {
   console.log("REVOKE AUTH CODE", code)
   const result = await db.query('DELETE FROM oauth_authcode WHERE authorization_code = $1', [code.authorizationCode]);
 
   return result.rowCount === 1;
 }
-
-module.exports.verifyScope= function(token, scope){
-  /* This is where we check to make sure the client has access to this scope */
-  log({
-    title: 'Verify Scope',
-    parameters: [
-      { name: 'token', value: token },
-      { name: 'scope', value: scope },
-    ],
-  })
-  const userHasAccess = true  // return true if this user / client combo has access to this resource
-  return new Promise(resolve => resolve(userHasAccess))
-}
-
 

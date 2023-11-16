@@ -1,7 +1,7 @@
 const path = require('path') // has path and __dirname
 const express = require('express')
 const oauthServer = require('../oauth/server.js')
-const db = require('../bd/pool.js')
+const userService = require('../services/userService.js')
 var	Request = oauthServer.Request;
 var	Response = oauthServer.Response;
 
@@ -17,30 +17,24 @@ router.get('/', (req, res) => {  // send back a simple form for the oauth
 })
 
 
-router.post('/authorize', (req, res, next) => {
+router.post('/authorize', async (req, res, next) => {
     console.log('Initial User Authentication')
-    const { username, password } = req.body
-    if (username === 'username' && password === 'password') {
-        req.body.user = { user: 1 }
+    const userData = { email: req.body.email, password: req.body.password };
+    
+    const userid = await userService.login(userData);
+    
+    if(userid !== -1){
+        req.body.user = { user: userid }
         return next()
     }
-    const params = [ // Send params back down
-        'client_id',
-        'redirect_uri',
-        'response_type',
-        'grant_type',
-        'state',
-    ]
-        .map(a => `${a}=${req.body[a]}`)
-        .join('&')
-    return res.redirect(`/oauth?success=false&${params}`)
+   
+    return res.redirect(`/oauth?success=false`)
 }, (req, res, next) => { // sends us to our redirect with an authorization code in our url
     console.log('Authorization')
     return next()
 }, oauthServer.authorize({
     authenticateHandler: {
       handle: req => {
-        console.log("Estamos autorizando", req.body.user)
         return req.body.user
       }
     }

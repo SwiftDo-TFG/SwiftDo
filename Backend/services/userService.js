@@ -32,13 +32,13 @@ userService.register = async (userData) => {
 userService.login = async (userData) => {
     const userEmail = userData.email;
     const userPass = userData.password;
-
-    const res = await db.query('SELECT password FROM users WHERE email = $1', [userEmail]);
-
+    
+    const res = await db.query('SELECT user_id, password FROM users WHERE email = $1', [userEmail]);
+    
     if(res.rowCount === 1){
         const hashpassw = res.rows[0].password;
         const match = await bcrypt.compare(userPass, hashpassw);
-    
+        
         if(match){
             return res.rows[0].user_id;
         }
