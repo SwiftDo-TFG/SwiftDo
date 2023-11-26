@@ -15,8 +15,8 @@ services:
 
   db:
     image: postgres
-    # volumes:
-    #   - todo-mysql-data:/var/lib/mysql
+    volumes:
+      - posgresql-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69
@@ -24,5 +24,5 @@ services:
     ports:
       - 5432:5432
 
-# volumes:
-#   todo-mysql-data:
+volumes:
+  posgresql-data:
