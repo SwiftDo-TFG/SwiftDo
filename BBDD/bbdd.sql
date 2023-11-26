@@ -28,12 +28,13 @@ CREATE TABLE tasks (
     project_id INTEGER REFERENCES "projects" (project_id),
     title VARCHAR NOT NULL,
     description VARCHAR,
-    state VARCHAR,
+    state NUMERIC (1,0),
+    completed BOOLEAN,
     verification_list VARCHAR,
     important_fixed BOOLEAN,
     date_added DATE,
     date_completed DATE,
     date_limit DATE,
-    date_changed TIME,
+    date_changed TIMESTAMP,
     num_version NUMERIC
 );
