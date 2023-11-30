@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const taskService = require('../services/taskService')
+const taskValidator = require('./validators/taskValidator')
+const checkValidations = require('./validators/validationUtils')
 
 
 router.get('/', async (req, res)=>{
@@ -15,7 +17,7 @@ router.get('/', async (req, res)=>{
   }
 })
 
-router.post('/', async (req, res)=>{
+router.post('/', taskValidator.validateCreate(), checkValidations, async (req, res)=>{
     try{
         const data_task = req.body;
         const user_id = res.locals.oauth.token.user.id;
@@ -29,7 +31,7 @@ router.post('/', async (req, res)=>{
     }
 })
 
-router.post('/:id', async (req, res)=>{
+router.post('/:id', taskValidator.validateModify(), checkValidations, async (req, res)=>{
   try{
       const task_id = req.params.id;
       const data_task = req.body;

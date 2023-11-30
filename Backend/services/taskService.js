@@ -6,9 +6,9 @@ const taskService = {}
 const querySearchByID = "SELECT * FROM tasks WHERE task_id = $1"
 
 taskService.createTask = async (task_data)=>{
-    const task = validateDataTask(task_data)
+    const task = completeTaskDefValues(task_data)
 
-    if(task.user_id !== null && task.title !== null && task.title.length !== 0){
+    if(task.user_id && task.title && task.title.length !== 0){
         let res = await db.query("INSERT INTO tasks(user_id, context_id, project_id, title, description, state, completed, verification_list, important_fixed, date_added, date_completed, date_limit, date_changed, num_version) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING task_id",
             [task.user_id, task.context_id, task.project_id, task.title, task.description, task.state, task.completed, task.verification_list, task.important_fixed, task.date_added, task.date_completed, task.date_limit, task.date_changed, task.num_version]);
 
@@ -26,8 +26,9 @@ taskService.modifyTask = async (task_id, task)=>{
     if(res.rows.length !== 1){
         throw new Error('The task does not exist');
     }
+    task = updateTaskDefValues(res.rows[0], task);
 
-    if(task.user_id !== null && task.title !== null && task.title.length !== 0){ 
+    if(task.user_id !== 0){ 
         let res = await conn.query("UPDATE tasks SET user_id = $1, context_id = $2, project_id = $3, title = $4, description = $5, state = $6, verification_list = $7, important_fixed = $8, date_added = $9, date_completed = $10, date_limit = $11, date_changed = $12, num_version = $13 WHERE task_id = $14 RETURNING task_id",
             [task.user_id, task.context_id, task.project_id, task.title, task.description, task.state, task.verification_list, task.important_fixed, task.date_added, task.date_completed, task.date_limit, task.date_changed, task.num_version, task_id]);
         if(res.rowCount !== 1){
@@ -59,8 +60,8 @@ taskService.findTaskByUserId = async (id)=>{
 }
 
 
-function validateDataTask(task){
-    if(!task.user_id && !task.title && task.title.length === 0){
+function completeTaskDefValues(task){
+    if(!task.user_id || !task.title || task.title.length === 0){
         throw new Error('Invalid Task data');
     }
 
@@ -70,42 +71,25 @@ function validateDataTask(task){
     task.completed = false
     task.date_added = new Date();
     task.date_changed = new Date();
-    console.log("DATE CHANGED",task.date_changed)
     task.num_version = 1;
-
+    
     return task
 }
 
-function validateModifyDataTask(newtask, oldtask){
-    if(!newtask.user_id && newtask.title.length === 0){
+function updateTaskDefValues(task, newTask){
+    
+    
+    if(!task.user_id || (task.title && task.title.length === 0)){
         throw new Error('Invalid Task data');
     }
-
-    oldtask.date_changed = new Date();
-    oldtask.num_version +=1;
-
-    if(newtask.title){
-        oldtask.title = newtask.title;
-    }
     
-    if(newtask.description){
-        oldtask.description = newtask.description;
-    }
-
-    if(newtask.important_fixed){
-        oldtask.important_fixed = newtask.important_fixed;
-    }
-
-    if(newtask.date_limit){
-        oldtask.date_limit = newtask.date_limit;
-    }
-
-    if(newtask.state){
-        oldtask.state = newtask.state;
-    }
-
-    //Todo Verification list
+    task.date_changed = new Date();
+    task.num_version = parseInt(task.num_version);
+    task.num_version += 1;
     
+    newTask = Object.assign(task, newTask)
+
+    return newTask
 }
 
 module.exports = taskService;

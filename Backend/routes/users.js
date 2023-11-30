@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userService = require('../services/userService')
 const userValidator = require('./validators/userValidator')
-const { validationResult } = require('express-validator');
+const checkValidations = require('./validators/validationUtils')
 const util = require('util');
 
 
@@ -51,15 +51,5 @@ router.get('/:id', async (req, res)=>{
   }
 })
 
-
-function checkValidations (req, res, next) {
-  const result = validationResult(req);
-
-  if (!result.isEmpty()) {
-    return res.send({ errors: result.array() });
-  }
-
-  next()
-}
 
 module.exports = router;
