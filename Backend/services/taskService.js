@@ -1,4 +1,5 @@
 const db = require('../bd/pool.js')
+const tagService = require('./tagService.js')
 
 const taskService = {}
 
@@ -57,6 +58,29 @@ taskService.findTaskByUserId = async (id)=>{
     const res = await db.query('SELECT * FROM tasks WHERE user_id = $1 AND completed is not true', [id])
 
     return res.rows;
+}
+
+task.Service.addTag = async (id, tag)=>{
+    const task = await db.query(querySearchByID, [id])
+
+    if(task.rows.length !== 1){
+        throw new Error('The task does not exist')
+    }
+    else{
+        const t = await tagService.findTag(tag);
+        if(t.rows.length !== 1 ){
+            await tagService.createTag(tag);
+        }
+        const intermediate = await db.query('SELECT * FROM TagsToTask WHERE task_id = $1 AND nameTag = $2', [id, tag])
+        if(intermediate.rows.length !== 1){
+            const res = await db.query('INSERT INTO TagsToTask (task_id, nameTag) VALUES ($1,$2)', [id, tag])
+            return true;
+        }
+        else{
+            throw new Error('The tag was relationate to the task')
+        }
+    }
+
 }
 
 
