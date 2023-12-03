@@ -60,7 +60,7 @@ taskService.findTaskByUserId = async (id)=>{
     return res.rows;
 }
 
-task.Service.addTag = async (id, tag)=>{
+taskService.addTag = async (id, tag)=>{
     const task = await db.query(querySearchByID, [id])
 
     if(task.rows.length !== 1){
