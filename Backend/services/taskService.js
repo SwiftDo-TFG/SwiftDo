@@ -68,7 +68,7 @@ taskService.addTag = async (id, tag)=>{
     }
     else{
         const t = await tagService.findTag(tag);
-        if(t.rows.length !== 1 ){
+        if(!t){
             await tagService.createTag(tag);
         }
         const intermediate = await db.query('SELECT * FROM TagsToTask WHERE task_id = $1 AND nameTag = $2', [id, tag])

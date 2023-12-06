@@ -31,6 +31,19 @@ router.post('/', taskValidator.validateCreate(), checkValidations, async (req, r
   }
 })
 
+router.post('/addTag', async (req, res) => {
+  const tag = req.body.name;
+  const id = req.body.task_id;
+
+  try{
+    const t = await taskService.addTag(id,tag);
+    res.send(t);
+  } catch (err){
+    console.log('[Exception]:', err.message)
+    res.sendStatus(409)
+  }
+})
+
 router.post('/:id', taskValidator.validateModify(), checkValidations, async (req, res) => {
   try {
     const task_id = req.params.id;
@@ -55,19 +68,6 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     console.log('[Exception]:', error.message)
     res.sendStatus(404);
-  }
-})
-
-router.post('/addTag', async (req, res) => {
-  const tag = req.body.name;
-  const id = req.body.id;
-
-  try{
-    const t = await taskService.addTag(id,tag);
-    res.send(t);
-  } catch (err){
-    console.log('[Exception]:', err.message)
-    res.sendStatus(409)
   }
 })
 
