@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const contextService = require('../services/contextService')
 
-router.post('/newContext', async (req, res)=>{
+router.post('/', async (req, res)=>{//create
     try{
         const context = req.body.name;
         const t = contextService.createContext(context);
@@ -13,7 +13,7 @@ router.post('/newContext', async (req, res)=>{
     }
 })
 
-router.post('/deleteContext', async (req, res)=>{
+router.post('/:id', async (req, res)=>{//delete
     try{
         const context = req.body.name;
         const t = contextService.deleteContext(context);
@@ -24,7 +24,7 @@ router.post('/deleteContext', async (req, res)=>{
     }
 })
 
-router.post('/modifyContext', async (req, res)=>{
+router.post('/:id', async (req, res)=>{//modify
     try{
         const context = req.body;
         const t = taskService.modifyContext(context);
@@ -35,7 +35,7 @@ router.post('/modifyContext', async (req, res)=>{
     }
   })
 
-router.get('/findContext', async (req, res)=>{
+router.get('/:id', async (req, res)=>{
   try {
     const context = req.body.name;
     const t = await contextService.findContext(context);
