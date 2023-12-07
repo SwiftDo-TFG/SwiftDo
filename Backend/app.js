@@ -3,6 +3,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const oauthServer = require('./oauth/server.js')
 const logger = require('morgan');
+const cors = require('cors');
+
 const port = 3000;
 
 const indexRouter = require('./routes/index');
@@ -17,6 +19,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
