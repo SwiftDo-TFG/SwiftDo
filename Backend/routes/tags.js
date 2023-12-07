@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const tagService = require('../services/tagService')
+const tagValidator = require('./validators/tagValidator')
+const checkValidations = require('./validators/validationUtils')
 
-router.post('/', async (req, res)=>{
+router.post('/', tagValidator.validateCreate(), checkValidations, async (req, res)=>{
     try{
         const tag = req.body.name;
         const t = tagService.createTag(tag);
