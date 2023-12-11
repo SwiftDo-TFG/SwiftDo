@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { TextInput, View, Button, Text } from 'react-native';
 import styles from './login.styles'
-
-
+import AuthContext from './authContext';
 
 function SignInScreen() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // const { signIn } = React.useContext(AuthContext);
+    const { signIn } = useContext(AuthContext);
 
     return (
         <View style={styles.container}>
@@ -26,7 +25,7 @@ function SignInScreen() {
                 style={styles.textInput}
                 secureTextEntry
             />
-            <Button title="Sign in" onPress={() => console.log("LOGIN")} />
+            <Button title="Sign in" onPress={() => signIn({ username, password })} />
         </View>
     );
 }
