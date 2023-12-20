@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const contextService = require('../services/contextService')
-
-router.post('/', async (req, res)=>{//create
+const contextValidator = require('./validators/contextValidator')
+const checkValidations = require('./validators/validationUtils')
+router.post('/', contextValidator.validateCreate(), checkValidations, async (req, res)=>{//create
     try{
         const context = req.body.name;
         const t = contextService.createContext(context);
@@ -35,7 +36,7 @@ router.post('/:id', async (req, res)=>{//modify
     }
   })
 
-router.get('/:id', async (req, res)=>{
+router.get('/:id', async (req, res)=>{//find
   try {
     const context = req.body.name;
     const t = await contextService.findContext(context);
