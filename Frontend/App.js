@@ -5,8 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import CustomButton from './components/buttons/Button';
 import SignInScreen from './screens/auth/login';
+import EjemploScreen from './screens/ejemplo';
+import Inbox from './screens/inbox';
 // import AuthState from './screens/auth/authState';
 import AuthContext from './screens/auth/authContext';
+
+// ICONS
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 const Drawer = createDrawerNavigator();
 // const AuthContext = React.createContext();
@@ -23,6 +28,19 @@ const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text>Welcome to TFG-GTD APP!</Text>
+      <CustomButton
+        text="Go to Login"
+        handler={() => navigation.navigate('Login')}
+      />
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const InfoScreen = ({navigation}) => {
+  return (
+    <View style={styles.container}>
+      <Text>Aqui iria la informacion</Text>
       <CustomButton
         text="Go to Login"
         handler={() => navigation.navigate('Login')}
@@ -112,7 +130,7 @@ export default function App() {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Drawer.Navigator>
-        {state.isLoading ? (
+        {/* {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Drawer.Screen name="Splash" component={SplashScreen} />
           ) : state.userToken == null ? (
@@ -128,8 +146,20 @@ export default function App() {
             />
           ) : (
             // User is signed in
+            )} */}
             <Drawer.Screen name="Home" component={HomeScreen} />
-          )}
+            <Drawer.Screen name="Info" component={InfoScreen} />
+            <Drawer.Screen name="Ejemplo" component={EjemploScreen}/>
+            <Drawer.Screen 
+                name="Inbox" 
+                component={Inbox} 
+                options={{
+                  title:'Inbox',
+                  drawerIcon: () => (
+                    <FontAwesome5 name="inbox" size={24} color={'orange'} />
+                  ),
+                }}
+            />
         </Drawer.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
