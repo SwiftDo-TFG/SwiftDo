@@ -7,8 +7,14 @@ CREATE TABLE "users" (
 
 CREATE TABLE projects (
     project_id serial PRIMARY KEY,
-    name VARCHAR,
-    description VARCHAR
+    title VARCHAR,
+    description VARCHAR, 
+    user_id INTEGER references "users" (user_id),
+    completed BOOLEAN,
+    date_added DATE, 
+    date_changed DATE, 
+    date_completed DATE, 
+    num_version NUMERIC
 );
 
 CREATE TABLE tags (
