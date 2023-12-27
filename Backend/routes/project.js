@@ -33,8 +33,8 @@ router.post('/', projectValidator.validateCreate(), checkValidations, async(req,
     }
 })
 
-// Actualizar los campos de un proyecto: 
-router.get('/:id', projectValidator.validateModify(), checkValidations, async (req, res) => {
+// Mostrar un proyecto dado y su progreso
+router.get('/:id', checkValidations, async (req, res) => {
     try{
         const project_id = req.params.id;
         const project_data = req.body;
@@ -49,6 +49,8 @@ router.get('/:id', projectValidator.validateModify(), checkValidations, async (r
         res.status(404).send({ error: error.message });
     }
 })
+
+// Actualizar los campos de un proyecto: 
 router.post('/:id', projectValidator.validateModify(), checkValidations, async (req, res) => {
     try{
         const project_id = req.params.id;
