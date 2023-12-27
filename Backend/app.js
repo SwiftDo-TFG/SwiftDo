@@ -29,7 +29,7 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/task', oauthServer.authenticate(), taskRouter);
 app.use('/tag', tagsRouter);
-app.use('/project', projectRouter)
+app.use('/project',oauthServer.authenticate(), projectRouter)
 // Get secret.
 app.get('/secret', oauthServer.authenticate(), function (req, res) {
   // Will require a valid access_token.
