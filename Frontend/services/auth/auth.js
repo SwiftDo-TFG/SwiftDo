@@ -1,7 +1,15 @@
 import axios from "axios";
+// import { URL } from 'react-native-url-polyfill';
+import { setupURLPolyfill } from 'react-native-url-polyfill';
+import { Platform } from 'react-native';
+
+if(Platform.OS !== 'web'){
+    setupURLPolyfill();
+}
 
 const instance = axios.create({
-    baseURL: 'http://localhost:3000',
+    // baseURL: 'http://localhost:3000',
+    baseURL: 'http://192.168.0.137:3000',
     timeout: 1000,
     //headers: { 'X-Custom-Header': 'foobar' }
 });
@@ -16,13 +24,14 @@ const getAuthCode = async (email, password) => {
         return authcode;
     } catch (error) {
         console.log("AXIOS Error", error)
-        return -1;
+        
+        return null;
     }
 
 }
 
 const getAuthToken = async (authcode) => {
-    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://localhost:3000/' }
+    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://192.168.0.137:3000/' }
 
     console.log("[AXIOS] Get OAUTH Token", data)
     try {
@@ -39,17 +48,36 @@ const getAuthToken = async (authcode) => {
         return token;
     } catch (error) {
         console.log("AXIOS Error", error)
-        return -1;
+        return null;
     }
 }
 
 
-const testLogin = async (email, password) => {
+const login = async (email, password) => {
+    console.log("LOGIN, data = ", email, password);
+
     const authcode = await getAuthCode(email, password);
 
-    if (authcode != -1) {
-        getAuthToken(authcode)
+    if (authcode != null) {
+        const token = await getAuthToken(authcode)
+        return token;
     }
+
+    return null;
 }
 
-//testLogin('pepe@ucm.es', 'Pepe@123');
+const signup = async (userData) =>{
+    console.log("SignUp, data = ", userData);
+
+    try{
+        const response = await instance.post('/user/register', userData);
+        const data = response.data;
+        
+        return data;
+    }catch(error){
+        return null;
+    }
+
+}
+
+export default {login, signup}

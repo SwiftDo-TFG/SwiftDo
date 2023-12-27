@@ -1,23 +1,16 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import CustomButton from './components/buttons/Button';
 import SignInScreen from './screens/auth/login';
-import AuthState from './screens/auth/authState';
-import AuthContext from './screens/auth/authContext';
+import SingUpScren from './screens/auth/singup';
+import AuthState from './services/auth/context/authState';
+import AuthContext from './services/auth/context/authContext';
 
 const Drawer = createDrawerNavigator();
-// const AuthContext = React.createContext();
 
-function SplashScreen() {
-  return (
-    <View>
-      <Text>Loading...</Text>
-    </View>
-  );
-}
 
 function Router() {
   const state = React.useContext(AuthContext);
@@ -26,57 +19,91 @@ function Router() {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
-  
+
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         // userToken = await SecureStore.getItemAsync('userToken');
       } catch (e) {
         // Restoring token failed
       }
-  
+
       // After restoring token, we may need to validate it in production apps
-  
+
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      state.signOut();
+      state.checkSession();
     };
-  
+
     bootstrapAsync();
   }, []);
 
   return (
-      <Drawer.Navigator>
-      {state.isLoading ? (
-          // We haven't finished checking for the token yet
-          <Drawer.Screen name="Splash" component={SplashScreen} />
-        ) : state.userToken == null ? (
-          // No token found, user isn't signed in
+    <Drawer.Navigator>
+      {state.userToken == null ? (
+        // No token found, user isn't signed in
+        <>
           <Drawer.Screen
             name="SignIn"
             component={SignInScreen}
             options={{
-              title: 'Sign in',
+              title: 'SignIn',
               // When logging out, a pop animation feels intuitive
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
           />
-        ) : (
-          // User is signed in
+          <Drawer.Screen
+            name="SignUp"
+            component={SingUpScren}
+            options={{
+              title: 'SignUp',
+              // When logging out, a pop animation feels intuitive
+              animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            }}
+          />
+        </>
+      ) : (
+        // User is signed in
+        <>
           <Drawer.Screen name="Home" component={HomeScreen} />
-        )}
-      </Drawer.Navigator>
+          <Drawer.Screen name="About" component={AboutScreen} />
+        </>
+      )}
+    </Drawer.Navigator>
   );
 }
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const state = React.useContext(AuthContext);
-  
+
   return (
     <View style={styles.container}>
       <Text>Welcome to TFG-GTD APP!</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>  
+        <CustomButton
+            text="About"
+            handler={() => navigation.navigate('About')}
+        />
+        <View style={styles.verticleLine}></View>
+        <CustomButton
+          text="Logout"
+          handler={() => state.signOut()}
+        />
+      </View>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const AboutScreen = ({ navigation }) => {
+  const state = React.useContext(AuthContext);
+
+  return (
+    <View style={styles.aboutContainer}>
+      <Text style={{marginBottom: 10, fontWeight: 'bold'}}>About TFG-GTD APP</Text>
+      <Text style={{textAlign:'justify'}}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
       <CustomButton
-        text="Logout"
-        handler={() => state.signOut()}
+        text="Go to Home"
+        handler={() => navigation.navigate('Home')}
       />
       <StatusBar style="auto" />
     </View>
@@ -87,7 +114,7 @@ export default function App() {
   return (
     <AuthState>
       <NavigationContainer>
-        <Router/>
+        <Router />
       </NavigationContainer>
     </AuthState>
   );
@@ -100,4 +127,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  aboutContainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  verticleLine: {
+    padding: 10
+  }
 });

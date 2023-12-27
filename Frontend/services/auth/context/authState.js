@@ -1,5 +1,7 @@
 import React from "react";
 import AuthContext from "./authContext";
+import authService from "../auth"
+import tokenStorage from "../token_store/storage"
 
 
 const AuthState = props => {
@@ -17,6 +19,7 @@ const AuthState = props => {
                         ...prevState,
                         isSignout: false,
                         userToken: action.token,
+                        isLoading: false,
                     };
                 case 'SIGN_OUT':
                     return {
@@ -25,6 +28,11 @@ const AuthState = props => {
                         userToken: null,
                         isLoading: false
                     };
+                case 'LOADING':
+                    return {
+                    ...prevState,
+                    isLoading: true
+                }
             }
         },
         {
@@ -37,15 +45,19 @@ const AuthState = props => {
     const authFunctions = React.useMemo(
         () => ({
             signIn: async (data) => {
-                // In a production app, we need to send some data (usually username, password) to server and get a token
-                // We will also need to handle errors if sign in failed
-                // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
-                // In the example, we'll use a dummy token
-                    
-                dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+                dispatch({ type: 'LOADING'});
+                const token = await authService.login(data.email, data.password);
+                
+                if(token != null){
+                    tokenStorage.storeToken(token);
+                    dispatch({ type: 'SIGN_IN', token: token.access_token });
+                }else{
+                    dispatch({ type: 'SIGN_OUT' })
+                    return -1;
+                }
             },
-            signOut: () => {
-                console.log("SINGING OUT")
+            signOut: async() => {
+                tokenStorage.removeToken();
                 dispatch({ type: 'SIGN_OUT' })
             },
             signUp: async (data) => {
@@ -53,9 +65,19 @@ const AuthState = props => {
                 // We will also need to handle errors if sign up failed
                 // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
                 // In the example, we'll use a dummy token
-
+                
                 dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
             },
+            checkSession: async () => {
+                const token = await tokenStorage.getToken();
+                console.log("checkSession", token)
+
+                if(token){
+                    dispatch({ type: 'SIGN_IN', token: token.access_token });
+                }else{
+                    dispatch({ type: 'SIGN_OUT' })
+                }
+            }
         }),
         []
     );
@@ -66,6 +88,7 @@ const AuthState = props => {
                 signIn: authFunctions.signIn,
                 signOut: authFunctions.signOut,
                 signUp: authFunctions.signUp,
+                checkSession: authFunctions.checkSession,
                 isLoading: state.isLoading,
                 isSignout: state.isSignout,
                 userToken: state.userToken
