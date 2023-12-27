@@ -8,6 +8,11 @@ import SignInScreen from './screens/auth/login';
 import SingUpScren from './screens/auth/singup';
 import AuthState from './services/auth/context/authState';
 import AuthContext from './services/auth/context/authContext';
+import EjemploScreen from './screens/ejemplo';
+import Inbox from './screens/inbox';
+
+// ICONS
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 const Drawer = createDrawerNavigator();
 
@@ -66,6 +71,17 @@ function Router() {
         <>
           <Drawer.Screen name="Home" component={HomeScreen} />
           <Drawer.Screen name="About" component={AboutScreen} />
+          <Drawer.Screen name="Ejemplo" component={EjemploScreen}/>
+          <Drawer.Screen 
+            name="Inbox" 
+            component={Inbox} 
+            options={{
+              title:'Inbox',
+              drawerIcon: () => (
+                <FontAwesome5 name="inbox" size={24} color={'orange'} />
+              ),
+            }}
+          />
         </>
       )}
     </Drawer.Navigator>
