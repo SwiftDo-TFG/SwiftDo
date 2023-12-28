@@ -9,7 +9,8 @@ if(Platform.OS !== 'web'){
 
 const instance = axios.create({
     // baseURL: 'http://localhost:3000',
-    baseURL: 'http://192.168.0.137:3000',
+    // baseURL: 'http://192.168.0.137:3000',
+    baseURL: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000',
     timeout: 1000,
     //headers: { 'X-Custom-Header': 'foobar' }
 });
@@ -31,7 +32,7 @@ const getAuthCode = async (email, password) => {
 }
 
 const getAuthToken = async (authcode) => {
-    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://192.168.0.137:3000/' }
+    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000/' }
 
     console.log("[AXIOS] Get OAUTH Token", data)
     try {
