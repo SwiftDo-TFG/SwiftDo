@@ -9,7 +9,7 @@ import SingUpScren from './screens/auth/singup';
 import AuthState from './services/auth/context/authState';
 import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
-import Inbox from './screens/inbox';
+import Inbox from './screens/inbox/inbox';
 
 // ICONS
 import { FontAwesome5 } from '@expo/vector-icons'; 
