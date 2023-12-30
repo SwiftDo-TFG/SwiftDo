@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import taskService from "../services/task/taskService";
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from "react-native";
+import AuthContext from '../services/auth/context/authContext';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 function Inbox() {
@@ -8,13 +9,17 @@ function Inbox() {
   const [taskText, setTaskText] = useState("");
   const [selectedTask, setSelectedTask] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const authState = useContext(AuthContext);
 
   useEffect(()=>{
     async function fetchData() {
       const tasks = await taskService.getTasks();
+      if(tasks.error){
+        return authState.signOut();
+      }
+
       console.log("Estas son las tareas que se devuelven", tasks)
-      
-      return tasks;
+      //setTasks(...)
     }
 
     fetchData()

@@ -53,6 +53,28 @@ const getAuthToken = async (authcode) => {
     }
 }
 
+const restoreToken = async (token)=> {
+    const data = { client_id: 1234, client_secret: 1234, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000/' }
+
+    console.log("[AXIOS] Refresh OAUTH Token", data)
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        };
+
+        const response = await instance.post('/oauth/token', data, config);
+        const token = response.data;
+
+        console.log("TOKEN RESPONSE", token);
+        return token;
+    } catch (error) {
+        console.log("AXIOS Error", error)
+        return null;
+    }
+}
+
 
 const login = async (email, password) => {
     console.log("LOGIN, data = ", email, password);
@@ -81,4 +103,4 @@ const signup = async (userData) =>{
 
 }
 
-export default {login, signup}
+export default {login, signup, restoreToken}

@@ -49,6 +49,7 @@ const AuthState = props => {
                 const token = await authService.login(data.email, data.password);
                 
                 if(token != null){
+                    token.expires_at = new Date(Date.now() + token.expires_in*1000);
                     tokenStorage.storeToken(token);
                     dispatch({ type: 'SIGN_IN', token: token.access_token });
                 }else{
