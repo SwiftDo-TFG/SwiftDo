@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import taskService from "../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, MenuButton } from "native-base";
@@ -18,6 +19,18 @@ function Inbox() {
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(()=>{
+    async function fetchData() {
+      const tasks = await taskService.getTasks();
+      console.log("Estas son las tareas que se devuelven", tasks)
+      
+      return tasks;
+    }
+
+    fetchData()
+
+  }, [])
 
   const addTask = () => {
     if (taskText.trim() !== "") {
