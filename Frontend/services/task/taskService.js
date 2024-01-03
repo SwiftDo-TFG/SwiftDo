@@ -37,15 +37,32 @@ const getTasks = async () => {
 }
 
 const getTaskById = async (taskId) => {
-
+    
 }
 
 const createTask = async (taskData) => {
+    try {
+        const response = await instance.post('/task/', taskData);
+        const taskid = response.data;
 
+        return taskid;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
 }
 
-const updateTask = async (taskData) => {
+const updateTask = async (taskId, taskData) => {
+    try {
+        const dir = `/task/${taskId}`
+        const response = await instance.post(dir, taskData);
+        const taskid = response.data;
 
+        return taskid;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
 }
 
 

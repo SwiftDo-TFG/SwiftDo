@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
     },
     leftSwipe: {
         backgroundColor: "#15ba53",
-        justifyContent: "center",
         alignItems: "center",
+        // justifyContent: "center",
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
         width: '100%',
-        height: '98%'
+        height: '100%'
     },
     menuContainer: {
         marginVertical: 10,

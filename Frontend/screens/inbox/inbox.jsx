@@ -2,46 +2,50 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
-import { NativeBaseProvider, VStack, Box, Menu, MenuButton } from "native-base";
+import { NativeBaseProvider, VStack, Box, Menu } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import styles from './inbox.styles'
 import AuthContext from '../../services/auth/context/authContext';
 
 
 function Inbox() {
-  const [tasks, setTasks] = useState([
-    { id: '1', text: 'Cortarse el pelo' },
-    { id: '2', text: 'Preparar apuntes SGE' },
-    { id: '3', text: 'Hacer test ética' },
-    { id: '4', text: 'Comprar libro' },
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [taskText, setTaskText] = useState("");
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState({});
+  const [isEditingModalVisible, setIsEditingModalVisible] = useState(false);
   const authState = useContext(AuthContext);
 
 
-  useEffect(()=>{
+  useEffect(() => {
     async function fetchData() {
-      const tasks = await taskService.getTasks();
-      if(tasks.error){
+      const tasksDB = await taskService.getTasks();
+      if (tasksDB.error) {
         return authState.signOut();
       }
 
-      console.log("Estas son las tareas que se devuelven", tasks)
-      //setTasks(...)
+      console.log("Estas son las tareas que se devuelven", tasksDB)
+      const actualtask = tasks.concat(tasksDB)
+      setTasks(actualtask)
     }
 
     fetchData()
 
   }, [])
 
-  const addTask = () => {
+  const addTask = async () => {
     if (taskText.trim() !== "") {
-      setTasks([...tasks, { id: tasks.length.toString(), text: taskText }]);
-      setTaskText("");
-      setIsModalVisible(false);
+      const taskData = { title: taskText };
+      const taskId = await taskService.createTask(taskData);
+      if (taskId !== -1) {
+        setTasks([...tasks, { task_id: taskId, title: taskText }]);
+        setTaskText("");
+        setIsModalVisible(false);
+      } else {
+        console.error("Error al agregar tarea a la base de datos");
+      }
     }
   };
 
@@ -54,7 +58,7 @@ function Inbox() {
   };
 
   const deleteTask = (taskId) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
     setTasks(updatedTasks);
     setSelectedTasks((prevSelectedTasks) =>
       prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId)
@@ -62,18 +66,32 @@ function Inbox() {
   };
 
   const deleteSelectedTask = () => {
-    const updatedTasks = tasks.filter((task) => !selectedTasks.includes(task.id));
+    const updatedTasks = tasks.filter((task) => !selectedTasks.includes(task.task_id));
     setTasks(updatedTasks);
     setSelectedTasks([]);
   }
 
+  const updateTask = async () => {
+    const updatedTask = await taskService.updateTask(editingTask.task_id, { title: editingTask.title });
+  
+    if (updatedTask !== -1) {
+      const updatedTasks = tasks.map((task) =>
+        task.task_id === editingTask.task_id ? { ...task, title: editingTask.title } : task
+      );
+      setTasks(updatedTasks);
+      setIsEditingModalVisible(false);
+    } else {
+      console.error("Error al actualizar la tarea en la base de datos");
+    }
+  };
+
   const ArchiveTask = (id, text) => {
-    setArchiveTask([...archiveTask, { id: id, text: text }]);
+    setArchiveTask([...archiveTask, { task_id: id, title: text }]);
     deleteTask(id);
   }
 
   const archiveSelectedTask = () => {
-    const updatedTasks = tasks.filter((task) => selectedTasks.includes(task.id));
+    const updatedTasks = tasks.filter((task) => selectedTasks.includes(task.task_id));
     const updatedArchiveTasks = [...archiveTask, ...updatedTasks]
     setArchiveTask(updatedArchiveTasks);
     deleteSelectedTask()
@@ -96,18 +114,32 @@ function Inbox() {
       outputRange: ['30%', '100%'],
       extrapolate: 'clamp',
     });
+    const borderTopRightRadius = translateX.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 10],
+      extrapolate: 'clamp',
+    });
+    const borderBottomRightRadius = translateX.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 10],
+      extrapolate: 'clamp',
+    });
 
     return (
       <Animated.View
-        style={[styles.leftSwipe, { width }]}
+        style={[styles.leftSwipe, { width }, { borderTopRightRadius }, { borderBottomRightRadius }]}
       >
         <Text
           style={{
-            paddingHorizontal: 10,
-            fontWeight: "600",
-            paddingHorizontal: 30,
-            paddingVertical: 20,
+            paddingHorizontal: '5%',
+            paddingVertical: '10%',
           }}
+        // style={{
+        //   paddingHorizontal: 10,
+        //   fontWeight: "600",
+        //   paddingHorizontal: 30,
+        //   paddingVertical: 20,
+        // }}
         >
           <Entypo name="archive" size={20} color="white" />
         </Text>
@@ -123,10 +155,11 @@ function Inbox() {
       >
         <Text
           style={{
-            paddingHorizontal: 10,
-            fontWeight: "600",
-            paddingHorizontal: 30,
-            paddingVertical: 20,
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: '5%',
+            paddingVertical: '10%',
           }}
         >
           <FontAwesome5
@@ -141,12 +174,17 @@ function Inbox() {
 
 
 
-  const SelectableTask = ({ id, text, isSelected, onPress, onDelete }) => {
+  const SelectableTask = ({ id, title, isSelected, onPress, onDelete }) => {
     const [isSwiped, setIsSwiped] = useState(true);
     const translateX = useRef(new Animated.Value(0)).current;
     const leftActions = selectedTasks.length > 0 ? () => null : () => LeftSwipeActions({ translateX });
     const rightActions = selectedTasks.length > 0 ? () => null : () => RightSwipeActions({ onDelete, id, translateX });
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const backgroundTask = translateX.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
+      extrapolate: 'clamp',
+    });
 
     useEffect(() => {
       const subscription = translateX.addListener(({ value }) => {
@@ -177,7 +215,7 @@ function Inbox() {
           useNativeDriver: false,
         }).start(() => {
           setTimeout(() => {
-            ArchiveTask(id, text);
+            ArchiveTask(id, title);
           }, 200);
         });
       }}
@@ -197,7 +235,7 @@ function Inbox() {
           setIsMenuVisible(!isMenuVisible);
         }}
       >
-        <View style={[getTaskItemStyle(isSelected), { backgroundColor: isSelected ? '#5ad5d5' : isSwiped ? "#f2f2f2" : "" }]}>
+        <Animated.View style={[getTaskItemStyle(isSelected), { backgroundColor: isSelected ? '#5ad5d5' : backgroundTask }]}>
           {isSwiped && (
             <View style={styles.innerContainer}>
               <View style={[
@@ -211,7 +249,7 @@ function Inbox() {
                 {isSelected && (
                   <FontAwesome name="check-circle" size={24} color="green" style={{ marginRight: '15px' }} />
                 )}
-                <Text>{text}</Text>
+                <Text>{title}</Text>
               </View>
               {!isSelected && isMenuVisible && (
                 <Menu
@@ -225,12 +263,18 @@ function Inbox() {
                 >
                   <Menu.Item style={styles.menuItem} onPress={() => (console.log(`Mover a`))}>Mover a</Menu.Item>
                   <Separator />
-                  <Menu.Item style={styles.menuItem} onPress={() => (console.log(`Editar`))}>Editar</Menu.Item>
+                  <Menu.Item style={styles.menuItem}
+                    onPress={() => {
+                      setEditingTask({task_id: id, title: title});
+                      setIsEditingModalVisible(true);
+                    }}>
+                    Editar
+                  </Menu.Item>
                 </Menu>
               )}
             </View>
           )}
-        </View>
+        </Animated.View >
       </TouchableWithoutFeedback>
     </Swipeable>)
   };
@@ -279,13 +323,13 @@ function Inbox() {
         )}
         <FlatList
           data={tasks}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.task_id.toString()}
           renderItem={({ item }) => (
             <SelectableTask
-              id={item.id}
-              text={item.text}
-              isSelected={selectedTasks.includes(item.id)}
-              onPress={() => toggleSelectTask(item.id)}
+              id={item.task_id}
+              title={item.title}
+              isSelected={selectedTasks.includes(item.task_id)}
+              onPress={() => toggleSelectTask(item.task_id)}
               onDelete={deleteTask}
             />
           )}
@@ -317,6 +361,32 @@ function Inbox() {
 
             <TouchableOpacity style={styles.button} onPress={addTask}>
               <Text style={styles.buttonText}>Add Task</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isEditingModalVisible}
+        onRequestClose={() => setIsEditingModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Edit the task"
+            value={editingTask.title}
+            onChangeText={(text) => setEditingTask({...editingTask, title: text})}
+          />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={() => setIsEditingModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={updateTask}>
+              <Text style={styles.buttonText}>Actualizar tarea</Text>
             </TouchableOpacity>
           </View>
         </View>
