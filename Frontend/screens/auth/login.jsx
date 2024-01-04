@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { TextInput, View, Button, Text, ActivityIndicator } from 'react-native';
+import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
 import styles from './login.styles'
 import AuthContext from '../../services/auth/context/authContext';
 
@@ -35,9 +35,12 @@ function SignInScreen({navigation}) {
                 value={password}
                 onChangeText={setPassword}
                 style={styles.textInput}
-                secureTextEntry
+                secureTextEntry 
             />
-            <Button title="Sign in" onPress={async () => {
+            <TouchableOpacity style={styles.linkContainer} onPress={()=>{navigation.navigate('SignUp')}}>
+                <Text style={styles.linkText}>Don't have an account? Sign up</Text>
+            </TouchableOpacity>
+            <Button title="Sign in" color="blue" onPress={async () => {
                 setError(false)
                 const res = await authState.signIn({ email, password })
 

@@ -8,6 +8,8 @@ services:
     volumes:
       - ./:/Backend
     environment:
+      NODE_ENV: production
+      PORT: 3000
       POSTGRES_HOST: localhost 
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69

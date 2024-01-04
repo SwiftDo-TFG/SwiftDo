@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
     },
     loadingIndicator: {
         padding: 10
+    },
+    linkContainer:{
+        marginBottom: 15,
+    },
+    linkText: {
+        color: 'grey',
+        textDecorationLine: 'underline'
     }
 })
 
