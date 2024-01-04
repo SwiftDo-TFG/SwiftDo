@@ -3,7 +3,10 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
     },
     checkgroup: {
         flex: 1,
@@ -15,7 +18,8 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
-        height: 48
+        marginBottom: 10,
+        height: 52
     },
     innerContainer: {
         flex: 1,
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         width: '30%',
-        height: '98%'
+        height: 52
     },
     leftSwipe: {
         backgroundColor: "#15ba53",
@@ -88,8 +92,8 @@ const styles = StyleSheet.create({
         // justifyContent: "center",
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
-        width: '100%',
-        height: '100%'
+        width: '30%',
+        height: 52
     },
     menuContainer: {
         marginVertical: 10,
