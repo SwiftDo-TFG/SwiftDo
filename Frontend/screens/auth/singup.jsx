@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, View, Button, Text, ActivityIndicator } from 'react-native';
+import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
 import AuthContext from '../../services/auth/context/authContext';
 import authService from "../../services/auth/auth"
 import styles from './login.styles'
@@ -34,7 +34,10 @@ function SingUpScren({navigation}){
                 style={styles.textInput}
                 secureTextEntry
             />
-            <Button title="Sign Up" onPress={async () => {
+            <TouchableOpacity style={styles.linkContainer} onPress={()=>{navigation.navigate('SignIn')}}>
+                <Text style={styles.linkText}>Already have an account? Sign in</Text>
+            </TouchableOpacity>
+            <Button title="Sign Up" color="blue" onPress={async () => {
                 setError({isError: false, msg:''})
 
                 if(password === password2){

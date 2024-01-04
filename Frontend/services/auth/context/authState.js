@@ -1,6 +1,7 @@
 import React from "react";
 import AuthContext from "./authContext";
 import authService from "../auth"
+import auth_utils from "../auth_utils";
 import tokenStorage from "../token_store/storage"
 
 
@@ -59,6 +60,7 @@ const AuthState = props => {
             },
             signOut: async() => {
                 tokenStorage.removeToken();
+                auth_utils.clearToken();
                 dispatch({ type: 'SIGN_OUT' })
             },
             signUp: async (data) => {

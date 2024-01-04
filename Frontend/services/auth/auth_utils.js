@@ -4,7 +4,7 @@ import tokenStorage from "./token_store/storage"
 let authtoken = null;
 
 const setAuthHeaders = async function (config) {
-    
+    console.log("Auth token actual", authtoken)
     if(!authtoken){
         let token = await tokenStorage.getToken();
         authtoken = token;
