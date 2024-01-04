@@ -1,10 +1,10 @@
 const pg = require('pg')
 
 const pool = new pg.Pool({
-    host: '16.171.198.23',
-    user: 'tfggtdUser',
-    password: 'nodenodito@69',
-    database: 'tfggtd',
+    host: process.env.POSTGRES_HOST,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
     port: 5432,
     max: 20,
     idleTimeoutMillis: 30000,
