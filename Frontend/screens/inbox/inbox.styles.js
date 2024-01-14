@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
         height: 52
     },
     innerContainer: {
-        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -101,6 +100,27 @@ const styles = StyleSheet.create({
     menuItem: {
         padding: 6,
         fontSize: 16,
+    },
+    acceptButton: {
+        backgroundColor: '#15ba53',
+        padding: 10,
+        borderRadius: 5,
+        marginRight: 10,
+    },
+    acceptButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    deleteButton: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 5,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

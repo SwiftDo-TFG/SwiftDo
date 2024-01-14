@@ -1,6 +1,10 @@
-import { FlatList } from 'native-base';
-import React from 'react';
+import { FlatList, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import { Animated, Modal, Dimensions, TouchableWithoutFeedback, View, Text } from 'react-native';
+import styles from '../screens/inbox/inbox.styles'
+import Modalize from 'react-native-modalize'
+
+
 
 const dvHeight = Dimensions.get('window').height;
 
@@ -10,10 +14,20 @@ export class PopUpModal extends React.Component {
     this.state = {
       translateY: new Animated.Value(dvHeight),
       show: false,
+      editedTitle: '',
     };
   }
 
   componentDidUpdate(prevProps) {
+    const { data } = this.props;
+    const { editedTitle } = this.state;
+
+    if (!this.isEditingLocally) {
+      if (data.length > 0 && editedTitle !== data[0].title) {
+        this.setState({ editedTitle: data[0].title });
+      }
+    }
+
     if (this.state.show !== prevProps.show) {
       this.animateModal();
     }
@@ -29,12 +43,18 @@ export class PopUpModal extends React.Component {
     }).start();
   }
 
+  onTextChange = (text) => {
+    this.setState({ editedTitle: text });
+    this.isEditingLocally = true;
+  };
+
   show = () => {
     this.setState({ show: true });
   };
 
   hide = () => {
     this.setState({ show: false });
+    this.isEditingLocally = false;
   };
 
   renderOutside(touch) {
@@ -59,7 +79,7 @@ export class PopUpModal extends React.Component {
   };
 
   renderContent = () => {
-    const { data } = this.props;
+    const { data, mode } = this.props;
 
     return (
       <View>
@@ -67,7 +87,7 @@ export class PopUpModal extends React.Component {
           style={{ marginBottom: 20 }}
           showsVerticalScrollIndicator={false}
           data={data}
-          renderItem={({ item }) => this.renderItem(item)}
+          renderItem={({ item }) => this.renderItem(item, mode)}
           extraData={data}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.renderSeparator()}
@@ -77,10 +97,39 @@ export class PopUpModal extends React.Component {
     );
   };
 
-  renderItem = (item) => {
+  renderItem = (item, mode) => {
     return (
-      <View style={{ height: 50, flex: 1, alignItems: 'flex-start', justifyContent: 'center', marginLeft: 20 }}>
-        <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44' }}>{item.title}</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        {mode === 'edit' ? (
+          <>
+            <TextInput
+              style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', borderBottomWidth: 1, borderColor: '#182E44' }}
+              value={this.state.editedTitle}
+              onChangeText={this.onTextChange}
+            />
+            <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'center' }}>
+              <TouchableOpacity
+                style={styles.acceptButton}
+                onPress={() => {
+                  this.props.onAccept(this.state.editedTitle);
+                  this.hide();
+                }}>
+                <Text style={styles.acceptButtonText}>Aceptar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => {
+                  // Agrega la lógica para eliminar aquí
+                }}>
+                <Text style={styles.deleteButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={{height: 50, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44' }}>{item.title}</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -105,7 +154,8 @@ export class PopUpModal extends React.Component {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               paddingHorizontal: 10,
-              maxHeight: dvHeight * 0.4,
+              maxHeight: dvHeight * 0.6,
+              minHeight: dvHeight * 0.4,
             }}
           >
             {this.renderTitle()}
@@ -116,3 +166,5 @@ export class PopUpModal extends React.Component {
     );
   }
 }
+
+

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
-import { NativeBaseProvider,  VStack, Box, Menu, extendTheme  } from "native-base";
+import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import styles from './inbox.styles'
@@ -17,9 +17,10 @@ function Inbox() {
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState({});
-  const [isEditingModalVisible, setIsEditingModalVisible] = useState(false);
   const [isDataLoaded, setDataLoaded] = useState(false);
-  let popupRef = React.createRef();
+  const [selectAll, setSelectAll] = useState(false);
+  let moveRef = React.createRef();
+  let editRef = React.createRef();
   const authState = useContext(AuthContext);
 
 
@@ -77,15 +78,14 @@ function Inbox() {
     setSelectedTasks([]);
   }
 
-  const updateTask = async () => {
-    const updatedTask = await taskService.updateTask(editingTask.task_id, { title: editingTask.title });
+  const updateTask = async (updatedTitle) => {
+    const updatedTask = await taskService.updateTask(editingTask[0].task_id, { title: updatedTitle });
 
     if (updatedTask !== -1) {
       const updatedTasks = tasks.map((task) =>
-        task.task_id === editingTask.task_id ? { ...task, title: editingTask.title } : task
+        task.task_id === editingTask[0].task_id ? { ...task, title: updatedTitle } : task
       );
       setTasks(updatedTasks);
-      setIsEditingModalVisible(false);
     } else {
       console.error("Error al actualizar la tarea en la base de datos");
     }
@@ -121,6 +121,17 @@ function Inbox() {
     );
   };
 
+  const toggleSelectAll = () => {
+    if (selectedTasks.length === tasks.length) {
+      setSelectedTasks([]);
+      setSelectAll(false);
+    } else {
+      const allTaskIds = tasks.map(task => task.task_id);
+      setSelectedTasks(allTaskIds);
+      setSelectAll(true);
+    }
+  };
+
   const LeftSwipeActions = () => {
     // const width = translateX.interpolate({
     //   inputRange: [0, 1],
@@ -143,7 +154,7 @@ function Inbox() {
       <TouchableOpacity
         // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
         style={[styles.leftSwipe]}
-        onPress={showPopUp}
+        onPress={showMovePopUp}
       >
         <Text
           style={{
@@ -279,13 +290,10 @@ function Inbox() {
                   style={styles.menuContainer}
                   placement="left"
                 >
-                  <Menu.Item style={styles.menuItem} onPress={showPopUp}>Mover a</Menu.Item>
+                  <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
                   {/* <Separator /> */}
                   <Menu.Item style={styles.menuItem}
-                    onPress={() => {
-                      setEditingTask({ task_id: id, title: title });
-                      setIsEditingModalVisible(true);
-                    }}>
+                    onPress={() => { showEditPopUp(id, title) }}>
                     Editar
                   </Menu.Item>
                 </Menu>
@@ -309,12 +317,21 @@ function Inbox() {
   //   />
   // );
 
-  const showPopUp = () => {
-    popupRef.show();
+  const showMovePopUp = () => {
+    moveRef.show();
   }
 
-  const hidePopUp = () => {
-    popupRef.hide();
+  const hideMovePopUp = () => {
+    moveRef.hide();
+  }
+
+  const showEditPopUp = (id, title) => {
+    setEditingTask([{ task_id: id, title: title }]);
+    editRef.show();
+  }
+
+  const hideEditPopUp = () => {
+    editRef.hide();
   }
 
   const popuplist = [
@@ -351,7 +368,6 @@ function Inbox() {
   return (
     <View style={styles.container}>
       <NativeBaseProvider>
-
         {selectedTasks.length > 0 && (
           <VStack>
             <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
@@ -372,10 +388,22 @@ function Inbox() {
                   style={styles.menuContainer}
                   placement="left"
                 >
-                  <Menu.Item style={styles.menuItem} onPress={showPopUp}>Mover a</Menu.Item>
+                  <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
                 </Menu>
               </View>
             </Box>
+            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+              <Text>{selectAll ? 'Deseleccionar todo' : 'Seleccionar todo'}</Text>
+              {tasks.length > 0 && (
+                <Checkbox
+                  value={selectAll}
+                  onChange={toggleSelectAll}
+                  borderColor={"#f39f18"}
+                  _checked={{ borderColor: "#f39f18", bgColor:"#f39f18"}}
+                  style={{ marginLeft: 10 }}
+                />
+              )}
+            </View>
           </VStack>
         )}
         <Animated.FlatList
@@ -414,70 +442,53 @@ function Inbox() {
         // ItemSeparatorComponent={() => <Separator />}
         />
 
-      <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
-        <FontAwesome5 name="plus" size={24} color="white" />
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+          <FontAwesome5 name="plus" size={24} color="white" />
+        </TouchableOpacity>
 
-      <PopUpModal
-        title="Mover a"
-        ref={(target) => popupRef = target}
-        touch={hidePopUp}
-        data={popuplist}
-      >
+        <PopUpModal
+          title="Mover a"
+          ref={(target) => moveRef = target}
+          touch={hideMovePopUp}
+          data={popuplist}
+          mode='move'
+        >
 
-      </PopUpModal>
+        </PopUpModal>
+        <PopUpModal
+          title="Editar"
+          ref={(target) => editRef = target}
+          touch={hideEditPopUp}
+          data={editingTask}
+          onAccept={updateTask}
+          mode='edit'
+        >
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-        <View style={styles.modalView}>
-          <TextInput
-            style={styles.modalInput}
-            placeholder="Enter a new task"
-            value={taskText}
-            onChangeText={(text) => setTaskText(text)}
-          />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setIsModalVisible(false)}>
-              <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
+        </PopUpModal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Enter a new task"
+              value={taskText}
+              onChangeText={(text) => setTaskText(text)}
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setIsModalVisible(false)}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={addTask}>
-              <Text style={styles.buttonText}>Add Task</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={addTask}>
+                <Text style={styles.buttonText}>Add Task</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isEditingModalVisible}
-        onRequestClose={() => setIsEditingModalVisible(false)}
-      >
-        <View style={styles.modalView}>
-          <TextInput
-            style={styles.modalInput}
-            placeholder="Edit the task"
-            value={editingTask.title}
-            onChangeText={(text) => setEditingTask({ ...editingTask, title: text })}
-          />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
-              onPress={() => setIsEditingModalVisible(false)}
-            >
-              <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={updateTask}>
-              <Text style={styles.buttonText}>Actualizar tarea</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
+        </Modal>
       </NativeBaseProvider>
     </View>
   );
