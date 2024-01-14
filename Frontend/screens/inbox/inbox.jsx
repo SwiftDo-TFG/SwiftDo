@@ -8,12 +8,13 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import styles from './inbox.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
+import SelectableTask from "./selectableTask";
 
 
 function Inbox() {
   const [tasks, setTasks] = useState([]);
   const [taskText, setTaskText] = useState("");
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState({});
@@ -32,8 +33,17 @@ function Inbox() {
       }
 
       console.log("Estas son las tareas que se devuelven", tasksDB)
-      const actualtask = tasks.concat(tasksDB)
-      setTasks(actualtask)
+      // const actualtask = tasks.concat(tasksDB)
+      const seletedAux = {}
+      tasksDB.forEach(task=>{
+        seletedAux[task.task_id] = false;
+      })
+
+      seletedAux.total = 0;
+
+      setTasks(tasksDB)
+      setSelectedTasks(seletedAux)
+      console.log("SELECTED TASK", seletedAux)
     }
 
     if (!isDataLoaded) {
@@ -55,13 +65,6 @@ function Inbox() {
         console.error("Error al agregar tarea a la base de datos");
       }
     }
-  };
-
-
-  const getTaskItemStyle = (isSelected) => {
-    return {
-      ...styles.taskContainer,
-    };
   };
 
   const deleteTask = (taskId) => {
@@ -111,211 +114,32 @@ function Inbox() {
   }
 
   const toggleSelectTask = (taskId) => {
-    setSelectedTasks((prevSelectedTasks) => {
-      if (prevSelectedTasks.includes(taskId)) {
-        return prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId);
-      } else {
-        return [...prevSelectedTasks, taskId];
-      }
-    }
-    );
+    let aux = selectedTasks
+    let factor = aux[taskId] ? -1 : 1 
+    aux[taskId] = !aux[taskId];
+    setSelectedTasks({...aux, total: aux.total + factor});
+    console.log("ANYYY", selectedTasks)
   };
 
   const toggleSelectAll = () => {
-    if (selectedTasks.length === tasks.length) {
-      setSelectedTasks([]);
-      setSelectAll(false);
-    } else {
-      const allTaskIds = tasks.map(task => task.task_id);
-      setSelectedTasks(allTaskIds);
-      setSelectAll(true);
-    }
+    // if (selectedTasks.length === tasks.length) {
+    //   setSelectedTasks([]);
+    //   setSelectAll(false);
+    // } else {
+    //   const allTaskIds = tasks.map(task => task.task_id);
+    //   setSelectedTasks(allTaskIds);
+    //   setSelectAll(true);
+    // }
+
+    let selecteds = selectedTasks;
+
+    tasks.forEach(task => {
+      selecteds[task.task_id] = !selectAll;
+    });
+
+    setSelectedTasks({...selecteds, total: !selectAll ? tasks.length : 0})
+    setSelectAll(!selectAll);
   };
-
-  const LeftSwipeActions = () => {
-    // const width = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: ['30%', '100%'],
-    //   extrapolate: 'clamp',
-    // });
-    // const borderTopRightRadius = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [0, 10],
-    //   extrapolate: 'clamp',
-    // });
-    // const borderBottomRightRadius = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [0, 10],
-    //   extrapolate: 'clamp',
-    // });
-
-    return (
-      // <Animated.View
-      <TouchableOpacity
-        // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
-        style={[styles.leftSwipe]}
-        onPress={showMovePopUp}
-      >
-        <Text
-          style={{
-            paddingHorizontal: '5%',
-            paddingVertical: '10%',
-          }}
-        // style={{
-        //   paddingHorizontal: 10,
-        //   fontWeight: "600",
-        //   paddingHorizontal: 30,
-        //   paddingVertical: 20,
-        // }}
-        >
-          <Entypo name="archive" size={20} color="white" />
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  const RightSwipeActions = ({ onDelete, id, translateX }) => {
-    return (
-      <TouchableOpacity
-        style={[styles.rightSwipe, { transform: [{ translateX: translateX }], }]}
-        onPress={() => onDelete(id)}
-      >
-        <Text
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: '5%',
-            paddingVertical: '10%',
-          }}
-        >
-          <FontAwesome5
-            name="trash"
-            size={20}
-            color="white"
-          />
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-
-
-  const SelectableTask = ({ id, title, isSelected, onPress, onDelete, scale, opacity }) => {
-    const [isSwiped, setIsSwiped] = useState(true);
-    const translateX = useRef(new Animated.Value(0)).current;
-    const leftActions = selectedTasks.length > 0 ? () => null : () => LeftSwipeActions();
-    const rightActions = selectedTasks.length > 0 ? () => null : () => RightSwipeActions({ onDelete, id, translateX });
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    // const backgroundTask = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
-    //   extrapolate: 'clamp',
-    // });
-
-    useEffect(() => {
-      const subscription = translateX.addListener(({ value }) => {
-        // setIsSwiped(value === 0);
-      });
-
-      return () => {
-        translateX.removeListener(subscription);
-      };
-    }, [translateX]);
-
-    return (<Swipeable
-      renderLeftActions={leftActions}
-      renderRightActions={rightActions}
-      onSwipeableClose={() => {
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }}
-      overshootLeft={false}
-      overshootRight={false}
-      onSwipeableLeftWillOpen={() => {
-        Animated.timing(translateX, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          setTimeout(() => {
-            //ArchiveTask(id, title);
-          }, 200);
-        });
-      }}
-      onSwipeableLeftWillClose={() => {
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }}
-      friction={2}
-    >
-      <TouchableWithoutFeedback
-        // onLongPress={() => onPress(id)}
-        onPress={() => {
-          // if (isSelected) onPress(id);
-          setIsMenuVisible(!isMenuVisible);
-        }}
-      >
-        <Animated.View style={[getTaskItemStyle(isSelected), { backgroundColor: isSelected ? '#ebd7b5' : '#f2f2f2', transform: [{ scale }], opacity }]}>
-          {isSwiped && (
-            <View style={styles.innerContainer}>
-              <View style={[
-                { flex: 1 },
-                { flexDirection: 'row' },
-                { alignItems: 'center' },
-              ]}>
-                <TouchableOpacity onPress={() => onPress(id)} style={{ marginRight: '5%' }}>
-                  {!isSelected && (
-                    <FontAwesome name="circle-o" size={24} color="#a0a0a0" />
-                  )}
-                  {isSelected && (
-                    <FontAwesome name="check-circle" size={24} color="#f39f18" />
-                  )}
-                </TouchableOpacity>
-                <Text>{title}</Text>
-              </View>
-              {!isSelected && isMenuVisible && (
-                <Menu
-                  trigger={(triggerProps) => (
-                    <TouchableOpacity {...triggerProps}>
-                      <Entypo name="dots-three-vertical" size={20} color="#a0a0a0" />
-                    </TouchableOpacity>
-                  )}
-                  style={styles.menuContainer}
-                  placement="left"
-                >
-                  <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
-                  {/* <Separator /> */}
-                  <Menu.Item style={styles.menuItem}
-                    onPress={() => { showEditPopUp(id) }}>
-                    Editar
-                  </Menu.Item>
-                </Menu>
-              )}
-            </View>
-          )}
-        </Animated.View >
-      </TouchableWithoutFeedback>
-    </Swipeable>)
-  };
-
-  // const Separator = () => (
-  //   <View
-  //     style={{
-  //       height: 1,
-  //       width: "100%",
-  //       backgroundColor: "#CED0CE",
-  //       marginLeft: "auto",
-  //       marginRight: "auto",
-  //     }}
-  //   />
-  // );
 
   const showMovePopUp = () => {
     moveRef.show();
@@ -374,10 +198,10 @@ function Inbox() {
   return (
     <View style={styles.container}>
       <NativeBaseProvider>
-        {selectedTasks.length > 0 && (
+        {selectedTasks.total > 0 && (
           <VStack>
             <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
-              <Text>Seleccionado: ({selectedTasks.length})</Text>
+              <Text>Seleccionado: ({selectedTasks.total})</Text>
               <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => archiveSelectedTask()}>
                   <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
@@ -436,13 +260,14 @@ function Inbox() {
             })
 
             return (<SelectableTask
-              id={item.task_id}
-              title={item.title}
-              isSelected={selectedTasks.includes(item.task_id)}
+              task={item}
               onPress={() => toggleSelectTask(item.task_id)}
               onDelete={deleteTask}
               scale={scale}
               opacity={opacity}
+              selectedTasks={selectedTasks}
+              showMovePopUp={showMovePopUp}
+              showEditPopUp={showEditPopUp}
             />)
           }}
         // ItemSeparatorComponent={() => <Separator />}
