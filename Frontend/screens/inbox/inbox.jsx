@@ -78,12 +78,12 @@ function Inbox() {
     setSelectedTasks([]);
   }
 
-  const updateTask = async (updatedTitle) => {
-    const updatedTask = await taskService.updateTask(editingTask[0].task_id, { title: updatedTitle });
-
-    if (updatedTask !== -1) {
+  const updateTask = async (updatedTask) => {
+    const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
+  
+    if (updatedTaskResult !== -1) {
       const updatedTasks = tasks.map((task) =>
-        task.task_id === editingTask[0].task_id ? { ...task, title: updatedTitle } : task
+        task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
       );
       setTasks(updatedTasks);
     } else {
@@ -293,7 +293,7 @@ function Inbox() {
                   <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
                   {/* <Separator /> */}
                   <Menu.Item style={styles.menuItem}
-                    onPress={() => { showEditPopUp(id, title) }}>
+                    onPress={() => { showEditPopUp(id) }}>
                     Editar
                   </Menu.Item>
                 </Menu>
@@ -325,9 +325,15 @@ function Inbox() {
     moveRef.hide();
   }
 
-  const showEditPopUp = (id, title) => {
-    setEditingTask([{ task_id: id, title: title }]);
-    editRef.show();
+  const showEditPopUp = (id) => {
+    const taskToEdit = tasks.find(task => task.task_id === id);
+
+    if (taskToEdit) {
+      setEditingTask([taskToEdit]);
+      editRef.show();
+    } else {
+      console.error(`No se encontró la tarea con ID: ${id}`);
+    }
   }
 
   const hideEditPopUp = () => {
@@ -399,7 +405,7 @@ function Inbox() {
                   value={selectAll}
                   onChange={toggleSelectAll}
                   borderColor={"#f39f18"}
-                  _checked={{ borderColor: "#f39f18", bgColor:"#f39f18"}}
+                  _checked={{ borderColor: "#f39f18", bgColor: "#f39f18" }}
                   style={{ marginLeft: 10 }}
                 />
               )}
