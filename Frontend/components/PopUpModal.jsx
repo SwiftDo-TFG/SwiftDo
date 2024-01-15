@@ -22,14 +22,14 @@ export class PopUpModal extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { data } = this.props;
-    const { editedTitle, editedDescription } = this.state;
+    const { editedTitle, editedDescription, mode } = this.state;
 
-    if (!this.isEditingTitle) {
+    if (!this.isEditingTitle && mode === 'edit') {
       if (data.length > 0 && editedTitle !== data[0].title) {
         this.setState({ editedTitle: data[0].title });
       }
     }
-    if (!this.isEditingDescription) {
+    if (!this.isEditingDescription && mode === 'edit') {
       if (data.length > 0 && editedDescription !== data[0].description) {
         this.setState({ editedDescription: data[0].description });
       }
@@ -83,8 +83,8 @@ export class PopUpModal extends React.Component {
   renderTitle = (mode) => {
     const { title } = this.props;
     return (
-      <View style={mode === 'edit' ? { alignItems: 'flex-start', marginLeft: 20, marginRight: 8 } : { alignItems: 'center' }}>
-        {mode === 'edit' ? (
+      <View style={(mode === 'edit' || mode === 'add') ? { alignItems: 'flex-start', marginLeft: 20, marginRight: 8 } : { alignItems: 'center' }}>
+        {(mode === 'edit' || mode === 'add') ? (
           <TextInput
             style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
             value={this.state.editedTitle}
@@ -131,7 +131,7 @@ export class PopUpModal extends React.Component {
   renderItem = (item, mode) => {
     return (
       <>
-        {mode === 'edit' ? (
+        {(mode === 'edit' || mode === 'add') ? (
           <View style={styles.editStyle}>
             <View style={{ height: '50%' }}>
               <TextInput

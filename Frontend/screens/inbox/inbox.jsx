@@ -22,6 +22,7 @@ function Inbox() {
   const [selectAll, setSelectAll] = useState(false);
   let moveRef = React.createRef();
   let editRef = React.createRef();
+  let addRef = React.createRef();
   const authState = useContext(AuthContext);
 
 
@@ -43,7 +44,6 @@ function Inbox() {
 
       setTasks(tasksDB)
       setSelectedTasks(seletedAux)
-      console.log("SELECTED TASK", seletedAux)
     }
 
     if (!isDataLoaded) {
@@ -53,14 +53,14 @@ function Inbox() {
 
   }, [authState]);
 
-  const addTask = async () => {
-    if (taskText.trim() !== "") {
-      const taskData = { title: taskText };
-      const taskId = await taskService.createTask(taskData);
+  const addTask = async (task) => {
+    console.log("Nueva task", task)
+    if (task.title.trim() !== "") {
+      const taskId = await taskService.createTask(task);
       if (taskId !== -1) {
-        setTasks([...tasks, { task_id: taskId, title: taskText }]);
-        setTaskText("");
-        setIsModalVisible(false);
+        setTasks([...tasks, task]);
+        // setTaskText("");
+        // setIsModalVisible(false);
       } else {
         console.error("Error al agregar tarea a la base de datos");
       }
@@ -118,7 +118,6 @@ function Inbox() {
     let factor = aux[taskId] ? -1 : 1 
     aux[taskId] = !aux[taskId];
     setSelectedTasks({...aux, total: aux.total + factor});
-    console.log("ANYYY", selectedTasks)
   };
 
   const toggleSelectAll = () => {
@@ -162,6 +161,14 @@ function Inbox() {
 
   const hideEditPopUp = () => {
     editRef.hide();
+  }
+
+  const showAddPopUp = () => {
+    addRef.show();
+  }
+
+  const hideAddPopUp = () => {
+    addRef.hide();
   }
 
   const popuplist = [
@@ -273,19 +280,20 @@ function Inbox() {
         // ItemSeparatorComponent={() => <Separator />}
         />
 
-        <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+        <TouchableOpacity style={styles.addButton} onPress={showAddPopUp}>
           <FontAwesome5 name="plus" size={24} color="white" />
         </TouchableOpacity>
 
+        {/* MOVE MODAL   */}
         <PopUpModal
           title="Mover a"
           ref={(target) => moveRef = target}
           touch={hideMovePopUp}
           data={popuplist}
           mode='move'
-        >
+        />
 
-        </PopUpModal>
+        {/* EDIT MODAL   */}
         <PopUpModal
           title="Editar"
           ref={(target) => editRef = target}
@@ -293,33 +301,17 @@ function Inbox() {
           data={editingTask}
           onAccept={updateTask}
           mode='edit'
-        >
+        />
 
-        </PopUpModal>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <View style={styles.modalView}>
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Enter a new task"
-              value={taskText}
-              onChangeText={(text) => setTaskText(text)}
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setIsModalVisible(false)}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.button} onPress={addTask}>
-                <Text style={styles.buttonText}>Add Task</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        {/* ADD MODAL   */}
+        <PopUpModal
+          title="Añadir"
+          ref={(target) => addRef = target}
+          touch={hideAddPopUp}
+          data={[{title: ""}]}
+          onAccept={addTask}
+          mode='add'
+        />
       </NativeBaseProvider>
     </View>
   );
