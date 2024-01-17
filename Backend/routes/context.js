@@ -5,7 +5,7 @@ const contextValidator = require('./validators/contextValidator')
 const checkValidations = require('./validators/validationUtils')
 router.post('/', contextValidator.validateCreate(), checkValidations, async (req, res)=>{//create
     try{
-        const context = req.body.name;
+        const context = req.body;
         const t = contextService.createContext(context);
         res.send(t);
     }catch(err){
@@ -14,10 +14,10 @@ router.post('/', contextValidator.validateCreate(), checkValidations, async (req
     }
 })
 
-router.post('/:id', async (req, res)=>{//delete
+router.delete('/:id', async (req, res)=>{//delete
     try{
-        const context = req.body.name;
-        const t = contextService.deleteContext(context);
+        const id = req.params.id;
+        const t = contextService.deleteContext(id);
         res.send(t);
     }catch(err){
         console.log('[Exception]:',err.message)
@@ -28,7 +28,8 @@ router.post('/:id', async (req, res)=>{//delete
 router.post('/:id', async (req, res)=>{//modify
     try{
         const context = req.body;
-        const t = taskService.modifyContext(context);
+        const id=req.params.id;
+        const t = contextService.modifyContext(context, id);
         res.send(t);
     }catch(err){
         console.log('[Exception]:',err.message)
@@ -38,7 +39,7 @@ router.post('/:id', async (req, res)=>{//modify
 
 router.get('/:id', async (req, res)=>{//find
   try {
-    const context = req.body.name;
+    const context = req.params.id;
     const t = await contextService.findContext(context);
     res.send(t);
   } catch (error) {

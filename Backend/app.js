@@ -17,6 +17,7 @@ const taskRouter = require('./routes/task');
 const tagsRouter = require('./routes/tags');
 const authRouter = require('./routes/auth');
 const projectRouter = require('./routes/project');
+const contextRouter = require('./routes/context');
 
 const app = express();
 
@@ -33,7 +34,8 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/task', oauthServer.authenticate(), taskRouter);
 app.use('/tag', tagsRouter);
-app.use('/project',oauthServer.authenticate(), projectRouter)
+app.use('/project',oauthServer.authenticate(), projectRouter);
+app.use('/context',oauthServer.authenticate(), contextRouter);
 // Get secret.
 app.get('/secret', oauthServer.authenticate(), function (req, res) {
   // Will require a valid access_token.
