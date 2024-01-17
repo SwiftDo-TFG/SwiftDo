@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
-import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox } from "native-base";
+import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+
 
 import styles from './inbox.styles'
 import { PopUpModal } from "../../components/PopUpModal";
@@ -13,7 +14,6 @@ import SelectableTask from "./selectableTask";
 
 function Inbox() {
   const [tasks, setTasks] = useState([]);
-  const [taskText, setTaskText] = useState("");
   const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -36,7 +36,7 @@ function Inbox() {
       console.log("Estas son las tareas que se devuelven", tasksDB)
       // const actualtask = tasks.concat(tasksDB)
       const seletedAux = {}
-      tasksDB.forEach(task=>{
+      tasksDB.forEach(task => {
         seletedAux[task.task_id] = false;
       })
 
@@ -83,8 +83,9 @@ function Inbox() {
   }
 
   const updateTask = async (updatedTask) => {
+    console.log(updatedTask.description.length)
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
-  
+
     if (updatedTaskResult !== -1) {
       const updatedTasks = tasks.map((task) =>
         task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
@@ -116,9 +117,9 @@ function Inbox() {
 
   const toggleSelectTask = (taskId) => {
     let aux = selectedTasks
-    let factor = aux[taskId] ? -1 : 1 
+    let factor = aux[taskId] ? -1 : 1
     aux[taskId] = !aux[taskId];
-    setSelectedTasks({...aux, total: aux.total + factor});
+    setSelectedTasks({ ...aux, total: aux.total + factor });
   };
 
   const toggleSelectAll = () => {
@@ -137,7 +138,7 @@ function Inbox() {
       selecteds[task.task_id] = !selectAll;
     });
 
-    setSelectedTasks({...selecteds, total: !selectAll ? tasks.length : 0})
+    setSelectedTasks({ ...selecteds, total: !selectAll ? tasks.length : 0 })
     setSelectAll(!selectAll);
   };
 
@@ -163,11 +164,11 @@ function Inbox() {
     editRef.hide();
   }
 
-  const showAddPopUp = () => {
+  const showAddTaskPopUp = () => {
     addRef.show();
   }
 
-  const hideAddPopUp = () => {
+  const hideAddTaskPopUp = () => {
     addRef.hide();
   }
 
@@ -235,10 +236,10 @@ function Inbox() {
                 <Checkbox
                   value={selectAll}
                   onChange={toggleSelectAll}
-                  borderColor={"#f39f18"}
-                  _checked={{ borderColor: "#f39f18", bgColor: "#f39f18" }}
-                  style={{ marginLeft: 10 }}
-                />
+                  style={{ borderWidth: 0, padding: 0, backgroundColor: 'transparent' }}
+                >
+                  <Icon style={{ marginLeft: -18 }} size={6} color="#f39f18" as={selectAll ? <MaterialCommunityIcons name="checkbox-multiple-marked-circle" /> : <MaterialCommunityIcons name="checkbox-multiple-blank-circle-outline" />} />
+                </Checkbox>
               )}
             </View>
           </VStack>
@@ -280,9 +281,51 @@ function Inbox() {
         // ItemSeparatorComponent={() => <Separator />}
         />
 
-        <TouchableOpacity style={styles.addButton} onPress={showAddPopUp}>
+        <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
           <FontAwesome5 name="plus" size={24} color="white" />
         </TouchableOpacity>
+
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType={"fade"}
+        >
+          <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalStyle}>
+                <TouchableOpacity onPress={() => {
+                  setIsModalVisible(false)
+                  showAddTaskPopUp()
+                }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
+                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                      Tarea
+                    </Text>
+                  </View>
+                  <View style={{ marginBottom: 20, marginLeft: 6 }}>
+                    <Text style={{ color: "#2C3E50" }}>Organiza y estructura las acciones y actividades que tienes previsto llevar a cabo.</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  setIsModalVisible(false)
+                }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="hexagon-slice-6" size={26} color="#2C3E50" />
+                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                      Proyecto
+                    </Text>
+                  </View>
+                  <View style={{ marginLeft: 6 }}>
+                    <Text style={{ color: "#2C3E50" }}>Planifica tus actividades para progresar de manera metódica y alcanza cada objetivo en tu proyecto GTD.</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
 
         {/* MOVE MODAL   */}
         <PopUpModal
@@ -307,8 +350,8 @@ function Inbox() {
         <PopUpModal
           title="Añadir"
           ref={(target) => addRef = target}
-          touch={hideAddPopUp}
-          data={[{title: ""}]}
+          touch={hideAddTaskPopUp}
+          data={[{ title: "" }]}
           onAccept={addTask}
           mode='add'
         />

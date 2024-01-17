@@ -92,7 +92,7 @@ export class PopUpModal extends React.Component {
             placeholder="Nueva Tarea"
             onChangeText={this.onTitleChange}
             maxLength={50}
-            multiline={false}
+            multiline={true}
           />
         ) : (
           <Text style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10 }}>
@@ -140,6 +140,8 @@ export class PopUpModal extends React.Component {
                 value={this.state.editedDescription}
                 placeholder="Descripcion..."
                 onChangeText={this.onDescriptionChange}
+                multiline={true}
+                maxLength={200}
               />
             </View>
             <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
@@ -186,7 +188,7 @@ export class PopUpModal extends React.Component {
                       title: this.state.editedTitle,
                       description: this.state.editedDescription,
                     };
-                
+
                     this.props.onAccept(updatedTask);
                     this.hide();
                   }}>
@@ -218,7 +220,7 @@ export class PopUpModal extends React.Component {
 
     return (
       <Modal animationType={'fade'} transparent={true} visible={this.state.show} onRequestClose={this.close}>
-        <View style={{ flex: 1, backgroundColor: '#000000AA', justifyContent: 'flex-end' }}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end' }}>
           {this.renderOutside(touch)}
           <Animated.View
             style={{

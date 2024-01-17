@@ -19,13 +19,12 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         marginBottom: 10,
-        height: 52
+        height: 52,
     },
     innerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: '100%',
     },
     trashIcon: {
         marginLeft: 'auto',
@@ -166,6 +165,26 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalStyle:{
+        backgroundColor: 'white',
+        margin: 20,
+        borderRadius: 16,
+        paddingHorizontal: 30,
+        paddingVertical: 20,
+        shadowColor: '#000',
+        shadowOffset:{
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }
 });
 
 export default styles;
