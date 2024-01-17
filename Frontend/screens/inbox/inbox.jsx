@@ -58,6 +58,7 @@ function Inbox() {
     if (task.title.trim() !== "") {
       const taskId = await taskService.createTask(task);
       if (taskId !== -1) {
+        task.task_id = taskId;
         setTasks([...tasks, task]);
         // setTaskText("");
         // setIsModalVisible(false);
@@ -150,7 +151,6 @@ function Inbox() {
 
   const showEditPopUp = (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
-
     if (taskToEdit) {
       setEditingTask([taskToEdit]);
       editRef.show();

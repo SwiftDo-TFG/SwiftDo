@@ -21,9 +21,8 @@ export class PopUpModal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { data } = this.props;
-    const { editedTitle, editedDescription, mode } = this.state;
-
+    const { data, mode } = this.props;
+    const { editedTitle, editedDescription } = this.state;
     if (!this.isEditingTitle && mode === 'edit') {
       if (data.length > 0 && editedTitle !== data[0].title) {
         this.setState({ editedTitle: data[0].title });
@@ -66,6 +65,8 @@ export class PopUpModal extends React.Component {
 
   hide = () => {
     this.setState({ show: false });
+    this.setState({ editedTitle: '' });
+    this.setState({ editedDescription: '' });
     this.isEditingTitle = false;
     this.isEditingDescription = false;
   };
