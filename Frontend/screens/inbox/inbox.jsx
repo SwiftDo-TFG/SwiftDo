@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
-import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox } from "native-base";
+import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+
 
 import styles from './inbox.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
+import SelectableTask from "./selectableTask";
 
 
 function Inbox() {
   const [tasks, setTasks] = useState([]);
-  const [taskText, setTaskText] = useState("");
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState({});
@@ -21,6 +22,7 @@ function Inbox() {
   const [selectAll, setSelectAll] = useState(false);
   let moveRef = React.createRef();
   let editRef = React.createRef();
+  let addRef = React.createRef();
   const authState = useContext(AuthContext);
 
 
@@ -32,8 +34,16 @@ function Inbox() {
       }
 
       console.log("Estas son las tareas que se devuelven", tasksDB)
-      const actualtask = tasks.concat(tasksDB)
-      setTasks(actualtask)
+      // const actualtask = tasks.concat(tasksDB)
+      const seletedAux = {}
+      tasksDB.forEach(task => {
+        seletedAux[task.task_id] = false;
+      })
+
+      seletedAux.total = 0;
+
+      setTasks(tasksDB)
+      setSelectedTasks(seletedAux)
     }
 
     if (!isDataLoaded) {
@@ -43,25 +53,19 @@ function Inbox() {
 
   }, [authState]);
 
-  const addTask = async () => {
-    if (taskText.trim() !== "") {
-      const taskData = { title: taskText };
-      const taskId = await taskService.createTask(taskData);
+  const addTask = async (task) => {
+    console.log("Nueva task", task)
+    if (task.title.trim() !== "") {
+      const taskId = await taskService.createTask(task);
       if (taskId !== -1) {
-        setTasks([...tasks, { task_id: taskId, title: taskText }]);
-        setTaskText("");
-        setIsModalVisible(false);
+        task.task_id = taskId;
+        setTasks([...tasks, task]);
+        // setTaskText("");
+        // setIsModalVisible(false);
       } else {
         console.error("Error al agregar tarea a la base de datos");
       }
     }
-  };
-
-
-  const getTaskItemStyle = (isSelected) => {
-    return {
-      ...styles.taskContainer,
-    };
   };
 
   const deleteTask = (taskId) => {
@@ -78,12 +82,13 @@ function Inbox() {
     setSelectedTasks([]);
   }
 
-  const updateTask = async (updatedTitle) => {
-    const updatedTask = await taskService.updateTask(editingTask[0].task_id, { title: updatedTitle });
+  const updateTask = async (updatedTask) => {
+    console.log(updatedTask.description.length)
+    const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
 
-    if (updatedTask !== -1) {
+    if (updatedTaskResult !== -1) {
       const updatedTasks = tasks.map((task) =>
-        task.task_id === editingTask[0].task_id ? { ...task, title: updatedTitle } : task
+        task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
       );
       setTasks(updatedTasks);
     } else {
@@ -111,211 +116,31 @@ function Inbox() {
   }
 
   const toggleSelectTask = (taskId) => {
-    setSelectedTasks((prevSelectedTasks) => {
-      if (prevSelectedTasks.includes(taskId)) {
-        return prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId);
-      } else {
-        return [...prevSelectedTasks, taskId];
-      }
-    }
-    );
+    let aux = selectedTasks
+    let factor = aux[taskId] ? -1 : 1
+    aux[taskId] = !aux[taskId];
+    setSelectedTasks({ ...aux, total: aux.total + factor });
   };
 
   const toggleSelectAll = () => {
-    if (selectedTasks.length === tasks.length) {
-      setSelectedTasks([]);
-      setSelectAll(false);
-    } else {
-      const allTaskIds = tasks.map(task => task.task_id);
-      setSelectedTasks(allTaskIds);
-      setSelectAll(true);
-    }
+    // if (selectedTasks.length === tasks.length) {
+    //   setSelectedTasks([]);
+    //   setSelectAll(false);
+    // } else {
+    //   const allTaskIds = tasks.map(task => task.task_id);
+    //   setSelectedTasks(allTaskIds);
+    //   setSelectAll(true);
+    // }
+
+    let selecteds = selectedTasks;
+
+    tasks.forEach(task => {
+      selecteds[task.task_id] = !selectAll;
+    });
+
+    setSelectedTasks({ ...selecteds, total: !selectAll ? tasks.length : 0 })
+    setSelectAll(!selectAll);
   };
-
-  const LeftSwipeActions = () => {
-    // const width = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: ['30%', '100%'],
-    //   extrapolate: 'clamp',
-    // });
-    // const borderTopRightRadius = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [0, 10],
-    //   extrapolate: 'clamp',
-    // });
-    // const borderBottomRightRadius = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [0, 10],
-    //   extrapolate: 'clamp',
-    // });
-
-    return (
-      // <Animated.View
-      <TouchableOpacity
-        // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
-        style={[styles.leftSwipe]}
-        onPress={showMovePopUp}
-      >
-        <Text
-          style={{
-            paddingHorizontal: '5%',
-            paddingVertical: '10%',
-          }}
-        // style={{
-        //   paddingHorizontal: 10,
-        //   fontWeight: "600",
-        //   paddingHorizontal: 30,
-        //   paddingVertical: 20,
-        // }}
-        >
-          <Entypo name="archive" size={20} color="white" />
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  const RightSwipeActions = ({ onDelete, id, translateX }) => {
-    return (
-      <TouchableOpacity
-        style={[styles.rightSwipe, { transform: [{ translateX: translateX }], }]}
-        onPress={() => onDelete(id)}
-      >
-        <Text
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: '5%',
-            paddingVertical: '10%',
-          }}
-        >
-          <FontAwesome5
-            name="trash"
-            size={20}
-            color="white"
-          />
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-
-
-  const SelectableTask = ({ id, title, isSelected, onPress, onDelete, scale, opacity }) => {
-    const [isSwiped, setIsSwiped] = useState(true);
-    const translateX = useRef(new Animated.Value(0)).current;
-    const leftActions = selectedTasks.length > 0 ? () => null : () => LeftSwipeActions();
-    const rightActions = selectedTasks.length > 0 ? () => null : () => RightSwipeActions({ onDelete, id, translateX });
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    // const backgroundTask = translateX.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
-    //   extrapolate: 'clamp',
-    // });
-
-    useEffect(() => {
-      const subscription = translateX.addListener(({ value }) => {
-        // setIsSwiped(value === 0);
-      });
-
-      return () => {
-        translateX.removeListener(subscription);
-      };
-    }, [translateX]);
-
-    return (<Swipeable
-      renderLeftActions={leftActions}
-      renderRightActions={rightActions}
-      onSwipeableClose={() => {
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }}
-      overshootLeft={false}
-      overshootRight={false}
-      onSwipeableLeftWillOpen={() => {
-        Animated.timing(translateX, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          setTimeout(() => {
-            //ArchiveTask(id, title);
-          }, 200);
-        });
-      }}
-      onSwipeableLeftWillClose={() => {
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }}
-      friction={2}
-    >
-      <TouchableWithoutFeedback
-        // onLongPress={() => onPress(id)}
-        onPress={() => {
-          // if (isSelected) onPress(id);
-          setIsMenuVisible(!isMenuVisible);
-        }}
-      >
-        <Animated.View style={[getTaskItemStyle(isSelected), { backgroundColor: isSelected ? '#ebd7b5' : '#f2f2f2', transform: [{ scale }], opacity }]}>
-          {isSwiped && (
-            <View style={styles.innerContainer}>
-              <View style={[
-                { flex: 1 },
-                { flexDirection: 'row' },
-                { alignItems: 'center' },
-              ]}>
-                <TouchableOpacity onPress={() => onPress(id)} style={{ marginRight: '5%' }}>
-                  {!isSelected && (
-                    <FontAwesome name="circle-o" size={24} color="#a0a0a0" />
-                  )}
-                  {isSelected && (
-                    <FontAwesome name="check-circle" size={24} color="#f39f18" />
-                  )}
-                </TouchableOpacity>
-                <Text>{title}</Text>
-              </View>
-              {!isSelected && isMenuVisible && (
-                <Menu
-                  trigger={(triggerProps) => (
-                    <TouchableOpacity {...triggerProps}>
-                      <Entypo name="dots-three-vertical" size={20} color="#a0a0a0" />
-                    </TouchableOpacity>
-                  )}
-                  style={styles.menuContainer}
-                  placement="left"
-                >
-                  <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
-                  {/* <Separator /> */}
-                  <Menu.Item style={styles.menuItem}
-                    onPress={() => { showEditPopUp(id, title) }}>
-                    Editar
-                  </Menu.Item>
-                </Menu>
-              )}
-            </View>
-          )}
-        </Animated.View >
-      </TouchableWithoutFeedback>
-    </Swipeable>)
-  };
-
-  // const Separator = () => (
-  //   <View
-  //     style={{
-  //       height: 1,
-  //       width: "100%",
-  //       backgroundColor: "#CED0CE",
-  //       marginLeft: "auto",
-  //       marginRight: "auto",
-  //     }}
-  //   />
-  // );
 
   const showMovePopUp = () => {
     moveRef.show();
@@ -325,13 +150,26 @@ function Inbox() {
     moveRef.hide();
   }
 
-  const showEditPopUp = (id, title) => {
-    setEditingTask([{ task_id: id, title: title }]);
-    editRef.show();
+  const showEditPopUp = (id) => {
+    const taskToEdit = tasks.find(task => task.task_id === id);
+    if (taskToEdit) {
+      setEditingTask([taskToEdit]);
+      editRef.show();
+    } else {
+      console.error(`No se encontró la tarea con ID: ${id}`);
+    }
   }
 
   const hideEditPopUp = () => {
     editRef.hide();
+  }
+
+  const showAddTaskPopUp = () => {
+    addRef.show();
+  }
+
+  const hideAddTaskPopUp = () => {
+    addRef.hide();
   }
 
   const popuplist = [
@@ -368,10 +206,10 @@ function Inbox() {
   return (
     <View style={styles.container}>
       <NativeBaseProvider>
-        {selectedTasks.length > 0 && (
+        {selectedTasks.total > 0 && (
           <VStack>
             <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
-              <Text>Seleccionado: ({selectedTasks.length})</Text>
+              <Text>Seleccionado: ({selectedTasks.total})</Text>
               <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => archiveSelectedTask()}>
                   <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
@@ -398,10 +236,10 @@ function Inbox() {
                 <Checkbox
                   value={selectAll}
                   onChange={toggleSelectAll}
-                  borderColor={"#f39f18"}
-                  _checked={{ borderColor: "#f39f18", bgColor:"#f39f18"}}
-                  style={{ marginLeft: 10 }}
-                />
+                  style={{ borderWidth: 0, padding: 0, backgroundColor: 'transparent' }}
+                >
+                  <Icon style={{ marginLeft: -18 }} size={6} color="#f39f18" as={selectAll ? <MaterialCommunityIcons name="checkbox-multiple-marked-circle" /> : <MaterialCommunityIcons name="checkbox-multiple-blank-circle-outline" />} />
+                </Checkbox>
               )}
             </View>
           </VStack>
@@ -430,13 +268,14 @@ function Inbox() {
             })
 
             return (<SelectableTask
-              id={item.task_id}
-              title={item.title}
-              isSelected={selectedTasks.includes(item.task_id)}
+              task={item}
               onPress={() => toggleSelectTask(item.task_id)}
               onDelete={deleteTask}
               scale={scale}
               opacity={opacity}
+              selectedTasks={selectedTasks}
+              showMovePopUp={showMovePopUp}
+              showEditPopUp={showEditPopUp}
             />)
           }}
         // ItemSeparatorComponent={() => <Separator />}
@@ -446,15 +285,58 @@ function Inbox() {
           <FontAwesome5 name="plus" size={24} color="white" />
         </TouchableOpacity>
 
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType={"fade"}
+        >
+          <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalStyle}>
+                <TouchableOpacity onPress={() => {
+                  setIsModalVisible(false)
+                  showAddTaskPopUp()
+                }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
+                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                      Tarea
+                    </Text>
+                  </View>
+                  <View style={{ marginBottom: 20, marginLeft: 6 }}>
+                    <Text style={{ color: "#2C3E50" }}>Organiza y estructura las acciones y actividades que tienes previsto llevar a cabo.</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  setIsModalVisible(false)
+                }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="hexagon-slice-6" size={26} color="#2C3E50" />
+                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                      Proyecto
+                    </Text>
+                  </View>
+                  <View style={{ marginLeft: 6 }}>
+                    <Text style={{ color: "#2C3E50" }}>Planifica tus actividades para progresar de manera metódica y alcanza cada objetivo en tu proyecto GTD.</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        {/* MOVE MODAL   */}
         <PopUpModal
           title="Mover a"
           ref={(target) => moveRef = target}
           touch={hideMovePopUp}
           data={popuplist}
           mode='move'
-        >
+        />
 
-        </PopUpModal>
+        {/* EDIT MODAL   */}
         <PopUpModal
           title="Editar"
           ref={(target) => editRef = target}
@@ -462,33 +344,17 @@ function Inbox() {
           data={editingTask}
           onAccept={updateTask}
           mode='edit'
-        >
+        />
 
-        </PopUpModal>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <View style={styles.modalView}>
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Enter a new task"
-              value={taskText}
-              onChangeText={(text) => setTaskText(text)}
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setIsModalVisible(false)}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.button} onPress={addTask}>
-                <Text style={styles.buttonText}>Add Task</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        {/* ADD MODAL   */}
+        <PopUpModal
+          title="Añadir"
+          ref={(target) => addRef = target}
+          touch={hideAddTaskPopUp}
+          data={[{ title: "" }]}
+          onAccept={addTask}
+          mode='add'
+        />
       </NativeBaseProvider>
     </View>
   );

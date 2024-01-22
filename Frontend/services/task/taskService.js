@@ -18,6 +18,7 @@ instance.interceptors.request.use(authUtils.setAuthHeaders, function (error) {
 instance.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
+    console.log("EL ERROR", error)
     if(error.response.status === 401){
         authUtils.clearToken();
     }

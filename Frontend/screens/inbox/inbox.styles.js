@@ -19,13 +19,12 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         marginBottom: 10,
-        height: 52
+        height: 52,
     },
     innerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: '100%',
     },
     trashIcon: {
         marginLeft: 'auto',
@@ -101,11 +100,55 @@ const styles = StyleSheet.create({
         padding: 6,
         fontSize: 16,
     },
+    editContainer: {
+        flex: 1,
+        justifyContent: 'space-between',
+        marginLeft: 20,
+    },
+    moveContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    editStyle: {
+        flex: 1,
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+    },
+    editTextInput: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#182E44',
+        borderBottomWidth: 1,
+        borderColor: '#182E44',
+        backgroundColor: 'red',
+    },
+    editButtonContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+        justifyContent: 'center',
+        backgroundColor: 'blue',
+    },
+    moveStyle: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    moveContent: {
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    moveText: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#182E44',
+    },
     acceptButton: {
-        backgroundColor: '#15ba53',
-        padding: 10,
+        backgroundColor: '#f39f18',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
         borderRadius: 5,
-        marginRight: 10,
     },
     acceptButtonText: {
         color: 'white',
@@ -122,6 +165,26 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalStyle:{
+        backgroundColor: 'white',
+        margin: 20,
+        borderRadius: 16,
+        paddingHorizontal: 30,
+        paddingVertical: 20,
+        shadowColor: '#000',
+        shadowOffset:{
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }
 });
 
 export default styles;

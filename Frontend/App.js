@@ -14,6 +14,7 @@ import Programadas from './screens/programadas/programadas'
 
 // ICONS
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import SideBar from './components/SideBar/SideBar';
 
 const Drawer = createDrawerNavigator();
 
@@ -44,7 +45,9 @@ function Router() {
   }, []);
 
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      // drawerContent={(props) => <SideBar {...props}/>}
+    >
       {state.userToken == null ? (
         // No token found, user isn't signed in
         <>

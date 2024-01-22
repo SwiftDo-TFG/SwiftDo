@@ -10,4 +10,4 @@ contextValidator.validateCreate = () => {
 }
 
 
-module.exports = tagValidators;
+module.exports = contextValidator;
