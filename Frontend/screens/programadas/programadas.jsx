@@ -3,12 +3,51 @@ import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar 
 import SelectableTask from "../inbox/selectableTask";
 import styles from './programadas.styles'
 import utils from "./calendar/utils"
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 
 const ProgramadasScreen = (props) => {
     const [calendarHeight, setCalendarHeight] = useState(0);
+    const [tasks, setTasks] = useState([]);
+    const marked = useRef(utils.getMarkedDates(tasks));
 
+    useEffect(()=>{
+        //Fetch tasks
+        //setTasks()
+
+        setTasks([{
+            title: '2024-01-17',
+            data: [{ task_id: 1, title: 'Task 1, this is the title' }, { task_id: 2, title: 'Task 2, this is the title' }]
+        },
+        {
+            title: '2024-01-18',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-01-19',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-01-23',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-01-27',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-01-29',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-01-30',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        },
+        {
+            title: '2024-02-15',
+            data: [{ task_id: 3, title: 'Task 23, this is the title' }, { task_id: 4, title: 'Task 26, this is the title' }]
+        }])
+    }, [])
 
     return (
         // <Agenda
@@ -123,57 +162,10 @@ const ProgramadasScreen = (props) => {
         //     // Agenda container style
         //     style={{}}
         // />
-        <CalendarProvider date={'2023-01-17'}>
-            <WeekCalendar testID={"weekCalendar"} firstDay={1}/>
+        <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
+            <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current}/>
             <AgendaList
-                // sections={{
-                //     '2024-01-17': [{ task_id: 1, title: 'Task 1, this is the title' }],
-                // }}
-                sections={[{
-                    title: '2024-01-17',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }, { task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-01-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-02-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-03-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-04-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-05-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-06-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-07-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-08-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-09-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                },
-                {
-                    title: '2024-10-18',
-                    data: [{ task_id: 1, title: 'Task 1, this is the title' }]
-                }
-                ]}
+                sections={tasks}
                 renderItem={(item, firstItemInDay) => {
                     console.log("THIS IS THE ITEM", item.item)
                     return (
@@ -183,6 +175,7 @@ const ProgramadasScreen = (props) => {
                         </View>
                     );
                 }}
+                markedDates={marked.current}
 
                 // renderSectionHeader={(info) => {
                 //     console.log("THIS IS INFO", info)

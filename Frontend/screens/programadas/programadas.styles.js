@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'grey',
         textTransform: 'capitalize',
+        // textDecorationLine: 'underline'
     },
     horizontalLine:{
         marginTop: 5,

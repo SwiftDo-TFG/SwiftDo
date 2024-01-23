@@ -60,4 +60,26 @@ const parseDatetoPretty = (date) =>{
   return hoy + getFormattedDay(auxDate.getDay()) + ', ' +getFormattedMonth(auxDate.getMonth()) + " " + auxDate.getDate();
 }
 
-export default {getFormattedMonth, parseDatetoPretty};
+const getFormattedDateCalendar = (date) =>{
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const fullYear = date.getFullYear();
+
+  return fullYear + '-'+ month + '-' + day;
+}
+
+function getMarkedDates(tasks) {
+  const marked = {};
+
+  tasks.forEach(item => {
+    // NOTE: only mark dates with data
+    if (item.data && item.data.length > 0 && !item.data.length !== 0) {
+      marked[item.title] = {marked: true};
+    } else {
+      marked[item.title] = {disabled: true};
+    }
+  });
+  return marked;
+}
+
+export default {getFormattedMonth, parseDatetoPretty, getFormattedDateCalendar, getMarkedDates};
