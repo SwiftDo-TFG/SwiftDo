@@ -83,9 +83,9 @@ function Inbox() {
   }
 
   const updateTask = async (updatedTask) => {
-    console.log(updatedTask.description.length)
+    console.log(updatedTask)
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
-
+    console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
       const updatedTasks = tasks.map((task) =>
         task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
@@ -154,7 +154,7 @@ function Inbox() {
     const taskToEdit = tasks.find(task => task.task_id === id);
     if (taskToEdit) {
       setEditingTask([taskToEdit]);
-      editRef.show();
+      editRef.show(taskToEdit);
     } else {
       console.error(`No se encontró la tarea con ID: ${id}`);
     }

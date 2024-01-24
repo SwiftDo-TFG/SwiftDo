@@ -170,21 +170,42 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    modalStyle:{
+    modalStyle: {
         backgroundColor: 'white',
         margin: 20,
         borderRadius: 16,
         paddingHorizontal: 30,
         paddingVertical: 20,
         shadowColor: '#000',
-        shadowOffset:{
+        shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-    }
+    },
+    modalDatePickerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalDatePickerBackground: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalDatePickerContent: {
+        backgroundColor: '#FFFFFF',
+        width: '90%',
+        borderRadius: 10,
+        padding: 20,
+    },
+    closeDatePickerButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 2,
+    },
 });
 
 export default styles;

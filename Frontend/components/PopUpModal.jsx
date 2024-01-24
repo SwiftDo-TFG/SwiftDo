@@ -1,13 +1,16 @@
 import { FlatList, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import { Animated, Modal, Dimensions, TouchableWithoutFeedback, View, Text } from 'react-native';
+import { StyleSheet, Animated, Modal, Dimensions, TouchableWithoutFeedback, View, Text } from 'react-native';
 import styles from '../screens/inbox/inbox.styles'
 import Modalize from 'react-native-modalize'
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import DatePicker from 'react-native-modern-datepicker';
+
 
 
 
 const dvHeight = Dimensions.get('window').height;
+const today = new Date();
 
 export class PopUpModal extends React.Component {
   constructor(props) {
@@ -17,23 +20,19 @@ export class PopUpModal extends React.Component {
       show: false,
       editedTitle: '',
       editedDescription: '',
+      isImportant: false,
+      date: 'Fecha',
+      showDatePicker: false,
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const { data, mode } = this.props;
-    const { editedTitle, editedDescription } = this.state;
-    if (!this.isEditingTitle && mode === 'edit') {
-      if (data.length > 0 && editedTitle !== data[0].title) {
-        this.setState({ editedTitle: data[0].title });
-      }
-    }
-    if (!this.isEditingDescription && mode === 'edit') {
-      if (data.length > 0 && editedDescription !== data[0].description) {
-        this.setState({ editedDescription: data[0].description });
-      }
-    }
+  toggleImportant = () => {
+    this.setState((prevState) => ({
+      isImportant: !prevState.isImportant,
+    }));
+  };
 
+  componentDidUpdate(prevProps) {
     if (this.state.show !== prevProps.show) {
       this.animateModal();
     }
@@ -59,14 +58,20 @@ export class PopUpModal extends React.Component {
     this.isEditingDescription = true;
   };
 
-  show = () => {
+  show = (task) => {
     this.setState({ show: true });
+    if (task) {
+      this.setState({ editedTitle: task.title });
+      this.setState({ editedDescription: task.description });
+      this.setState({ isImportant: task.important_fixed })
+    }
   };
 
   hide = () => {
     this.setState({ show: false });
     this.setState({ editedTitle: '' });
     this.setState({ editedDescription: '' });
+    this.setState({ isImportant: false })
     this.isEditingTitle = false;
     this.isEditingDescription = false;
   };
@@ -146,10 +151,10 @@ export class PopUpModal extends React.Component {
             </View>
             <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
                   <Text style={{ color: '#a0a0a0' }}>
                     <Ionicons name="calendar-outline" size={22} color="#a0a0a0" />
-                    &nbsp; Fecha
+                    &nbsp; {this.state.date}
                   </Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '30%' }}>
@@ -163,9 +168,13 @@ export class PopUpModal extends React.Component {
                       <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={this.toggleImportant}>
                     <Text>
-                      <Feather name="flag" size={22} color="#a0a0a0" />
+                      {this.state.isImportant ? (
+                        <Ionicons name="flag" size={22} color="#be201c" />
+                      ) : (
+                        <Ionicons name="flag-outline" size={22} color="#a0a0a0" />
+                      )}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity>
@@ -187,6 +196,7 @@ export class PopUpModal extends React.Component {
                       ...item,
                       title: this.state.editedTitle,
                       description: this.state.editedDescription,
+                      important_fixed: this.state.isImportant
                     };
 
                     this.props.onAccept(updatedTask);
@@ -238,10 +248,66 @@ export class PopUpModal extends React.Component {
             {this.renderTitle(mode)}
             {this.renderContent(mode)}
           </Animated.View>
+          <Modal
+            transparent={true}
+            animationType={'fade'}
+            visible={this.state.showDatePicker}
+            onRequestClose={() => this.setState({ showDatePicker: false })}
+          >
+            <View style={styles.modalDatePickerContainer}>
+
+              <TouchableWithoutFeedback onPress={() => this.setState({ showDatePicker: false })}>
+
+                <View style={styles.modalDatePickerBackground} />
+              </TouchableWithoutFeedback>
+
+              <View style={[styles.modalDatePickerContent, { zIndex: 2 }]}>
+                <DatePicker
+                  onSelectedChange={(date) => {
+                    this.setState({ date: date, showDatePicker: false });
+                  }}
+                  current={today.toISOString().split('T')[0]}
+                  minimumDate={today.toISOString().split('T')[0]}
+                  options={{
+                    backgroundColor: '#ffffff',
+                    textHeaderColor: '#666666',
+                    textDefaultColor: '#808080',
+                    selectedTextColor: 'white',
+                    mainColor: '#f39f18',
+                    textSecondaryColor: '#f39f18',
+                  }}
+                  configs={{
+                    dayNames: [
+                      "Domingo",
+                      "Lunes",
+                      "Martes",
+                      "Miércoles",
+                      "Jueves",
+                      "Viernes",
+                      "Sábado",
+                    ],
+                    dayNamesShort: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                    monthNames: [
+                      "Enero",
+                      "Febrero",
+                      "Marzo",
+                      "Abril",
+                      "Mayo",
+                      "Junio",
+                      "Julio",
+                      "Agosto",
+                      "Septiembre",
+                      "Octubre",
+                      "Noviembre",
+                      "Diciembre",
+                    ],
+                  }}
+                />
+              </View>
+            </View>
+          </Modal>
         </View>
       </Modal>
     );
   }
 }
-
-
