@@ -54,6 +54,15 @@ taskService.findTaskById = async (id)=>{
     return res.rows[0];
 }
 
+taskService.findTasksByFilters = async (user_id, filters)=>{
+    const filterdQuery = addFiltersToQuery('SELECT * FROM tasks WHERE user_id = $1', filters);
+    filterdQuery.values.unshift(user_id);
+
+    const res = await db.query(filterdQuery.query, filterdQuery.values)
+
+    return res.rows;
+}
+
 taskService.findTaskByUserId = async (id)=>{
     const res = await db.query('SELECT * FROM tasks WHERE user_id = $1 AND completed is not true', [id])
 
@@ -92,10 +101,14 @@ function completeTaskDefValues(task){
     if(!task.state){
         task.state = 1; //Inbox default
     }
-    task.completed = false
+    task.completed = false;
     task.date_added = new Date();
     task.date_changed = new Date();
     task.num_version = 1;
+    
+    if(task.important_fixed){
+        task.important_fixed = false;
+    }
     
     return task
 }
@@ -114,6 +127,59 @@ function updateTaskDefValues(task, newTask){
     newTask = Object.assign(task, newTask)
 
     return newTask
+}
+
+function addFiltersToQuery(query, filters){
+    let finalQuery = query;
+    let nextParam = 0;
+    const paramNumbers = ["$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9"]
+    let finalFilters = {}
+
+    if(filters.context_id){
+        finalQuery = finalQuery.concat(" AND context_id = ")
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalFilters.context_id = filters.context_id;
+    }
+
+    if(filters.project_id){
+        finalQuery = finalQuery.concat(" AND project_id = ")
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalFilters.project_id = filters.project_id;
+    }
+
+    if(filters.state){
+        finalQuery = finalQuery.concat(" AND state = ")
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalFilters.state = filters.state;
+    }
+
+    if(filters.completed){
+        finalQuery = finalQuery.concat(" AND completed = ")
+        filters.completed = (/true/i).test(filters.completed);
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalFilters.completed = filters.completed;
+    }
+
+    if(filters.date_limit){
+        if(filters.date_limit === '?'){
+            finalQuery = finalQuery.concat(" AND date_limit is not null")
+        }else if (filters.date_limit === 'null'){
+            finalQuery = finalQuery.concat(" AND date_limit is null")
+        }else if(Date.parse(filters.date_limit)){
+            finalQuery = finalQuery.concat(" AND date_limit = ")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+            finalFilters.date_limit = new Date(filters.date_limit);
+        }
+    }
+
+    if(filters.important_fixed){
+        finalQuery = finalQuery.concat(" AND important_fixed = ")
+        filters.important_fixed = (/true/i).test(filters.important_fixed);
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalFilters.important_fixed = filters.important_fixed;
+    }
+
+    return {query: finalQuery, values: Object.values(finalFilters)};
 }
 
 module.exports = taskService;
