@@ -101,10 +101,14 @@ function completeTaskDefValues(task){
     if(!task.state){
         task.state = 1; //Inbox default
     }
-    task.completed = false
+    task.completed = false;
     task.date_added = new Date();
     task.date_changed = new Date();
     task.num_version = 1;
+    
+    if(task.important_fixed){
+        task.important_fixed = false;
+    }
     
     return task
 }
