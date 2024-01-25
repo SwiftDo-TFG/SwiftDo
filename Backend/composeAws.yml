@@ -10,7 +10,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      POSTGRES_HOST: localhost 
+      POSTGRES_HOST: db 
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69
       POSTGRES_DB: tfggtd
