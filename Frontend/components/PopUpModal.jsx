@@ -6,11 +6,9 @@ import Modalize from 'react-native-modalize'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DatePicker from 'react-native-modern-datepicker';
 
-
-
+const today = new Date()
 
 const dvHeight = Dimensions.get('window').height;
-const today = new Date();
 
 export class PopUpModal extends React.Component {
   constructor(props) {
@@ -21,8 +19,9 @@ export class PopUpModal extends React.Component {
       editedTitle: '',
       editedDescription: '',
       isImportant: false,
-      date: 'Fecha',
+      date_name: 'Fecha',
       showDatePicker: false,
+      selectedDate: 'Fecha',
     };
   }
 
@@ -59,11 +58,19 @@ export class PopUpModal extends React.Component {
   };
 
   show = (task) => {
+    console.log(task)
     this.setState({ show: true });
     if (task) {
       this.setState({ editedTitle: task.title });
-      this.setState({ editedDescription: task.description });
+      if (task.description) {
+        this.setState({ editedDescription: task.description });
+      }
       this.setState({ isImportant: task.important_fixed })
+      if (task.date_limit) {
+        const dateLimit = new Date(task.date_limit)
+        const formattedDate = `${dateLimit.getFullYear()}/${(dateLimit.getMonth() + 1).toString().padStart(2, '0')}/${dateLimit.getDate().toString().padStart(2, '0')} 00:00`;
+        this.setState({ date_name: formattedDate });
+      }
     }
   };
 
@@ -71,7 +78,8 @@ export class PopUpModal extends React.Component {
     this.setState({ show: false });
     this.setState({ editedTitle: '' });
     this.setState({ editedDescription: '' });
-    this.setState({ isImportant: false })
+    this.setState({ isImportant: false });
+    this.setState({ date_name: 'Fecha' });
     this.isEditingTitle = false;
     this.isEditingDescription = false;
   };
@@ -154,7 +162,7 @@ export class PopUpModal extends React.Component {
                 <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
                   <Text style={{ color: '#a0a0a0' }}>
                     <Ionicons name="calendar-outline" size={22} color="#a0a0a0" />
-                    &nbsp; {this.state.date}
+                    &nbsp; {this.state.date_name}
                   </Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '30%' }}>
@@ -192,13 +200,17 @@ export class PopUpModal extends React.Component {
                 <TouchableOpacity
                   style={styles.acceptButton}
                   onPress={() => {
-                    const updatedTask = {
-                      ...item,
-                      title: this.state.editedTitle,
-                      description: this.state.editedDescription,
-                      important_fixed: this.state.isImportant
-                    };
+                    const updatedTask = {};
+                    Object.keys(item).forEach(key => {
+                      if (item[key] !== null) {
+                        updatedTask[key] = item[key];
+                      }
+                    });
 
+                    if (this.state.date_name !== 'Fecha') updatedTask.date_limit = new Date(this.state.date_name);
+                    if (this.state.editedDescription !== '') updatedTask.description = this.state.editedDescription;
+                    updatedTask.title = this.state.editedTitle;
+                    updatedTask.important_fixed = this.state.isImportant;
                     this.props.onAccept(updatedTask);
                     this.hide();
                   }}>
@@ -257,16 +269,16 @@ export class PopUpModal extends React.Component {
             <View style={styles.modalDatePickerContainer}>
 
               <TouchableWithoutFeedback onPress={() => this.setState({ showDatePicker: false })}>
-
                 <View style={styles.modalDatePickerBackground} />
               </TouchableWithoutFeedback>
 
               <View style={[styles.modalDatePickerContent, { zIndex: 2 }]}>
                 <DatePicker
                   onSelectedChange={(date) => {
-                    this.setState({ date: date, showDatePicker: false });
+                    this.setState({ selectedDate: date });
                   }}
-                  current={today.toISOString().split('T')[0]}
+                  selected={this.state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : this.state.date_name}
+                  current={this.state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : this.state.date_name}
                   minimumDate={today.toISOString().split('T')[0]}
                   options={{
                     backgroundColor: '#ffffff',
@@ -301,8 +313,20 @@ export class PopUpModal extends React.Component {
                       "Noviembre",
                       "Diciembre",
                     ],
+                    hour: 'Hora',
+                    minute: 'Minuto',
+                    timeSelect: 'Aceptar',
+                    timeClose: 'Cerrar',
                   }}
                 />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingHorizontal: 20 }}>
+                  <TouchableOpacity onPress={() => this.setState({ showDatePicker: false })}>
+                    <Text style={{ color: '#f39f18', fontSize: 18, marginLeft: 5 }}>Cerrar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.setState({ showDatePicker: false, date_name: this.state.selectedDate })} style={{ backgroundColor: '#f39f18', paddingVertical: 8, paddingHorizontal: 20, borderRadius: 10 }}>
+                    <Text style={{ color: 'white', fontSize: 18 }}>Aceptar</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </Modal>
