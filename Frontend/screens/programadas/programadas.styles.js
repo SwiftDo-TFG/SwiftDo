@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     horizontalLine:{
         marginTop: 5,
         borderBottomColor: 'grey', borderBottomWidth: 0.5
+    },
+    selectionPanel:{
+        paddingVertical: 5, 
+        paddingHorizontal: 20
     }
 });
 
