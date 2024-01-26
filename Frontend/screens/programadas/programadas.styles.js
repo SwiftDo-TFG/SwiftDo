@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderBottomColor: 'grey', borderBottomWidth: 0.5
     },
-    selectionPanel:{
-        paddingVertical: 5, 
-        paddingHorizontal: 20
+    selectionPanel:{ 
+        paddingHorizontal: 20,
+        paddingTop: 15
     }
 });
 

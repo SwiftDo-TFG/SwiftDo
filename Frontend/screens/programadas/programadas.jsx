@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Animated } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../inbox/selectableTask";
 import styles from './programadas.styles'
@@ -171,6 +171,23 @@ const ProgramadasScreen = (props) => {
                 <AgendaList
                     sections={calendarTasks}
                     renderItem={(item, firstItemInDay) => {
+                        const scrollY = useRef(new Animated.Value(0)).current;
+                        const ITEM_SIZE = 62; //Tamaño tarea + margin
+
+                        const inputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + 2)]
+                        const scale = scrollY.interpolate({
+                            inputRange,
+                            outputRange: [1, 1, 1, 0],
+                            extrapolate: 'clamp',
+                        })
+
+                        const opacityinputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + .5)]
+                        const opacity = scrollY.interpolate({
+                            inputRange: opacityinputRange,
+                            outputRange: [1, 1, 1, 0],
+                            extrapolate: 'clamp',
+                        })
+
                         return (
                             <View style={styles.taskContainer}>
                                 <SelectableTask
@@ -178,6 +195,8 @@ const ProgramadasScreen = (props) => {
                                     showEditPopUp={showEditPopUp}
                                     showMovePopUp={showMovePopUp}
                                     onPress={() => toggleSelectTask(item.item.task_id)}
+                                    scale={scale}
+                                    opacity={opacity}
                                 />
                             </View>
                         );
