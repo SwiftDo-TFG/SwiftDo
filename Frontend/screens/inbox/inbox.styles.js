@@ -185,6 +185,12 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    textContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        width: '100%'   
+    },
     modalDatePickerContainer: {
         flex: 1,
         justifyContent: 'center',
