@@ -21,7 +21,8 @@ function SignInScreen({navigation}) {
     
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login Into TFG-GTD App</Text>
+            <Text style={styles.title}>Welcome to TFG-GTD App!</Text>
+            <Text style={styles.formTitle}>Login Into TFG-GTD App</Text>
             {authState.isLoading && <LoadingIndicator />}
             {error && <Text style={styles.textError}>Correo o contraseña no válidos</Text>}
             <TextInput

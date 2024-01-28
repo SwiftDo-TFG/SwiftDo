@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CustomButton from './components/buttons/Button';
 import SignInScreen from './screens/auth/login';
 import SingUpScren from './screens/auth/singup';
@@ -12,10 +13,11 @@ import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/inbox/inbox';
 
 // ICONS
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
 
 const Drawer = createDrawerNavigator();
+const LoginStack = createNativeStackNavigator();
 
 
 function Router() {
@@ -43,14 +45,41 @@ function Router() {
     bootstrapAsync();
   }, []);
 
+  function HomeNotLogged() {
+    return (
+      <LoginStack.Navigator>
+        <LoginStack.Screen
+          name="SignIn"
+          component={SignInScreen}
+          options={{
+            title: 'SignIn',
+            // When logging out, a pop animation feels intuitive
+            animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            headerShown: false
+          }}
+        />
+        <LoginStack.Screen
+          name="SignUp"
+          component={SingUpScren}
+          options={{
+            title: 'SignUp',
+            // When logging out, a pop animation feels intuitive
+            animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            headerShown: false
+          }}
+        />
+      </LoginStack.Navigator>
+    )
+  }
+
   return (
     <Drawer.Navigator
-      // drawerContent={(props) => <SideBar {...props}/>}
+    // drawerContent={(props) => <SideBar {...props}/>}
     >
       {state.userToken == null ? (
         // No token found, user isn't signed in
         <>
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="SignIn"
             component={SignInScreen}
             options={{
@@ -67,19 +96,20 @@ function Router() {
               // When logging out, a pop animation feels intuitive
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
-          />
+          /> */}
+          <Drawer.Screen options={{headerShown: false}} name='Test' component={HomeNotLogged}/>
         </>
       ) : (
         // User is signed in
         <>
           <Drawer.Screen name="Home" component={HomeScreen} />
           <Drawer.Screen name="About" component={AboutScreen} />
-          <Drawer.Screen name="Ejemplo" component={EjemploScreen}/>
-          <Drawer.Screen 
-            name="Inbox" 
-            component={Inbox} 
+          <Drawer.Screen name="Ejemplo" component={EjemploScreen} />
+          <Drawer.Screen
+            name="Inbox"
+            component={Inbox}
             options={{
-              title:'Inbox',
+              title: 'Inbox',
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
               ),
@@ -97,10 +127,10 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Welcome to TFG-GTD APP!</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>  
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <CustomButton
-            text="About"
-            handler={() => navigation.navigate('About')}
+          text="About"
+          handler={() => navigation.navigate('About')}
         />
         <View style={styles.verticleLine}></View>
         <CustomButton
@@ -118,8 +148,8 @@ const AboutScreen = ({ navigation }) => {
 
   return (
     <View style={styles.aboutContainer}>
-      <Text style={{marginBottom: 10, fontWeight: 'bold'}}>About TFG-GTD APP</Text>
-      <Text style={{textAlign:'justify'}}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
+      <Text style={{ marginBottom: 10, fontWeight: 'bold' }}>About TFG-GTD APP</Text>
+      <Text style={{ textAlign: 'justify' }}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
       <CustomButton
         text="Go to Home"
         handler={() => navigation.navigate('Home')}

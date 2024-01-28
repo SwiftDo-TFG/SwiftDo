@@ -3,9 +3,15 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20
+        padding: 20,
+        marginTop: 75
     },
     title: {
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 40
+    },
+    formTitle: {
         fontSize: 20,
         marginBottom: 10
     },

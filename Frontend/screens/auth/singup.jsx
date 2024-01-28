@@ -12,8 +12,9 @@ function SingUpScren({navigation}){
 
     return(
         <View style={styles.container}>
+            <Text style={styles.title}>Welcome to TFG-GTD App!</Text>
             {error.isError && <Text style={styles.textError}>{error.msg}</Text>}
-            <Text style={styles.title}>Sign Up Into TFG-GTD App</Text>
+            <Text style={styles.formTitle}>Sign Up Into TFG-GTD App</Text>
             <TextInput
                 placeholder="Email"
                 value={email}
