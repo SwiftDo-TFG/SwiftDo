@@ -25,9 +25,12 @@ instance.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-const getTasks = async () => {
+const getTasks = async (filters) => {
+    const urlparams = new URLSearchParams(filters)
+    console.log("urlparams", urlparams.toString())
+
     try {
-        const response = await instance.get('/task/');
+        const response = await instance.get('/task/?'+ urlparams.toString());
         const tasks = response.data;
 
         return tasks;

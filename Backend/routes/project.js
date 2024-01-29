@@ -40,9 +40,10 @@ router.get('/:id', checkValidations, async (req, res) => {
         const project_data = req.body;
         const user_id = res.locals.oauth.token.user.id;
         project_data.user_id = user_id;
-        const tasks = await projectService.showContent(project_id)
+        const project = await projectService.showProjectContent(project_id)
+        const tasks = await projectService.showTasksByProject(project_id)
         const progress = await projectService.showCompletedPercentage(project_id)
-        res.send({tareas: tasks, porcentaje: progress});
+        res.send({project: project, tasks: tasks, percentage: progress});
     }
     catch(error){
         console.error("[Exception]: ", error.message)

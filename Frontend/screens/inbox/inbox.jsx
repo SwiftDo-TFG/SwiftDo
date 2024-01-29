@@ -3,16 +3,15 @@ import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-
+import TaskList from "./TaskList";
+import TaskStates from '../../utils/enums/taskStates'
 
 import styles from './inbox.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
-import SelectableTask from "./selectableTask";
 
 
-function Inbox() {
+function Inbox(props) {
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
@@ -28,13 +27,13 @@ function Inbox() {
 
   useEffect(() => {
     async function fetchData() {
-      const tasksDB = await taskService.getTasks();
+      const tasksDB = await taskService.getTasks({state: TaskStates.INBOX});
       if (tasksDB.error) {
         return authState.signOut();
       }
 
       console.log("Estas son las tareas que se devuelven", tasksDB)
-      // const actualtask = tasks.concat(tasksDB)
+      
       const seletedAux = {}
       tasksDB.forEach(task => {
         seletedAux[task.task_id] = false;
@@ -46,12 +45,15 @@ function Inbox() {
       setSelectedTasks(seletedAux)
     }
 
-    if (!isDataLoaded) {
-      fetchData()
-      setDataLoaded(true)
-    }
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      if (!isDataLoaded) {
+          fetchData()
+          setDataLoaded(true)
+      }
+    });
 
-  }, [authState]);
+    return unsubscribe;
+  }, [authState, props.navigation]);
 
   const addTask = async (task) => {
     console.log("Nueva task", task)
@@ -206,80 +208,8 @@ function Inbox() {
   return (
     <View style={styles.container}>
       <NativeBaseProvider>
-        {selectedTasks.total > 0 && (
-          <VStack>
-            <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
-              <Text>Seleccionado: ({selectedTasks.total})</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => archiveSelectedTask()}>
-                  <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => deleteSelectedTask()}>
-                  <FontAwesome5 name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
-                </TouchableOpacity>
-                <Menu
-                  trigger={(triggerProps) => (
-                    <TouchableOpacity {...triggerProps}>
-                      <Entypo name="dots-three-vertical" size={20} color="#a0a0a0" />
-                    </TouchableOpacity>
-                  )}
-                  style={styles.menuContainer}
-                  placement="left"
-                >
-                  <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
-                </Menu>
-              </View>
-            </Box>
-            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-              <Text>{selectAll ? 'Deseleccionar todo' : 'Seleccionar todo'}</Text>
-              {tasks.length > 0 && (
-                <Checkbox
-                  value={selectAll}
-                  onChange={toggleSelectAll}
-                  style={{ borderWidth: 0, padding: 0, backgroundColor: 'transparent' }}
-                >
-                  <Icon style={{ marginLeft: -18 }} size={6} color="#f39f18" as={selectAll ? <MaterialCommunityIcons name="checkbox-multiple-marked-circle" /> : <MaterialCommunityIcons name="checkbox-multiple-blank-circle-outline" />} />
-                </Checkbox>
-              )}
-            </View>
-          </VStack>
-        )}
-        <Animated.FlatList
-          data={tasks}
-          showsVerticalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: true }
-          )}
-          keyExtractor={(item) => item.task_id.toString()}
-          renderItem={({ item, index }) => {
-            const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
-            const scale = scrollY.interpolate({
-              inputRange,
-              outputRange: [1, 1, 1, 0],
-              extrapolate: 'clamp',
-            })
-
-            const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
-            const opacity = scrollY.interpolate({
-              inputRange: opacityinputRange,
-              outputRange: [1, 1, 1, 0],
-              extrapolate: 'clamp',
-            })
-
-            return (<SelectableTask
-              task={item}
-              onPress={() => toggleSelectTask(item.task_id)}
-              onDelete={deleteTask}
-              scale={scale}
-              opacity={opacity}
-              selectedTasks={selectedTasks}
-              showMovePopUp={showMovePopUp}
-              showEditPopUp={showEditPopUp}
-            />)
-          }}
-        // ItemSeparatorComponent={() => <Separator />}
-        />
+        
+        <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp}/>
 
         <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
           <FontAwesome5 name="plus" size={24} color="white" />

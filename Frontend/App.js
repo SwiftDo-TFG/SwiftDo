@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CustomButton from './components/buttons/Button';
 import SignInScreen from './screens/auth/login';
 import SingUpScren from './screens/auth/singup';
@@ -11,6 +12,7 @@ import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/inbox/inbox';
 import Project from './screens/project/project';
+import Programadas from './screens/programadas/programadas'
 
 // ICONS
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,6 +20,7 @@ import SideBar from './components/SideBar/SideBar';
 import ProjectScreen from './screens/project/project';
 
 const Drawer = createDrawerNavigator();
+const LoginStack = createNativeStackNavigator();
 
 
 function Router() {
@@ -45,6 +48,33 @@ function Router() {
     bootstrapAsync();
   }, []);
 
+  function HomeNotLogged() {
+    return (
+      <LoginStack.Navigator>
+        <LoginStack.Screen
+          name="SignIn"
+          component={SignInScreen}
+          options={{
+            title: 'SignIn',
+            // When logging out, a pop animation feels intuitive
+            animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            headerShown: false
+          }}
+        />
+        <LoginStack.Screen
+          name="SignUp"
+          component={SingUpScren}
+          options={{
+            title: 'SignUp',
+            // When logging out, a pop animation feels intuitive
+            animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+            headerShown: false
+          }}
+        />
+      </LoginStack.Navigator>
+    )
+  }
+
   return (
     <Drawer.Navigator
     // drawerContent={(props) => <SideBar {...props}/>}
@@ -52,7 +82,7 @@ function Router() {
       {state.userToken == null ? (
         // No token found, user isn't signed in
         <>
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="SignIn"
             component={SignInScreen}
             options={{
@@ -69,7 +99,8 @@ function Router() {
               // When logging out, a pop animation feels intuitive
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
-          />
+          /> */}
+          <Drawer.Screen options={{ headerShown: false }} name='Test' component={HomeNotLogged} />
         </>
       ) : (
         // User is signed in
@@ -95,6 +126,16 @@ function Router() {
               title: 'Project',
               drawerIcon: () => (
                 <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Programadas"
+            component={Programadas}
+            options={{
+              title: 'Programadas',
+              drawerIcon: () => (
+                <FontAwesome5 name="calendar" size={24} color={'cyan'} />
               ),
             }}
           />

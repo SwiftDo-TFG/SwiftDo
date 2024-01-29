@@ -10,7 +10,7 @@ taskValidators.validateCreate = () => {
         state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
         context_id: {optional: true, isInt: { min: 0 } },
         project_id: {optional: true, isInt: { min: 0 } },
-        date_limit: {optional: true, isDate: true},
+        date_limit: {optional: true, isISO8601: true},
         //TODO Verification list
     })
 }
@@ -24,7 +24,7 @@ taskValidators.validateModify = () => {
         state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
         context_id: {optional: true, isInt: { min: 0 } },
         project_id: {optional: true, isInt: { min: 0 } },
-        date_limit: {optional: true, isDate: true},
+        date_limit: {optional: true, isISO8601: true},
         //TODO Verification list
     })
 }

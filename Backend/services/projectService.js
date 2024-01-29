@@ -25,12 +25,19 @@ projectService.showProjectsByUser = async (user_id) => {
     return res.rows;
 }
 
-projectService.showContent = async (project_id) => {
+projectService.showProjectContent = async (project_id) => {
     
     const res = await db.query('SELECT * FROM projects WHERE project_id = $1 AND completed is not true', [project_id])
     if(res.rowCount !== 1){
         throw new Error("The project does not exist")
     }
+    return res.rows;
+}
+
+projectService.showTasksByProject = async (project_id) => {
+    
+    const res = await db.query('SELECT * FROM tasks WHERE project_id = $1 AND completed is not true', [project_id])
+    
     return res.rows;
 }
 

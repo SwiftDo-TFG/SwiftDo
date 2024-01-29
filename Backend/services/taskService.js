@@ -179,6 +179,10 @@ function addFiltersToQuery(query, filters){
         finalFilters.important_fixed = filters.important_fixed;
     }
 
+    if(filters.date_limit){
+        finalQuery = finalQuery.concat(" order by date_limit");
+    }
+
     return {query: finalQuery, values: Object.values(finalFilters)};
 }
 
