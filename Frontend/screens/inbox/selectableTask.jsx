@@ -15,7 +15,7 @@ const getTaskItemStyle = () => {
   };
 };
 
-const LeftSwipeActions = (showMovePopUp) => {
+const LeftSwipeActions = (showMovePopUp, id) => {
   // const width = translateX.interpolate({
   //   inputRange: [0, 1],
   //   outputRange: ['30%', '100%'],
@@ -37,7 +37,7 @@ const LeftSwipeActions = (showMovePopUp) => {
     <TouchableOpacity
       // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
       style={[styles.leftSwipe]}
-      onPress={showMovePopUp}
+      onPress={() => showMovePopUp(id)}
     >
       <Text
         style={{
@@ -85,7 +85,7 @@ const RightSwipeActions = ({ onDelete, id, translateX }) => {
 const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
-  const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp);
+  const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id);
   const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ onDelete, id: task.task_id, translateX });
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   // const backgroundTask = translateX.interpolate({
@@ -172,7 +172,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 style={styles.menuContainer}
                 placement="left"
               >
-                <Menu.Item style={styles.menuItem} onPress={showMovePopUp}>Mover a</Menu.Item>
+                <Menu.Item style={styles.menuItem} onPress={() => showMovePopUp(task.task_id)}>Mover a</Menu.Item>
                 {/* <Separator /> */}
                 <Menu.Item style={styles.menuItem}
                   onPress={() => { showEditPopUp(task.task_id) }}>
