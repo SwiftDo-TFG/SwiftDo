@@ -10,10 +10,12 @@ import AuthState from './services/auth/context/authState';
 import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/inbox/inbox';
+import Project from './screens/project/project';
 
 // ICONS
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
+import ProjectScreen from './screens/project/project';
 
 const Drawer = createDrawerNavigator();
 
@@ -45,7 +47,7 @@ function Router() {
 
   return (
     <Drawer.Navigator
-      // drawerContent={(props) => <SideBar {...props}/>}
+    // drawerContent={(props) => <SideBar {...props}/>}
     >
       {state.userToken == null ? (
         // No token found, user isn't signed in
@@ -74,14 +76,25 @@ function Router() {
         <>
           <Drawer.Screen name="Home" component={HomeScreen} />
           <Drawer.Screen name="About" component={AboutScreen} />
-          <Drawer.Screen name="Ejemplo" component={EjemploScreen}/>
-          <Drawer.Screen 
-            name="Inbox" 
-            component={Inbox} 
+          <Drawer.Screen name="Ejemplo" component={EjemploScreen} />
+          <Drawer.Screen
+            name="Inbox"
+            component={Inbox}
             options={{
-              title:'Inbox',
+              title: 'Inbox',
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
+              ),
+            }}
+          />
+          {/* <Drawer.Screen name="Project" component={ProjectScreen} /> */}
+          <Drawer.Screen
+            name="Project"
+            component={Project}
+            options={{
+              title: 'Project',
+              drawerIcon: () => (
+                <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
               ),
             }}
           />
@@ -97,10 +110,10 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Welcome to TFG-GTD APP!</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>  
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <CustomButton
-            text="About"
-            handler={() => navigation.navigate('About')}
+          text="About"
+          handler={() => navigation.navigate('About')}
         />
         <View style={styles.verticleLine}></View>
         <CustomButton
@@ -118,8 +131,8 @@ const AboutScreen = ({ navigation }) => {
 
   return (
     <View style={styles.aboutContainer}>
-      <Text style={{marginBottom: 10, fontWeight: 'bold'}}>About TFG-GTD APP</Text>
-      <Text style={{textAlign:'justify'}}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
+      <Text style={{ marginBottom: 10, fontWeight: 'bold' }}>About TFG-GTD APP</Text>
+      <Text style={{ textAlign: 'justify' }}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
       <CustomButton
         text="Go to Home"
         handler={() => navigation.navigate('Home')}
