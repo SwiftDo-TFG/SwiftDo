@@ -10,8 +10,13 @@ function Project() {
     const ITEM_SIZE = 62; //Tamaño tarea + margin
     const [project_data, set_project_data] = React.useState({ title: "Proyecto 1", project_id: 1 },)
     React.useEffect(() => {
-        const project = projectService.showContent(1);//aqui iria el id del project
-        set_project_data({ title: "Proyecto 1", project_id: 1 })
+        async function fetchData() {
+            const project = await projectService.showContent(1);//aqui iria el id del project
+            set_project_data(project.project);
+            console.log(project);
+        }
+        fetchData();
+
     }, []);
     return ( //html aqui
         //div

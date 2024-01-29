@@ -31,7 +31,7 @@ projectService.showProjectContent = async (project_id) => {
     if(res.rowCount !== 1){
         throw new Error("The project does not exist")
     }
-    return res.rows;
+    return res.rows[0];
 }
 
 projectService.showTasksByProject = async (project_id) => {
