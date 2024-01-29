@@ -3,17 +3,15 @@ import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import TaskList from "./TaskList";
-
+import TaskStates from '../../utils/enums/taskStates'
 
 import styles from './inbox.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
-import SelectableTask from "./selectableTask";
 
 
-function Inbox() {
+function Inbox(props) {
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
@@ -29,13 +27,13 @@ function Inbox() {
 
   useEffect(() => {
     async function fetchData() {
-      const tasksDB = await taskService.getTasks();
+      const tasksDB = await taskService.getTasks({state: TaskStates.INBOX});
       if (tasksDB.error) {
         return authState.signOut();
       }
 
       console.log("Estas son las tareas que se devuelven", tasksDB)
-      // const actualtask = tasks.concat(tasksDB)
+      
       const seletedAux = {}
       tasksDB.forEach(task => {
         seletedAux[task.task_id] = false;
@@ -47,12 +45,15 @@ function Inbox() {
       setSelectedTasks(seletedAux)
     }
 
-    if (!isDataLoaded) {
-      fetchData()
-      setDataLoaded(true)
-    }
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      if (!isDataLoaded) {
+          fetchData()
+          setDataLoaded(true)
+      }
+    });
 
-  }, [authState]);
+    return unsubscribe;
+  }, [authState, props.navigation]);
 
   const addTask = async (task) => {
     console.log("Nueva task", task)
