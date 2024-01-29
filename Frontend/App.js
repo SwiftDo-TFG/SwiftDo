@@ -11,6 +11,7 @@ import AuthState from './services/auth/context/authState';
 import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/inbox/inbox';
+import Programadas from './screens/programadas/programadas'
 
 // ICONS
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -112,6 +113,16 @@ function Router() {
               title: 'Inbox',
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
+              ),
+            }}
+          />
+          <Drawer.Screen 
+            name="Programadas" 
+            component={Programadas} 
+            options={{
+              title:'Programadas',
+              drawerIcon: () => (
+                <FontAwesome5 name="calendar" size={24} color={'cyan'} />
               ),
             }}
           />
