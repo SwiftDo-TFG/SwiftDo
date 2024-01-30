@@ -55,9 +55,33 @@ export class PopUpModal extends React.Component {
     this.isEditingDescription = true;
   };
 
+  todayDate = (date) =>{
+    return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} 00:00`;
+  }
+
+  onAcceptFunction = (item, state) => {
+    const updatedTask = {};
+    Object.keys(item).forEach(key => {
+      if (item[key] !== null) {
+        updatedTask[key] = item[key];
+      }
+    });
+    console.log("FECHA: ", this.state.date_name)
+    if (this.state.date_name !== 'Fecha') updatedTask.date_limit = new Date(this.state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
+    else if(state === "3") updatedTask.date_limit = today
+    if (this.state.editedDescription !== '') updatedTask.description = this.state.editedDescription;
+    updatedTask.title = this.state.editedTitle;
+    updatedTask.important_fixed = this.state.isImportant;
+    updatedTask.state = state;
+    console.log(updatedTask)
+    this.props.onAccept(updatedTask);
+    this.hide();
+  }
+
   handleSelectState = (state) => {
-    if(state === "3") this.setState({date_name: `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')} 00:00`})
-    else this.setState({date_name: 'Fecha'})
+    if (state === "3") this.setState({ date_name: `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')} 00:00` })
+    else this.setState({ date_name: 'Fecha' })
+    console.log("STATE: ", state)
     this.setState({ state: state, showStatusSelector: false });
   };
 
@@ -107,7 +131,7 @@ export class PopUpModal extends React.Component {
             multiline={true}
           />
         ) : (
-          <Text style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10 }}>
+          <Text style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15 }}>
             {title}
           </Text>
         )}
@@ -226,25 +250,25 @@ export class PopUpModal extends React.Component {
                       <TouchableOpacity onPress={() => this.handleSelectState("2")}>
                         <View style={styles.textContainer}>
                           <FontAwesome5 name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
-                          <Text style={{fontSize: 17}}>Cuanto Antes</Text>
+                          <Text style={{ fontSize: 17 }}>Cuanto Antes</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => this.handleSelectState("3")}>
                         <View style={styles.textContainer}>
                           <Ionicons name="calendar-outline" size={20} color={'#008080'} style={{ width: '15%' }} />
-                          <Text style={{fontSize: 17}}>Programada</Text>
+                          <Text style={{ fontSize: 17 }}>Programada</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => this.handleSelectState("4")}>
                         <View style={styles.textContainer}>
                           <Entypo name="archive" size={20} color="#d2b48c" style={{ width: '15%' }} />
-                          <Text style={{fontSize: 17}}>Archivadas</Text>
+                          <Text style={{ fontSize: 17 }}>Archivadas</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => this.handleSelectState("1")}>
                         <View style={styles.textContainer}>
                           <FontAwesome5 name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
-                          <Text style={{fontSize: 17}}>Inbox</Text>
+                          <Text style={{ fontSize: 17 }}>Inbox</Text>
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -252,31 +276,49 @@ export class PopUpModal extends React.Component {
                 </Modal>
                 <TouchableOpacity
                   style={styles.acceptButton}
-                  onPress={() => {
-                    const updatedTask = {};
-                    Object.keys(item).forEach(key => {
-                      if (item[key] !== null) {
-                        updatedTask[key] = item[key];
-                      }
-                    });
-
-                    if (this.state.date_name !== 'Fecha') updatedTask.date_limit = new Date(this.state.date_name);
-                    if (this.state.editedDescription !== '') updatedTask.description = this.state.editedDescription;
-                    updatedTask.title = this.state.editedTitle;
-                    updatedTask.important_fixed = this.state.isImportant;
-                    updatedTask.state = this.state.state;
-                    this.props.onAccept(updatedTask);
-                    this.hide();
-                  }}>
+                  onPress={() => this.onAcceptFunction(item, this.state.state)}>
                   <Text style={styles.acceptButtonText}>Aceptar</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         ) : (
-          <View style={styles.moveStyle}>
-            <View style={{ height: 50, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44' }}>{item.title}</Text>
+          <View>
+            <View style={styles.moveContainer}>
+              <View style={styles.moveStyle}>
+                <TouchableOpacity onPress={() => {
+                  this.onAcceptFunction(item, "2");
+                }}>
+                  <View style={styles.textContainer}>
+                    <FontAwesome5 name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
+                    <Text style={{ fontSize: 17 }}>Cuanto Antes</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  this.onAcceptFunction(item, "3");
+                }}>
+                  <View style={styles.textContainer}>
+                    <Ionicons name="calendar-outline" size={20} color={'#008080'} style={{ width: '15%' }} />
+                    <Text style={{ fontSize: 17 }}>Programada</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  this.onAcceptFunction(item, "4");
+                }}>
+                  <View style={styles.textContainer}>
+                    <Entypo name="archive" size={20} color="#d2b48c" style={{ width: '15%' }} />
+                    <Text style={{ fontSize: 17 }}>Archivadas</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  this.onAcceptFunction(item, "1");
+                }}>
+                  <View style={styles.textContainer}>
+                    <FontAwesome5 name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
+                    <Text style={{ fontSize: 17 }}>Inbox</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -326,7 +368,7 @@ export class PopUpModal extends React.Component {
                 <DatePicker
                   onSelectedChange={(date) => {
                     if (date !== this.state.date_name) {
-                      if (this.state.date_name !== "Fecha") this.setState({ showDatePicker: false })
+                      if (this.state.date_name !== 'Fecha') this.setState({ showDatePicker: false })
                       this.setState({ date_name: date, state: "3" });
                     }
                   }}

@@ -143,8 +143,14 @@ function Inbox(props) {
     setSelectAll(!selectAll);
   };
 
-  const showMovePopUp = () => {
-    moveRef.show();
+  const showMovePopUp = (id) => {
+    const taskToEdit = tasks.find(task => task.task_id === id);
+    if (taskToEdit) {
+      setEditingTask([taskToEdit]);
+      moveRef.show(taskToEdit);
+    } else {
+      console.error(`No se encontró la tarea con ID: ${id}`);
+    }
   }
 
   const hideMovePopUp = () => {
@@ -172,34 +178,6 @@ function Inbox(props) {
   const hideAddTaskPopUp = () => {
     addRef.hide();
   }
-
-  const popuplist = [
-    {
-      id: 1,
-      title: 'Archivados'
-    },
-    {
-      id: 2,
-      title: 'Hoy'
-    },
-    {
-      id: 3,
-      title: 'Cuanto antes'
-    },
-    {
-      id: 4,
-      title: 'Programadas'
-    },
-    {
-      id: 5,
-      title: 'Algun día'
-    },
-    {
-      id: 6,
-      title: 'Proyecto'
-    },
-
-  ]
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const ITEM_SIZE = 62; //Tamaño tarea + margin
@@ -261,7 +239,8 @@ function Inbox(props) {
           title="Mover a"
           ref={(target) => moveRef = target}
           touch={hideMovePopUp}
-          data={popuplist}
+          data={editingTask}
+          onAccept={updateTask}
           mode='move'
         />
 
