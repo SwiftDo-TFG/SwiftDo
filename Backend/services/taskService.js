@@ -123,6 +123,10 @@ function updateTaskDefValues(task, newTask){
     task.date_changed = new Date();
     task.num_version = parseInt(task.num_version);
     task.num_version += 1;
+
+    if(newTask.state !== task.state && parseInt(task.state) === 3){
+        task.date_limit = null;
+    }
     
     newTask = Object.assign(task, newTask)
 
