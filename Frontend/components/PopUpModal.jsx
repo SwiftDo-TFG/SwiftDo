@@ -1,7 +1,7 @@
 import { FlatList, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { StyleSheet, Animated, Modal, Dimensions, TouchableWithoutFeedback, View, Text } from 'react-native';
-import styles from '../screens/inbox/inbox.styles'
+import styles from '../screens/tasks/actionScreen.styles'
 import Modalize from 'react-native-modalize'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import DatePicker from 'react-native-modern-datepicker';

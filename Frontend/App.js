@@ -10,7 +10,8 @@ import SingUpScren from './screens/auth/singup';
 import AuthState from './services/auth/context/authState';
 import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
-import Inbox from './screens/inbox/inbox';
+import Inbox from './screens/actions/inbox';
+import CuantoAntes from './screens/actions/cuantoAntes';
 import Project from './screens/project/project';
 import Programadas from './screens/programadas/programadas'
 
@@ -18,6 +19,7 @@ import Programadas from './screens/programadas/programadas'
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
 import ProjectScreen from './screens/project/project';
+import Archivadas from './screens/actions/archivadas';
 
 const Drawer = createDrawerNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -115,7 +117,30 @@ function Router() {
               title: 'Inbox',
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
-              )
+              ),
+              // headerShown: false
+            }}
+          />
+          <Drawer.Screen
+            name="CuantoAntes"
+            component={CuantoAntes}
+            options={{
+              title: 'Cuanto antes',
+              // drawerIcon: () => (
+              //   <FontAwesome5 name="inbox" size={24} color={'orange'} />
+              // ),
+              // headerShown: false
+            }}
+          />
+          <Drawer.Screen
+            name="Archivadas"
+            component={Archivadas}
+            options={{
+              title: 'Archivadas',
+              // drawerIcon: () => (
+              //   <FontAwesome5 name="inbox" size={24} color={'orange'} />
+              // ),
+              // headerShown: false
             }}
           />
           {/* <Drawer.Screen name="Project" component={ProjectScreen} /> */}

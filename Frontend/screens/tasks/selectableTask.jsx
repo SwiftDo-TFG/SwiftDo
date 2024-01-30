@@ -5,7 +5,7 @@ import { FontAwesome5, Entypo, FontAwesome } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-import styles from './inbox.styles'
+import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
 

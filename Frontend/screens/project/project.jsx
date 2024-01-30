@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { View, Text, Animated } from "react-native";
 import styles from "./project.styles";
-import SelectableTask from "../inbox/selectableTask";
+import SelectableTask from "../tasks/selectableTask";
 import projectService from "../../services/project/projectService";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import TaskList from "../inbox/TaskList";
+import TaskList from "../tasks/TaskList";
 import { NativeBaseProvider } from "native-base";
 function Project() {
     const scrollY = useRef(new Animated.Value(0)).current;

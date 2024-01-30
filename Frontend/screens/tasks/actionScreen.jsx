@@ -4,14 +4,13 @@ import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, Tou
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import TaskList from "./TaskList";
-import TaskStates from '../../utils/enums/taskStates'
 
-import styles from './inbox.styles'
+import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
 
 
-function Inbox(props) {
+function ActionScreen(props) {
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState({});
   const [archiveTask, setArchiveTask] = useState([]);
@@ -26,13 +25,13 @@ function Inbox(props) {
 
   useEffect(() => {
     async function fetchData() {
-      const tasksDB = await taskService.getTasks({state: TaskStates.INBOX});
+      const tasksDB = await taskService.getTasks({ state: props.state });
       if (tasksDB.error) {
         return authState.signOut();
       }
 
       console.log("Estas son las tareas que se devuelven", tasksDB)
-      
+
       const seletedAux = {}
       tasksDB.forEach(task => {
         seletedAux[task.task_id] = false;
@@ -46,8 +45,8 @@ function Inbox(props) {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (!isDataLoaded) {
-          fetchData()
-          setDataLoaded(true)
+        fetchData()
+        setDataLoaded(true)
       }
     });
 
@@ -143,14 +142,8 @@ function Inbox(props) {
     setSelectAll(!selectAll);
   };
 
-  const showMovePopUp = (id) => {
-    const taskToEdit = tasks.find(task => task.task_id === id);
-    if (taskToEdit) {
-      setEditingTask([taskToEdit]);
-      moveRef.show(taskToEdit);
-    } else {
-      console.error(`No se encontró la tarea con ID: ${id}`);
-    }
+  const showMovePopUp = () => {
+    moveRef.show();
   }
 
   const hideMovePopUp = () => {
@@ -179,14 +172,43 @@ function Inbox(props) {
     addRef.hide();
   }
 
+  const popuplist = [
+    {
+      id: 1,
+      title: 'Archivados'
+    },
+    {
+      id: 2,
+      title: 'Hoy'
+    },
+    {
+      id: 3,
+      title: 'Cuanto antes'
+    },
+    {
+      id: 4,
+      title: 'Programadas'
+    },
+    {
+      id: 5,
+      title: 'Algun día'
+    },
+    {
+      id: 6,
+      title: 'Proyecto'
+    },
+
+  ]
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const ITEM_SIZE = 62; //Tamaño tarea + margin
 
   return (
     <View style={styles.container}>
+      {props.children}
       <NativeBaseProvider>
-        
-        <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp}/>
+
+        <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />
 
         <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
           <FontAwesome5 name="plus" size={24} color="white" />
@@ -239,8 +261,7 @@ function Inbox(props) {
           title="Mover a"
           ref={(target) => moveRef = target}
           touch={hideMovePopUp}
-          data={editingTask}
-          onAccept={updateTask}
+          data={popuplist}
           mode='move'
         />
 
@@ -268,4 +289,4 @@ function Inbox(props) {
   );
 }
 
-export default Inbox;
+export default ActionScreen;

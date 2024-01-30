@@ -70,7 +70,7 @@ export default ({ navigation }) => {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('CuantoAntes')}>
                     <View style={styles.actionContainer}>
                         <View style={styles.action}>
                             <FontAwesome5 name="bolt" style={styles.iconAction} color={'#ffd700'} />
@@ -96,7 +96,7 @@ export default ({ navigation }) => {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Archivadas')}>
                     <View style={styles.actionContainer}>
                         <View style={styles.action}>
                             <FontAwesome5 name="archive" style={styles.iconAction} color={'#d2b48c'} />
@@ -112,8 +112,7 @@ export default ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.navigate('Project')}>
                     <View style={styles.actionContainer}>
                         <View style={styles.action}>
-                            <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
-                            {/* <FontAwesome5 name="archive" style={styles.iconAction} color={'#d2b48c'} /> */}
+                            <MaterialCommunityIcons name="hexagon-slice-6" style={styles.iconAction} size={26} color="red" />
                             <Text style={styles.actionTitle}>Proyecto</Text>
                         </View>
                         <View style={styles.countContainer}>

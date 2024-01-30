@@ -1,13 +1,13 @@
 import { View, Text, Animated, ActivityIndicator } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
-import SelectableTask from "../inbox/selectableTask";
+import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
 import { PopUpModal } from "../../components/PopUpModal";
 import taskService from "../../services/task/taskService";
-import SelectionPanel from "../inbox/SelectionPanel";
+import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
 
 
