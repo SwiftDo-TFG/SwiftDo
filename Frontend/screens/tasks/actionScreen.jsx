@@ -8,6 +8,7 @@ import TaskList from "./TaskList";
 import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
+import LoadingIndicator from "../../components/LoadingIndicator";
 
 
 function ActionScreen(props) {
@@ -205,7 +206,10 @@ function ActionScreen(props) {
 
   return (
     <View style={styles.container}>
-      {props.children}
+      <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+        {props.children}
+      </TouchableOpacity>
+      {!isDataLoaded && <LoadingIndicator />}
       <NativeBaseProvider>
 
         <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />

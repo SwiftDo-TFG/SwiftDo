@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, useWindowDimensions} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -27,6 +27,7 @@ const LoginStack = createNativeStackNavigator();
 
 function Router() {
   const state = React.useContext(AuthContext);
+  const dimensions = useWindowDimensions(); 
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -80,6 +81,9 @@ function Router() {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <SideBar {...props}/>}
+      screenOptions={{
+        drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
+      }}
     >
       {state.userToken == null ? (
         // No token found, user isn't signed in
@@ -118,7 +122,7 @@ function Router() {
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
               ),
-              // headerShown: false
+              headerShown: false
             }}
           />
           <Drawer.Screen
@@ -126,10 +130,7 @@ function Router() {
             component={CuantoAntes}
             options={{
               title: 'Cuanto antes',
-              // drawerIcon: () => (
-              //   <FontAwesome5 name="inbox" size={24} color={'orange'} />
-              // ),
-              // headerShown: false
+              headerShown: false
             }}
           />
           <Drawer.Screen
@@ -137,10 +138,7 @@ function Router() {
             component={Archivadas}
             options={{
               title: 'Archivadas',
-              // drawerIcon: () => (
-              //   <FontAwesome5 name="inbox" size={24} color={'orange'} />
-              // ),
-              // headerShown: false
+              headerShown: false
             }}
           />
           {/* <Drawer.Screen name="Project" component={ProjectScreen} /> */}
@@ -152,6 +150,7 @@ function Router() {
               drawerIcon: () => (
                 <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
               ),
+              // headerShown: false
             }}
           />
           <Drawer.Screen
@@ -162,6 +161,7 @@ function Router() {
               drawerIcon: () => (
                 <FontAwesome5 name="calendar" size={24} color={'cyan'} />
               ),
+              headerShown: false
             }}
           />
         </>
