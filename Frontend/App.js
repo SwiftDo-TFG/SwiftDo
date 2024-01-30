@@ -77,7 +77,7 @@ function Router() {
 
   return (
     <Drawer.Navigator
-    // drawerContent={(props) => <SideBar {...props}/>}
+      drawerContent={(props) => <SideBar {...props}/>}
     >
       {state.userToken == null ? (
         // No token found, user isn't signed in
@@ -115,7 +115,7 @@ function Router() {
               title: 'Inbox',
               drawerIcon: () => (
                 <FontAwesome5 name="inbox" size={24} color={'orange'} />
-              ),
+              )
             }}
           />
           {/* <Drawer.Screen name="Project" component={ProjectScreen} /> */}

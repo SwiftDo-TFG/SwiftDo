@@ -24,7 +24,6 @@ function Inbox(props) {
   let addRef = React.createRef();
   const authState = useContext(AuthContext);
 
-
   useEffect(() => {
     async function fetchData() {
       const tasksDB = await taskService.getTasks({state: TaskStates.INBOX});

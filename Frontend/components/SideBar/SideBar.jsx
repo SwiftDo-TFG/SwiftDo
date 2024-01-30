@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import styles from './SideBar.styles';
+import { FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import styles from './SideBar.styles'; 
 
 const Separator = () => {
     return (
@@ -83,7 +83,7 @@ export default ({ navigation }) => {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Programadas')}>
                     <View style={styles.actionContainer}>
                         <View style={styles.action}>
                             <Ionicons name="calendar-outline" style={styles.iconAction} color={'#008080'} />
@@ -101,6 +101,20 @@ export default ({ navigation }) => {
                         <View style={styles.action}>
                             <FontAwesome5 name="archive" style={styles.iconAction} color={'#d2b48c'} />
                             <Text style={styles.actionTitle}>Algún día</Text>
+                        </View>
+                        <View style={styles.countContainer}>
+                            <View style={[styles.count, { backgroundColor: '#e3e4e5' }]}>
+                                <Text>1</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Project')}>
+                    <View style={styles.actionContainer}>
+                        <View style={styles.action}>
+                            <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
+                            {/* <FontAwesome5 name="archive" style={styles.iconAction} color={'#d2b48c'} /> */}
+                            <Text style={styles.actionTitle}>Proyecto</Text>
                         </View>
                         <View style={styles.countContainer}>
                             <View style={[styles.count, { backgroundColor: '#e3e4e5' }]}>
