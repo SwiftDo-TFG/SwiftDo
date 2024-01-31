@@ -105,11 +105,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginLeft: 20,
     },
-    moveContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     editStyle: {
         flex: 1,
         alignItems: 'flex-start',
@@ -185,6 +180,16 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    moveContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+    },
+    moveStyle:{
+        backgroundColor: 'white',
+        marginHorizontal: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
+    },
     textContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -211,7 +216,7 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         zIndex: 2,
-    },
+    }
 });
 
 export default styles;

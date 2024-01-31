@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
-import styles from './inbox.styles'
+import styles from './actionScreen.styles'
 
 
 function SelectionPanel (props){

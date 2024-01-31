@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     taskContainer: {
         flex: 1,
         paddingHorizontal: 15,
-        marginVertical: 10
+        marginVertical: 10,
     },
     taskItem: {
 
@@ -37,6 +37,23 @@ const styles = StyleSheet.create({
     selectionPanel:{ 
         paddingHorizontal: 20,
         paddingTop: 15
+    },
+    action: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '65%',
+        marginVertical: 60,
+        marginLeft: 20,
+    },
+    iconAction: {
+        fontSize: 26,
+        marginRight: 10,
+        width: '20%',
+        textAlign: 'center'
+    },
+    actionTitle: {
+        fontSize: 24,
+        fontWeight: 'bold'
     }
 });
 

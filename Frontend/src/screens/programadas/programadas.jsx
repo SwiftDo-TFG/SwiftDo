@@ -1,13 +1,14 @@
-import { View, Text, Animated, ActivityIndicator } from "react-native";
+import { View, Text, Animated, TouchableOpacity } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
-import SelectableTask from "../inbox/selectableTask";
+import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
 import { PopUpModal } from "../../components/PopUpModal";
+import { Ionicons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
-import SelectionPanel from "../inbox/SelectionPanel";
+import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
 
 
@@ -136,64 +137,64 @@ const ProgramadasScreen = (props) => {
         }
     };
 
-    function TasksCalendar () {
-        return(
+    function TasksCalendar() {
+        return (
             <>
-            <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />
-            {selectedTasks.total > 0 &&
-                <View style={styles.selectionPanel}>
-                    <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} />
-                </View>
-            }
-            <AgendaList
-                sections={calendarTasks}
-                renderItem={(item, firstItemInDay) => {
-                    const scrollY = useRef(new Animated.Value(0)).current;
-                    const ITEM_SIZE = 62; //Tamaño tarea + margin
+                <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />
+                {selectedTasks.total > 0 &&
+                    <View style={styles.selectionPanel}>
+                        <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} />
+                    </View>
+                }
+                <AgendaList
+                    sections={calendarTasks}
+                    renderItem={(item, firstItemInDay) => {
+                        const scrollY = useRef(new Animated.Value(0)).current;
+                        const ITEM_SIZE = 62; //Tamaño tarea + margin
 
-                    const inputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + 2)]
-                    const scale = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [1, 1, 1, 0],
-                        extrapolate: 'clamp',
-                    })
+                        const inputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + 2)]
+                        const scale = scrollY.interpolate({
+                            inputRange,
+                            outputRange: [1, 1, 1, 0],
+                            extrapolate: 'clamp',
+                        })
 
-                    const opacityinputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + .5)]
-                    const opacity = scrollY.interpolate({
-                        inputRange: opacityinputRange,
-                        outputRange: [1, 1, 1, 0],
-                        extrapolate: 'clamp',
-                    })
+                        const opacityinputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + .5)]
+                        const opacity = scrollY.interpolate({
+                            inputRange: opacityinputRange,
+                            outputRange: [1, 1, 1, 0],
+                            extrapolate: 'clamp',
+                        })
 
-                    return (
-                        <View style={styles.taskContainer}>
-                            <SelectableTask
-                                task={item.item} selectedTasks={selectedTasks}
-                                showEditPopUp={showEditPopUp}
-                                showMovePopUp={showMovePopUp}
-                                onPress={() => toggleSelectTask(item.item.task_id)}
-                                scale={scale}
-                                opacity={opacity}
-                            />
-                        </View>
-                    );
-                }}
-                markedDates={marked.current}
+                        return (
+                            <View style={styles.taskContainer}>
+                                <SelectableTask
+                                    task={item.item} selectedTasks={selectedTasks}
+                                    showEditPopUp={showEditPopUp}
+                                    showMovePopUp={showMovePopUp}
+                                    onPress={() => toggleSelectTask(item.item.task_id)}
+                                    scale={scale}
+                                    opacity={opacity}
+                                />
+                            </View>
+                        );
+                    }}
+                    markedDates={marked.current}
 
-                // renderSectionHeader={(info) => {
-                //     console.log("THIS IS INFO", info)
-                //     return (
-                //         <View style={styles.dayItem}>
-                //             <Text style={styles.dateText}>{utils.parseDatetoPretty(info)}</Text>
-                //             <View style={styles.horizontalLine} />
-                //         </View>
-                //     )
-                // }}
+                    // renderSectionHeader={(info) => {
+                    //     console.log("THIS IS INFO", info)
+                    //     return (
+                    //         <View style={styles.dayItem}>
+                    //             <Text style={styles.dateText}>{utils.parseDatetoPretty(info)}</Text>
+                    //             <View style={styles.horizontalLine} />
+                    //         </View>
+                    //     )
+                    // }}
 
-                // scrollToNextEvent
-                sectionStyle={styles.section}
-            // dayFormat={'yyyy-MM-d'}
-            />
+                    // scrollToNextEvent
+                    sectionStyle={styles.section}
+                // dayFormat={'yyyy-MM-d'}
+                />
             </>
         )
     }
@@ -229,8 +230,13 @@ const ProgramadasScreen = (props) => {
                     onAccept={addTask}
                     mode='add'
                 /> */}
-
-                {isDataLoaded ? <TasksCalendar/>: <LoadingIndicator/>}
+                <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                    <View style={styles.action}>
+                        <Ionicons name="calendar-outline" style={styles.iconAction} color={'#008080'} />
+                        <Text style={styles.actionTitle}>Programadas</Text>
+                    </View>
+                </TouchableOpacity>
+                {isDataLoaded ? <TasksCalendar /> : <LoadingIndicator />}
             </CalendarProvider>
         </NativeBaseProvider>
     )
