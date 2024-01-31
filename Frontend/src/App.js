@@ -88,24 +88,6 @@ function Router() {
       {state.userToken == null ? (
         // No token found, user isn't signed in
         <>
-          {/* <Drawer.Screen
-            name="SignIn"
-            component={SignInScreen}
-            options={{
-              title: 'SignIn',
-              // When logging out, a pop animation feels intuitive
-              animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-            }}
-          />
-          <Drawer.Screen
-            name="SignUp"
-            component={SingUpScren}
-            options={{
-              title: 'SignUp',
-              // When logging out, a pop animation feels intuitive
-              animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-            }}
-          /> */}
           <Drawer.Screen options={{ headerShown: false }} name='Test' component={HomeNotLogged} />
         </>
       ) : (
