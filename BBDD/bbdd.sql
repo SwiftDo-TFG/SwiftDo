@@ -14,7 +14,8 @@ CREATE TABLE projects (
     date_added DATE, 
     date_changed DATE, 
     date_completed DATE, 
-    num_version NUMERIC
+    num_version NUMERIC,
+    color varchar NOT NULL
 );
 
 CREATE TABLE tags (

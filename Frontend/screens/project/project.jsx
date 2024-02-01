@@ -159,7 +159,7 @@ function Project() {
         //div
         <View style={styles.project}>
             <Text style={styles.header}>
-                <MaterialCommunityIcons style={styles.icon} name="hexagon-slice-6" size={26} color="red" />
+                <MaterialCommunityIcons style={styles.icon} name="hexagon-slice-6" size={26} color= {project_data.color}  />
                 <Text style={styles.title}> {project_data.title} </Text>
             </Text>
             <NativeBaseProvider>
