@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ActivityIndicator, useWindowDimensions} from 'r
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { registerRootComponent } from 'expo';
 import CustomButton from './components/buttons/Button';
 import SignInScreen from './screens/auth/login';
 import SingUpScren from './screens/auth/singup';
@@ -199,6 +200,8 @@ export default function App() {
     </AuthState>
   );
 }
+
+registerRootComponent(App);
 
 const styles = StyleSheet.create({
   container: {
