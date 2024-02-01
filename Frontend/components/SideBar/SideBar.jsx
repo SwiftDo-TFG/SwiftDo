@@ -70,7 +70,7 @@ export default ({ navigation }) => {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('CuantoAntes')}>
                     <View style={styles.actionContainer}>
                         <View style={styles.action}>
                             <FontAwesome5 name="bolt" style={styles.iconAction} color={'#ffd700'} />

@@ -12,8 +12,7 @@ import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/inbox/inbox';
 import Project from './screens/project/project';
-import Programadas from './screens/programadas/programadas'
-
+import Programadas from './screens/programadas/programadas';
 // ICONS
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
@@ -77,7 +76,7 @@ function Router() {
 
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <SideBar {...props}/>}
+      drawerContent={(props) => <SideBar {...props} />}
     >
       {state.userToken == null ? (
         // No token found, user isn't signed in
@@ -126,6 +125,16 @@ function Router() {
               title: 'Project',
               drawerIcon: () => (
                 <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="CuantoAntes"
+            component={CuantoAntes}
+            options={{
+              title: 'CuantoAntes',
+              drawerIcon: () => (
+                <FontAwesome5 name="bolt" style={styles.iconAction} color={'#ffd700'} />
               ),
             }}
           />
