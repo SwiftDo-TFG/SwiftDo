@@ -129,16 +129,6 @@ function Router() {
             }}
           />
           <Drawer.Screen
-            name="CuantoAntes"
-            component={CuantoAntes}
-            options={{
-              title: 'CuantoAntes',
-              drawerIcon: () => (
-                <FontAwesome5 name="bolt" style={styles.iconAction} color={'#ffd700'} />
-              ),
-            }}
-          />
-          <Drawer.Screen
             name="Programadas"
             component={Programadas}
             options={{
