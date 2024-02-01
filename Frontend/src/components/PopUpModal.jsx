@@ -55,7 +55,7 @@ export class PopUpModal extends React.Component {
     this.isEditingDescription = true;
   };
 
-  todayDate = (date) =>{
+  todayDate = (date) => {
     return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} 00:00`;
   }
 
@@ -68,7 +68,7 @@ export class PopUpModal extends React.Component {
     });
     console.log("FECHA: ", this.state.date_name)
     if (this.state.date_name !== 'Fecha') updatedTask.date_limit = new Date(this.state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
-    else if(state === "3") updatedTask.date_limit = today
+    else if (state === "3") updatedTask.date_limit = today
     if (this.state.editedDescription !== '') updatedTask.description = this.state.editedDescription;
     updatedTask.title = this.state.editedTitle;
     updatedTask.important_fixed = this.state.isImportant;
@@ -142,22 +142,9 @@ export class PopUpModal extends React.Component {
     const { data } = this.props;
     return (
       <View style={{ height: '100%', justifyContent: 'flex-end' }}>
-        {mode === 'move' ? (
-          <FlatList
-            style={{ marginBottom: 20 }}
-            showsVerticalScrollIndicator={false}
-            data={data}
-            renderItem={({ item }) => this.renderItem(item, mode)}
-            extraData={data}
-            keyExtractor={(item, index) => index.toString()}
-            ItemSeparatorComponent={this.renderSeparator()}
-            contentContainerStyle={{ paddingBottom: 40 }}
-          />
-        ) : (
-          <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-            {this.renderItem(data[0], mode)}
-          </View>
-        )}
+        <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
+          {this.renderItem(data[0], mode)}
+        </View>
       </View>
     );
   };

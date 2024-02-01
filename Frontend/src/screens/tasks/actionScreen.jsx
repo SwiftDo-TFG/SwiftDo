@@ -9,6 +9,7 @@ import AddButton from "../../components/common/addButton";
 
 import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
+import PopUpModal2 from "../../components/PopUpModalAux";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 
@@ -24,6 +25,8 @@ function ActionScreen(props) {
   let moveRef = React.createRef();
   let editRef = React.createRef();
   let addRef = React.createRef();
+  
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const authState = useContext(AuthContext);
 
   useEffect(() => {
@@ -157,7 +160,9 @@ function ActionScreen(props) {
     const taskToEdit = tasks.find(task => task.task_id === id);
     if (taskToEdit) {
       setEditingTask([taskToEdit]);
-      editRef.show(taskToEdit);
+      // editRef.show(taskToEdit);
+      setIsEditModalOpen(true);
+
     } else {
       console.error(`No se encontró la tarea con ID: ${id}`);
     }
@@ -272,14 +277,14 @@ function ActionScreen(props) {
         />
 
         {/* EDIT MODAL   */}
-        <PopUpModal
+        {/* <PopUpModal
           title="Editar"
           ref={(target) => editRef = target}
           touch={hideEditPopUp}
           data={editingTask}
           onAccept={updateTask}
           mode='edit'
-        />
+        /> */}
 
         {/* ADD MODAL   */}
         <PopUpModal
@@ -289,6 +294,16 @@ function ActionScreen(props) {
           data={[{ title: "" }]}
           onAccept={addTask}
           mode='add'
+        />
+
+        <PopUpModal2
+          title="Editar"
+          // ref={(target) => editRef = target}
+          touch={hideEditPopUp}
+          data={editingTask}
+          onAccept={updateTask}
+          isModalOpen={isEditModalOpen}
+          mode='edit'
         />
       </NativeBaseProvider>
     </View>
