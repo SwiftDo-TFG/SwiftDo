@@ -4,6 +4,8 @@ import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, Tou
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import TaskList from "./TaskList";
+import AddButton from "../../components/common/addButton";
+
 
 import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
@@ -214,10 +216,10 @@ function ActionScreen(props) {
 
         <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />
 
-        <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+        {/* <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
           <FontAwesome5 name="plus" size={24} color="white" />
-        </TouchableOpacity>
-
+        </TouchableOpacity> */}
+        <AddButton />
         <Modal
           visible={isModalVisible}
           transparent={true}

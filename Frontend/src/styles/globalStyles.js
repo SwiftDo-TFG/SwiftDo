@@ -2,6 +2,12 @@
 import { StyleSheet } from "react-native";
 import Colors from "./colors";
 
+
+const sideBar = StyleSheet.create({
+    dims : {
+        width: 0,
+    }
+})
 const buttonStyle = StyleSheet.create({
     container: {
         marginTop: 40,
@@ -20,7 +26,36 @@ const buttonStyle = StyleSheet.create({
         textAlign: 'center',
         color: Colors.light,
         fontSize: 18
-    }
+    },
+
+})
+
+
+const addButton = StyleSheet.create({
+    container: {
+        flex: 1,
+        position: 'absolute',
+        bottom: 70,
+        height: 50,
+        width: 50,
+        alignSelf: 'center',
+        borderRadius: 100,
+        backgroundColor: Colors.orange,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'flex-end'
+    },
+    buttonPressed: {
+        transform: [{scale: 1.2}]
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    questionIcon: {
+        marginTop: 20
+    },
 })
 
 const textStyle = StyleSheet.create({
@@ -75,4 +110,4 @@ const formStyle = StyleSheet.create({
     },
 })
 
-export {formStyle, buttonStyle, textStyle}
+export {sideBar, addButton, formStyle, buttonStyle, textStyle}

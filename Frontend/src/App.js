@@ -20,6 +20,7 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
 import ProjectScreen from './screens/project/project';
 import Archivadas from './screens/actions/archivadas';
+import { sideBar } from './styles/globalStyles';
 
 const Drawer = createDrawerNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -80,9 +81,11 @@ function Router() {
 
   return (
     <Drawer.Navigator
+      drawerStyle={sideBar.dims}
       drawerContent={(props) => <SideBar {...props}/>}
       screenOptions={{
         drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
+        
       }}
     >
       {state.userToken == null ? (
