@@ -4,8 +4,7 @@ import { StyleSheet, Animated, Modal, Dimensions, TouchableWithoutFeedback, View
 import styles from '../screens/tasks/actionScreen.styles'
 import Modalize from 'react-native-modalize'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
-import DatePicker from 'react-native-modern-datepicker';
-
+import DatePicker from './DatePicker';
 
 const dvHeight = Dimensions.get('window').height;
 const today = new Date();
@@ -208,53 +207,9 @@ function PopUpModal(props) {
 
                         <View style={[styles.modalDatePickerContent, { zIndex: 2 }]}>
                             <DatePicker
-                                onSelectedChange={(date) => {
-                                    if (date !== state.date_name) {
-                                        if (state.date_name !== 'Fecha') setState({ showDatePicker: false })
-                                        setState({ date_name: date, state: "3" });
-                                    }
-                                }}
-                                selected={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
-                                current={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
-                                minimumDate={today.toISOString().split('T')[0]}
-                                options={{
-                                    backgroundColor: '#ffffff',
-                                    textHeaderColor: '#666666',
-                                    textDefaultColor: '#808080',
-                                    selectedTextColor: 'white',
-                                    mainColor: '#f39f18',
-                                    textSecondaryColor: '#f39f18',
-                                }}
-                                configs={{
-                                    dayNames: [
-                                        "Domingo",
-                                        "Lunes",
-                                        "Martes",
-                                        "Miércoles",
-                                        "Jueves",
-                                        "Viernes",
-                                        "Sábado",
-                                    ],
-                                    dayNamesShort: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                                    monthNames: [
-                                        "Enero",
-                                        "Febrero",
-                                        "Marzo",
-                                        "Abril",
-                                        "Mayo",
-                                        "Junio",
-                                        "Julio",
-                                        "Agosto",
-                                        "Septiembre",
-                                        "Octubre",
-                                        "Noviembre",
-                                        "Diciembre",
-                                    ],
-                                    hour: 'Hora',
-                                    minute: 'Minuto',
-                                    timeSelect: 'Aceptar',
-                                    timeClose: 'Cerrar',
-                                }}
+                                today={today}
+                                state={state}
+                                setState={setState}
                             />
                         </View>
                     </View>
