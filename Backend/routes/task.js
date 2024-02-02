@@ -8,13 +8,15 @@ const checkValidations = require('./validators/validationUtils')
 router.get('/', async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;
   const filters = req.query;
-  console.log("[TASK FIND BY ID] The filters", filters)
+  const state = req.query.state;
+  console.log("[TASK FIND BY ID] The filters", req.query.state)
 
   try {
     let task;
 
     if(Object.keys(filters).length === 0){
-      task = await taskService.findTaskByUserId(user_id);
+      // task = await taskService.findTaskByUserId(user_id);
+      task = await taskService.findByState(state)
     }else{
       task = await taskService.findTasksByFilters(user_id, filters)
     }

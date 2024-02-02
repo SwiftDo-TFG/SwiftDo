@@ -25,8 +25,12 @@ instance.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-function getInfo() {
+const getInfo = async (id) => {
+    const url = `/user/${id}`
+    const response = await instance.get(url)
+    const userInfo = response.data;
 
+    return userInfo
 }
 
 export default {getInfo}
