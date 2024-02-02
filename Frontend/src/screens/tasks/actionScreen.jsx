@@ -9,6 +9,9 @@ import AddButton from "../../components/common/addButton";
 import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import PopUpModal2 from "../../components/PopUpModalAux";
+import PopUpModalPadre from "../../components/modals/PopUpModalPadre";
+import MoveTaskModal from "../../components/modals/MoveTaskModal";
+import CreateTaskModal from "../../components/modals/CreateTaskModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { actStyle } from "../../styles/globalStyles";
@@ -299,13 +302,14 @@ function ActionScreen(props) {
           mode='add'
         />
 
-        <PopUpModal2
+        <CreateTaskModal
           title="Editar"
           // ref={(target) => editRef = target}
           touch={hideEditPopUp}
           data={editingTask}
           onAccept={updateTask}
           isModalOpen={isEditModalOpen}
+          setIsModalOpen={setIsEditModalOpen}
           mode='edit'
         />
       </NativeBaseProvider>

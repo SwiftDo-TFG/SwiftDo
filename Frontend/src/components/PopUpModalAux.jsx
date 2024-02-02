@@ -11,10 +11,6 @@ const today = new Date();
 
 function PopUpModal(props) {
 
-    useEffect(() => {
-        console.log("[MODAL] SE ESTA LLAMANDO AL USE EFECT DEL MODAL")
-    }, [])
-
     const [state, setState] = useState({
         translateY: new Animated.Value(dvHeight),
         show: false,
@@ -33,6 +29,9 @@ function PopUpModal(props) {
     const { touch, mode } = props;
     const { translateY } = state;
 
+    useEffect(() => {
+        animateModal()
+    }, [props.isModalOpen]);
 
     const toggleImportant = () => {
         setState((prevState) => ({
@@ -47,7 +46,9 @@ function PopUpModal(props) {
     // }
 
     function animateModal() {
-        const { show, translateY } = state;
+        const { translateY } = state;
+        const show = props.isModalOpen;
+        
         Animated.timing(translateY, {
             toValue: show ? 0 : dvHeight,
             duration: 300,
@@ -55,11 +56,11 @@ function PopUpModal(props) {
         }).start();
     }
     const onTitleChange = (text) => {
-        setState({ editedTitle: text });
+        setState({ ...state, editedTitle: text });
         setIEditingDescription(true)
     };
     const onDescriptionChange = (text) => {
-        setState({ editedDescription: text });
+        setState({ ...state, editedDescription: text });
         setIEditingDescription(true)
     };
 
@@ -86,33 +87,34 @@ function PopUpModal(props) {
         hide();
     }
 
-    const handleSelectState = (state) => {
-        if (state === "3") setState({ date_name: `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')} 00:00` })
-        else setState({ date_name: 'Fecha' })
+    const handleSelectState = (stateAux) => {
+        if (stateAux === "3") setState({ ...state, date_name: `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')} 00:00` })
+        else setState({ ...state, date_name: 'Fecha' })
         console.log("STATE: ", state)
-        setState({ state: state, showStatusSelector: false });
+        setState({ ...state, state: stateAux, showStatusSelector: false });
     };
 
     const show = (task) => {
-        console.log(task)
-        setState({ show: true });
+        console.log("SHOW MODAL LOCO",task)
+        setState({ ...state, show: true });
+
         if (task) {
-            setState({ editedTitle: task.title });
+            setState({ ...state, editedTitle: task.title });
             if (task.description) {
-                setState({ editedDescription: task.description });
+                setState({ ...state, editedDescription: task.description });
             }
-            setState({ isImportant: task.important_fixed })
+            setState({ ...state, isImportant: task.important_fixed })
             if (task.date_limit) {
                 const dateLimit = new Date(task.date_limit)
                 const formattedDate = `${dateLimit.getFullYear()}/${(dateLimit.getMonth() + 1).toString().padStart(2, '0')}/${dateLimit.getDate().toString().padStart(2, '0')} 00:00`;
-                setState({ date_name: formattedDate });
+                setState({ ...state, date_name: formattedDate });
             }
-            setState({ state: task.state })
+            setState({ ...state, state: task.state })
         }
     };
 
     const hide = () => {
-        setState({ show: false, editedTitle: '', editedDescription: '', isImportant: false, date_name: 'Fecha', state: "1" });
+        setState({ ...state, show: false, editedTitle: '', editedDescription: '', isImportant: false, date_name: 'Fecha', state: "1" });
         setIsEditingTitle(false);
         setIEditingDescription(false);
     };
@@ -129,6 +131,7 @@ function PopUpModal(props) {
 
     function ModalTitle(mode) {
         const { title } = props;
+        console.log("MODAL TITLE", title, mode)
         return (
             <View style={(props.mode === 'edit' || props.mode === 'add') ? { alignItems: 'flex-start', marginLeft: 20, marginRight: 8 } : { alignItems: 'center' }}>
                 {(props.mode === 'edit' || props.mode === 'add') ? (
@@ -153,22 +156,9 @@ function PopUpModal(props) {
         const { data } = props;
         return (
             <View style={{ height: '100%', justifyContent: 'flex-end' }}>
-                {/* {mode === 'move' ? (
-                    <FlatList
-                        style={{ marginBottom: 20 }}
-                        showsVerticalScrollIndicator={false}
-                        data={data}
-                        renderItem={({ item }) => this.renderItem(item, mode)}
-                        extraData={data}
-                        keyExtractor={(item, index) => index.toString()}
-                        ItemSeparatorComponent={this.renderSeparator()}
-                        contentContainerStyle={{ paddingBottom: 40 }}
-                    />
-                ) : (
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-                        {this.renderItem(data[0], mode)}
-                    </View>
-                )} */}
+                <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
+                <ModalItem mode={mode} item={data}/>
+                </View>
             </View>
         );
     }
@@ -339,7 +329,7 @@ function PopUpModal(props) {
     }
 
     return (
-        <Modal animationType={'fade'} transparent={true} visible={props.isModalOpen} onRequestClose={close}>
+        <Modal animationType={'fade'} transparent={true} visible={props.isModalOpen} onRequestClose={close} onShow={show}>
             <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end' }}>
                 <OutSide touch={touch} />
                 <Animated.View
@@ -362,11 +352,11 @@ function PopUpModal(props) {
                     transparent={true}
                     animationType={'fade'}
                     visible={state.showDatePicker}
-                    onRequestClose={() => setState({ showDatePicker: false })}
+                    onRequestClose={() => setState({ ...state, showDatePicker: false })}
                 >
                     <View style={styles.modalDatePickerContainer}>
 
-                        <TouchableWithoutFeedback onPress={() => setState({ showDatePicker: false })}>
+                        <TouchableWithoutFeedback onPress={() => setState({ ...state, showDatePicker: false })}>
                             <View style={styles.modalDatePickerBackground} />
                         </TouchableWithoutFeedback>
 
