@@ -68,6 +68,18 @@ const updateTask = async (taskId, taskData) => {
         return { error: 'Error', status: error.response.status }
     }
 }
+const getInfo = async () => {
+    try {
+        const url = '/task/'
+        const res = await instance.get(url)
+        const tasksAndUsername = res.data;
+        console.log("??????:", tasksAndUsername)
+        return tasksAndUsername;
+    }
+    catch(e){
+        console.log("ERROR:", e)
+        return { e: 'Error', status: e.response.status }
+    }
+}
 
-
-export default { getTasks, getTaskById, createTask, updateTask }
+export default { getInfo, getTasks, getTaskById, createTask, updateTask }

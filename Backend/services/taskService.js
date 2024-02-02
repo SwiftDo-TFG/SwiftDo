@@ -89,7 +89,12 @@ taskService.addTag = async (id, tag)=>{
             throw new Error('The tag was relationate to the task')
         }
     }
-
+    
+}
+// Obtenemos los datos de la sesion del usuario y las tareas asociadas segun el action.
+taskService.getInfo = async(user_id, state) => {
+    const res = await db.query('SELECT count (*) as total FROM tasks where user_id = $1 and state = $2 and completed is false group by important_fixed', [user_id, state])
+    return res.rows;
 }
 
 
@@ -128,6 +133,8 @@ function updateTaskDefValues(task, newTask){
 
     return newTask
 }
+
+
 
 function addFiltersToQuery(query, filters){
     let finalQuery = query;

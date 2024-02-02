@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const taskService = require('../services/taskService')
 const taskValidator = require('./validators/taskValidator')
-const checkValidations = require('./validators/validationUtils')
+const checkValidations = require('./validators/validationUtils');
+const userService = require('../services/userService');
+
 
 
 router.get('/', async (req, res) => {
@@ -11,15 +13,19 @@ router.get('/', async (req, res) => {
   console.log("[TASK FIND BY ID] The filters", filters)
 
   try {
-    let task;
+    // let task
+    // if(Object.keys(filters).length === 0){
+      // task = await taskService.findTaskByUserId(user_id);
+      const userInfo = await userService.findUserById(user_id)
+      const task_inbox = await taskService.getInfo(user_id, 1)
+      const task_ca = await taskService.getInfo(user_id, 2)
+      const task_prog = await taskService.getInfo(user_id, 3)
+      const task_arch = await taskService.getInfo(user_id, 4)
+    // }else{
+      // task = await taskService.findTasksByFilters(user_id, filters)
+    // }
 
-    if(Object.keys(filters).length === 0){
-      task = await taskService.findTaskByUserId(user_id);
-    }else{
-      task = await taskService.findTasksByFilters(user_id, filters)
-    }
-
-    res.send(task);
+    res.send({userName: userInfo.name, task_inbox: task_inbox, task_ca: task_ca, task_prog: task_prog, task_arch: task_arch});
   } catch (error) {
     console.log('[Exception]:', error.message)
     res.sendStatus(404);

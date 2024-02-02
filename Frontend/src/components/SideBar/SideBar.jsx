@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import userService from '../../services/user/userService';
 import Profile from './Profile';
 import { sideBar } from '../../styles/globalStyles';
 import ActionScheme from './Actions';
 import Colors from '../../styles/colors';
+import taskService from '../../services/task/taskService';
 const Separator = () => {
     return (
         <View style={sideBar.separator} />
@@ -22,27 +22,38 @@ function getMonthName(month) {
 
 export default ({ navigation }) => {
     
-    const [info, setInfo] = React.useState({})
+    const [username, setUsername] = React.useState([])
+    const [normalTask, setNormalTask ] = React.useState([])
+    const [importantTask, setimportantTask ] = React.useState([])
     React.useEffect(() => {
         async function fetchData() {
-        //   const tasksDB = await taskService.getTasks({ state: props.state });
-        //   if (tasksDB.error) {
-        //     return authState.signOut();
-        //   }
-    
-        //   console.log("Estas son las tareas que se devuelven", tasksDB)
-    
-        //   const seletedAux = {}
-        //   tasksDB.forEach(task => {
-        //     seletedAux[task.task_id] = false;
-        //   })
-    
-        //   seletedAux.total = 0;
-    
-        //   setTasks(tasksDB)
-        //   setSelectedTasks(seletedAux)
+        const userAndTaks = await taskService.getInfo();
+        // console.log("DATOS AQUI", userAndTaks)
+            setUsername(userAndTaks.userName)
+            setNormalTask(userAndTaks.task_inbox[0])
+            setNormalTask(userAndTaks.task_ca[0])
+            
+            setNormalTask(userAndTaks.task_prog[0])
+            
+            setNormalTask(userAndTaks.task_arch[0])
+            if(task_inbox[1] != null){
+                setimportantTask(userAndTaks.task_inbox[1])
+            }
+            if(task_ca[1] != null){
+                setimportantTask(userAndTaks.task_ca[1])
+            }
+            if(task_prog[1] != null){
+                setimportantTask(userAndTaks.task_prog[1])
+            }
+            if(task_arch[1] != null){
+                setimportantTask(userAndTaks.task_arch[1])
+            }
+            
+            
+
         }
-    })
+        fetchData();
+    }, [])
 
 
     return (
