@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 
 
-function Inbox(props) {
+function CuantoAntes(props) {
     return (
         <ActionScreen {...props} state={TaskStates.CUANTO_ANTES}>
             <View style={styles.action}>
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Inbox;
+export default CuantoAntes;

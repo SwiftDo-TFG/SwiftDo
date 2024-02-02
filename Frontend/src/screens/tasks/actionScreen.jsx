@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
 
-
 import styles from './actionScreen.styles'
 import { PopUpModal } from "../../components/PopUpModal";
 import PopUpModal2 from "../../components/PopUpModalAux";
+import PopUpModalPadre from "../../components/modals/PopUpModalPadre";
+import MoveTaskModal from "../../components/modals/MoveTaskModal";
+import CreateTaskModal from "../../components/modals/CreateTaskModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
+import { actStyle } from "../../styles/globalStyles";
 
 
 function ActionScreen(props) {
@@ -212,69 +215,72 @@ function ActionScreen(props) {
   const ITEM_SIZE = 62; //Tamaño tarea + margin
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-        {props.children}
-      </TouchableOpacity>
-      {!isDataLoaded && <LoadingIndicator />}
-      <NativeBaseProvider>
+    <SafeAreaView style={{flex:1}}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+          {props.children}
+        </TouchableOpacity>
+        {!isDataLoaded && <LoadingIndicator />}
+        <NativeBaseProvider>
 
-        <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />
+          <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />
 
-        {/* <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
-          <FontAwesome5 name="plus" size={24} color="white" />
-        </TouchableOpacity> */}
-        <AddButton />
-        <Modal
-          visible={isModalVisible}
-          transparent={true}
-          animationType={"fade"}
-        >
-          <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalStyle}>
-                <TouchableOpacity onPress={() => {
-                  setIsModalVisible(false)
-                  showAddTaskPopUp()
-                }}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
-                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
-                      Tarea
-                    </Text>
-                  </View>
-                  <View style={{ marginBottom: 20, marginLeft: 6 }}>
-                    <Text style={{ color: "#2C3E50" }}>Organiza y estructura las acciones y actividades que tienes previsto llevar a cabo.</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                  setIsModalVisible(false)
-                }}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <MaterialCommunityIcons style={{ marginRight: 10 }} name="hexagon-slice-6" size={26} color="#2C3E50" />
-                    <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
-                      Proyecto
-                    </Text>
-                  </View>
-                  <View style={{ marginLeft: 6 }}>
-                    <Text style={{ color: "#2C3E50" }}>Planifica tus actividades para progresar de manera metódica y alcanza cada objetivo en tu proyecto GTD.</Text>
-                  </View>
-                </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.addButton} onPress={}>
+            <FontAwesome5 name="plus" size={24} color="white" />
+          </TouchableOpacity> */}
+          <AddButton onPress={() =>  showAddTaskPopUp()} onLongPress={() => setIsModalVisible(true)}/>
+
+          <Modal
+            visible={isModalVisible}
+            transparent={true}
+            animationType={"fade"}
+          >
+            <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalStyle}>
+                  <TouchableOpacity onPress={() => {
+                    setIsModalVisible(false)
+                    showAddTaskPopUp()
+                  }}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
+                      <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                        Tarea
+                      </Text>
+                    </View>
+                    <View style={{ marginBottom: 20, marginLeft: 6 }}>
+                      <Text style={{ color: "#2C3E50" }}>Organiza y estructura las acciones y actividades que tienes previsto llevar a cabo.</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    setIsModalVisible(false)
+                  }}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="hexagon-slice-6" size={26} color="#2C3E50" />
+                      <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
+                        Proyecto
+                      </Text>
+                    </View>
+                    <View style={{ marginLeft: 6 }}>
+                      <Text style={{ color: "#2C3E50" }}>Planifica tus actividades para progresar de manera metódica y alcanza cada objetivo en tu proyecto GTD.</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+            </TouchableWithoutFeedback>
+          </Modal>
 
-        {/* MOVE MODAL   */}
-        <PopUpModal
-          title="Mover a"
-          ref={(target) => moveRef = target}
-          touch={hideMovePopUp}
-          data={popuplist}
-          mode='move'
-        />
+          {/* MOVE MODAL   */}
+          <PopUpModal
+            title="Mover a"
+            ref={(target) => moveRef = target}
+            touch={hideMovePopUp}
+            data={popuplist}
+            mode='move'
+          />
+
 
         {/* EDIT MODAL   */}
         {/* <PopUpModal
@@ -296,17 +302,21 @@ function ActionScreen(props) {
           mode='add'
         />
 
-        <PopUpModal2
+        <CreateTaskModal
           title="Editar"
           // ref={(target) => editRef = target}
           touch={hideEditPopUp}
           data={editingTask}
           onAccept={updateTask}
           isModalOpen={isEditModalOpen}
+          setIsModalOpen={setIsEditModalOpen}
           mode='edit'
         />
       </NativeBaseProvider>
+
     </View>
+    </SafeAreaView>
+    
   );
 }
 

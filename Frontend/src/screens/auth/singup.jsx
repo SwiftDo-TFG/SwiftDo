@@ -42,7 +42,7 @@ function SingUpScren({navigation}){
             <SafeAreaView>
                 <LoginImg/>
                 <View style={formStyle.textWrapper}>
-                    <Text style={[textStyle.largeText, {fontWeight: 'bold'}]}>Domina el caos, conquista tu día.</Text>
+                    <Text style={[textStyle.largeText, {fontWeight: 'bold', textAlign: 'center'}]}>Domina el caos, conquista tu día.</Text>
                 </View>
                 
                 {error.isError && <Text style={textStyle.textError}>{error.msg}</Text>}
