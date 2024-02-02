@@ -2,12 +2,10 @@ import * as React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import userService from '../../services/user/userService';
-import taskService from '../../services/task/taskService';
 import Profile from './Profile';
 import { sideBar } from '../../styles/globalStyles';
 import ActionScheme from './Actions';
 import Colors from '../../styles/colors';
-import Inbox from '../../screens/actions/inbox';
 const Separator = () => {
     return (
         <View style={sideBar.separator} />
@@ -24,23 +22,32 @@ function getMonthName(month) {
 
 export default ({ navigation }) => {
     
-    const [username, setUsername] = React.useState([])
-    const [totalTask, setTotalTask] = React.useState([])
-    const [fixedTask, setFixedTask] = React.useState([])
+    const [info, setInfo] = React.useState({})
     React.useEffect(() => {
         async function fetchData() {
-            const userInfo = await userService.getInfo(1);
-            const labelTask = await taskService.getTasks()
-            console.log("AQUI", labelTask.length)
-            setUsername(userInfo.name)
+        //   const tasksDB = await taskService.getTasks({ state: props.state });
+        //   if (tasksDB.error) {
+        //     return authState.signOut();
+        //   }
+    
+        //   console.log("Estas son las tareas que se devuelven", tasksDB)
+    
+        //   const seletedAux = {}
+        //   tasksDB.forEach(task => {
+        //     seletedAux[task.task_id] = false;
+        //   })
+    
+        //   seletedAux.total = 0;
+    
+        //   setTasks(tasksDB)
+        //   setSelectedTasks(seletedAux)
         }
-        fetchData();
-    }, [])
+    })
 
 
     return (
             <DrawerContentScrollView style={sideBar.container}>
-                <Profile name={username} formattedDate={formattedDate}/>
+                <Profile formattedDate={formattedDate}/>
                 
                 <Separator  />
                 <View style={sideBar.actionContainer}>

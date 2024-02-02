@@ -69,13 +69,6 @@ taskService.findTaskByUserId = async (id)=>{
     return res.rows;
 }
 
-// funcion provisional: 
-taskService.findByState = async (state)=>{
-    const res = await db.query('SELECT * FROM tasks WHERE state = $1 AND completed is not true', [state])
-    return res.rows;
-}
-
-
 taskService.addTag = async (id, tag)=>{
     const task = await db.query(querySearchByID, [id])
 

@@ -4,7 +4,7 @@ import Colors from "../../styles/colors"
 
 
 
-const Profile = ({formattedDate, name}) =>{
+const Profile = ({formattedDate}) =>{
     return (
         <View style={sideBar.profileContainer}>
             <Image
@@ -12,7 +12,7 @@ const Profile = ({formattedDate, name}) =>{
                 source={require('../../assets/perfil.png')}
             />
             <View style={{marginLeft: 15}}>
-                <Text style={[textStyle.largeText, {fontWeight: '600', paddingBottom: 5}]}>{name}</Text>
+                <Text style={[textStyle.largeText, {fontWeight: '600', paddingBottom: 5}]}>Usuario</Text>
                 <Text style={[textStyle.smallText, {color: Colors.grey}]}>{formattedDate}</Text>
             </View>
         </View>
