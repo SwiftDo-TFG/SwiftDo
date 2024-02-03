@@ -69,19 +69,6 @@ router.post('/:id', taskValidator.validateModify(), checkValidations, async (req
   }
 })
 
-router.get('/:id', async (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-
-  try {
-    const task = await taskService.findTaskById(id);
-    res.send(task);
-  } catch (error) {
-    console.log('[Exception]:', error.message)
-    res.sendStatus(404);
-  }
-})
-
 
 router.get('/info', async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;
@@ -101,5 +88,19 @@ router.get('/info', async (req, res) => {
     res.sendStatus(404);
   }
 })
+
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+
+  try {
+    const task = await taskService.findTaskById(id);
+    res.send(task);
+  } catch (error) {
+    console.log('[Exception]:', error.message)
+    res.sendStatus(404);
+  }
+})
+
 
 module.exports = router;
