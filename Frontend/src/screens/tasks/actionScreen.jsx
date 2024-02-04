@@ -28,8 +28,10 @@ function ActionScreen(props) {
   let moveRef = React.createRef();
   let editRef = React.createRef();
   let addRef = React.createRef();
-  
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const authState = useContext(AuthContext);
 
   useEffect(() => {
@@ -69,6 +71,7 @@ function ActionScreen(props) {
       if (taskId !== -1) {
         task.task_id = taskId;
         setTasks([...tasks, task]);
+        setIsCreateModalOpen(false);
         // setTaskText("");
         // setIsModalVisible(false);
       } else {
@@ -99,6 +102,7 @@ function ActionScreen(props) {
       const updatedTasks = tasks.map((task) =>
         task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
       );
+      isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
       setTasks(updatedTasks);
     } else {
       console.error("Error al actualizar la tarea en la base de datos");
@@ -151,8 +155,15 @@ function ActionScreen(props) {
     setSelectAll(!selectAll);
   };
 
-  const showMovePopUp = () => {
-    moveRef.show();
+  const showMovePopUp = (id) => {
+    const taskToEdit = tasks.find(task => task.task_id === id);
+    
+    if (taskToEdit) {
+      setEditingTask(taskToEdit);
+      setIsMoveModalOpen(true);
+    } else {
+      console.error(`No se encontró la tarea con ID: ${id}`);
+    }
   }
 
   const hideMovePopUp = () => {
@@ -161,11 +172,10 @@ function ActionScreen(props) {
 
   const showEditPopUp = (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
+    
     if (taskToEdit) {
-      setEditingTask([taskToEdit]);
-      // editRef.show(taskToEdit);
+      setEditingTask(taskToEdit);
       setIsEditModalOpen(true);
-
     } else {
       console.error(`No se encontró la tarea con ID: ${id}`);
     }
@@ -176,7 +186,7 @@ function ActionScreen(props) {
   }
 
   const showAddTaskPopUp = () => {
-    addRef.show();
+    setIsCreateModalOpen(true);
   }
 
   const hideAddTaskPopUp = () => {
@@ -215,7 +225,7 @@ function ActionScreen(props) {
   const ITEM_SIZE = 62; //Tamaño tarea + margin
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
           {props.children}
@@ -228,7 +238,7 @@ function ActionScreen(props) {
           {/* <TouchableOpacity style={styles.addButton} onPress={}>
             <FontAwesome5 name="plus" size={24} color="white" />
           </TouchableOpacity> */}
-          <AddButton onPress={() =>  showAddTaskPopUp()} onLongPress={() => setIsModalVisible(true)}/>
+          <AddButton onPress={() => showAddTaskPopUp()} onLongPress={() => setIsModalVisible(true)} />
 
           <Modal
             visible={isModalVisible}
@@ -273,50 +283,39 @@ function ActionScreen(props) {
           </Modal>
 
           {/* MOVE MODAL   */}
-          <PopUpModal
-            title="Mover a"
-            ref={(target) => moveRef = target}
-            touch={hideMovePopUp}
-            data={popuplist}
-            mode='move'
+          <MoveTaskModal
+            title="Move"
+            // touch={hideEditPopUp}
+            editingTask={editingTask}
+            onAccept={updateTask}
+            isModalOpen={isMoveModalOpen}
+            setIsModalOpen={setIsMoveModalOpen}
           />
 
+          {/* EDIT MODAL   */}
+          <CreateTaskModal
+            title="Editar"
+            // touch={hideEditPopUp}
+            editingTask={editingTask}
+            onAccept={updateTask}
+            isModalOpen={isEditModalOpen}
+            setIsModalOpen={setIsEditModalOpen}
+          />
+          
+          {/* ADD MODAL   */}
+          <CreateTaskModal
+            title="Añadir"
+            // touch={hideEditPopUp}
+            // editingTask={editingTask}
+            onAccept={addTask}
+            isModalOpen={isCreateModalOpen}
+            setIsModalOpen={setIsCreateModalOpen}
+          />
+        </NativeBaseProvider>
 
-        {/* EDIT MODAL   */}
-        {/* <PopUpModal
-          title="Editar"
-          ref={(target) => editRef = target}
-          touch={hideEditPopUp}
-          data={editingTask}
-          onAccept={updateTask}
-          mode='edit'
-        /> */}
-
-        {/* ADD MODAL   */}
-        <PopUpModal
-          title="Añadir"
-          ref={(target) => addRef = target}
-          touch={hideAddTaskPopUp}
-          data={[{ title: "" }]}
-          onAccept={addTask}
-          mode='add'
-        />
-
-        <CreateTaskModal
-          title="Editar"
-          // ref={(target) => editRef = target}
-          touch={hideEditPopUp}
-          data={editingTask}
-          onAccept={updateTask}
-          isModalOpen={isEditModalOpen}
-          setIsModalOpen={setIsEditModalOpen}
-          mode='edit'
-        />
-      </NativeBaseProvider>
-
-    </View>
+      </View>
     </SafeAreaView>
-    
+
   );
 }
 

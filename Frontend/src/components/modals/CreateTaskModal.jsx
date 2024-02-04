@@ -1,16 +1,15 @@
 import PopUpModal from "./PopUpModalPadre"
 import { View, TextInput, TouchableOpacity, Modal, Text } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 
 
 
 function CreateTaskModal(props) {
-
     const [state, setState] = useState({
         show: false,
-        editedTitle: '',
+        editedTitle:  '',
         editedDescription: '',
         isImportant: false,
         date_name: 'Fecha',
@@ -22,33 +21,52 @@ function CreateTaskModal(props) {
     const [isEditingDescription, setIEditingDescription] = useState(false);
     const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-    const onAcceptFunction = (item, state) => {
+    function setValuesToEdit(){
+        if(props.editingTask){
+            setState({
+                ...state,
+                editedTitle: props.editingTask.title ? props.editingTask.title : '',
+                editedDescription: props.editingTask.description ? props.editingTask.description : '',
+                isImportant: props.editingTask.important_fixed ? props.editingTask.important_fixed: false,
+                state: props.editingTask.state ? props.editingTask.state : "1"
+            })
+        }
+    }
+
+    const onAcceptFunction = (stateAux) => {
         const updatedTask = {};
-        Object.keys(item).forEach(key => {
-            if (item[key] !== null) {
-                updatedTask[key] = item[key];
-            }
-        });
+
+        if(props.editingTask){
+            Object.keys(props.editingTask).forEach(key => {
+                if (props.editingTask[key] !== null) {
+                    updatedTask[key] = props.editingTask[key];
+                }
+            });
+        }
         console.log("FECHA: ", state.date_name)
         if (state.date_name !== 'Fecha') updatedTask.date_limit = new Date(state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
-        else if (state === "3") updatedTask.date_limit = today
+        else if (stateAux === "3") updatedTask.date_limit = today
         if (state.editedDescription !== '') updatedTask.description = state.editedDescription;
         updatedTask.title = state.editedTitle;
         updatedTask.important_fixed = state.isImportant;
-        updatedTask.state = state;
+        updatedTask.state = stateAux;
         console.log(updatedTask)
-        // props.onAccept(updatedTask);
-        props.onCloseModal();
+        props.onAccept(updatedTask);
     }
 
     const Title = () => {
+        const onTitleChange = (text) => {
+            setState({ ...state, editedTitle: text })
+            setIsEditingTitle(true)
+        };
+
         return (
             <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8 }}>
                 <TextInput
                     style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
-                    // value={state.editedTitle}
+                    value={state.editedTitle}
                     placeholder="Nueva Tarea"
-                    // onChangeText={(text) => setState({ ...state, editedTitle: text })}
+                    onChangeText={onTitleChange}
                     maxLength={50}
                     multiline={true}
                 />
@@ -63,7 +81,12 @@ function CreateTaskModal(props) {
                 isImportant: !prevState.isImportant,
             }));
         };
-    
+
+        const onDescriptionChange = (text) => {
+            setState({ ...state, editedDescription: text })
+            setIEditingDescription(true)
+        };
+
         return (
             <View style={{ height: '100%', justifyContent: 'flex-end' }}>
                 <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
@@ -73,7 +96,7 @@ function CreateTaskModal(props) {
                                 style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                                 value={state.editedDescription}
                                 placeholder="Descripcion..."
-                                onChangeText={(text) => setState({ ...state, editedDescription: text })}
+                                onChangeText={onDescriptionChange}
                                 multiline={true}
                                 maxLength={200}
                             />
@@ -178,7 +201,7 @@ function CreateTaskModal(props) {
                                 </Modal>
                                 <TouchableOpacity
                                     style={styles.acceptButton}
-                                    onPress={() => onAcceptFunction(item, state.state)}>
+                                    onPress={() => onAcceptFunction(state.state)}>
                                     <Text style={styles.acceptButtonText}>Aceptar</Text>
                                 </TouchableOpacity>
                             </View>
@@ -190,11 +213,13 @@ function CreateTaskModal(props) {
     }
 
     function onCloseModal(){
+        setIEditingDescription(false);
+        setIsEditingTitle(false);
         props.setIsModalOpen(false);
     }
 
     return (
-        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal}>
+        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
             <Title />
             <Body />
         </PopUpModal>
