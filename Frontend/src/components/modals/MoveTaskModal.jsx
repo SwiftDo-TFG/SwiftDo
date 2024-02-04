@@ -19,6 +19,7 @@ function MoveTaskModal(props) {
     const Body = () => {
         const onAcceptFunction = (stateAux) => {
             const updatedTask = {};
+            const today = new Date();
             
             Object.keys(props.editingTask).forEach(key => {
                 if (props.editingTask[key] !== null) {
