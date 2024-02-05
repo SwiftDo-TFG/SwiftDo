@@ -26,7 +26,7 @@ const ActionScheme = ({onPress, icon, iconColor, text, totalTasks, importantTask
                 )}
                 {totalTasks !== undefined && totalTasks !== 0 &&  (
                 <>
-                    <View style={[sideBar.count]}>
+                    <View style={sideBar.count}>
                         <Text>{totalTasks}</Text>
                     </View>
                 </>  
