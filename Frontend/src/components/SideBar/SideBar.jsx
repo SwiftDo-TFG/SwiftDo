@@ -56,9 +56,9 @@ export default ({ navigation }) => {
                         <ActionScheme onPress={() => navigation.navigate('Hoy')} icon={"play"} iconColor={Colors.dark} text={"Hoy"} /> 
                     </View>
                     
-                    <ActionScheme onPress={() => navigation.navigate('Cuanto antes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total}/>
+                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total}/>
                     <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total}/>
-                    <ActionScheme onPress={() => navigation.navigate('Algun dia')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total}/>
+                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total}/>
 
                 </View>
                 

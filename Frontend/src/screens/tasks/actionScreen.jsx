@@ -166,10 +166,6 @@ function ActionScreen(props) {
     }
   }
 
-  const hideMovePopUp = () => {
-    moveRef.hide();
-  }
-
   const showEditPopUp = (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
     
@@ -181,48 +177,9 @@ function ActionScreen(props) {
     }
   }
 
-  const hideEditPopUp = () => {
-    editRef.hide();
-  }
-
   const showAddTaskPopUp = () => {
     setIsCreateModalOpen(true);
   }
-
-  const hideAddTaskPopUp = () => {
-    addRef.hide();
-  }
-
-  const popuplist = [
-    {
-      id: 1,
-      title: 'Archivados'
-    },
-    {
-      id: 2,
-      title: 'Hoy'
-    },
-    {
-      id: 3,
-      title: 'Cuanto antes'
-    },
-    {
-      id: 4,
-      title: 'Programadas'
-    },
-    {
-      id: 5,
-      title: 'Algun día'
-    },
-    {
-      id: 6,
-      title: 'Proyecto'
-    },
-
-  ]
-
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const ITEM_SIZE = 62; //Tamaño tarea + margin
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator, useWindowDimensions} from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -29,7 +29,7 @@ const LoginStack = createNativeStackNavigator();
 
 function Router() {
   const state = React.useContext(AuthContext);
-  const dimensions = useWindowDimensions(); 
+  const dimensions = useWindowDimensions();
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -83,10 +83,10 @@ function Router() {
   return (
     <Drawer.Navigator
       drawerStyle={sideBar.dims}
-      drawerContent={(props) => <SideBar {...props}/>}
+      drawerContent={(props) => state.userToken != null ? <SideBar {...props} /> : <></>}
+      gestureEnabled={state.userToken != null}
       screenOptions={{
-        drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
-        
+        drawerType: (dimensions.width >= 768 && state.userToken != null) ? 'permanent' : 'front',
       }}
     >
       {state.userToken == null ? (

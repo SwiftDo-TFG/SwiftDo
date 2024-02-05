@@ -1,9 +1,21 @@
-import { Modal, View, TouchableOpacity, Text} from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 
 
 const SelectStateModal = (props) => {
+
+    const OutSide = ({onCloseModal, isModalOpen}) => {
+        const view = <View style={{ flex: 1, width: '100%' }} />;
+        if (!isModalOpen) return view;
+        return (
+            <TouchableWithoutFeedback onPress={() => { onCloseModal() }} style={{ flex: 1, width: '100%' }}>
+                {view}
+            </TouchableWithoutFeedback>
+        );
+    }
+
+
     return (
         <Modal
             animationType="slide"
@@ -12,6 +24,7 @@ const SelectStateModal = (props) => {
             onRequestClose={() => props.setState({ ...props.state, showStatusSelector: false })}
         >
             <View style={styles.stateModalContainer}>
+                <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal}/>
                 <View style={styles.modalStyle}>
                     <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                         <View style={styles.textContainer}>

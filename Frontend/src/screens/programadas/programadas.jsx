@@ -10,6 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
+import CreateTaskModal from "../../components/modals/CreateTaskModal"
+import MoveTaskModal from "../../components/modals/MoveTaskModal"
 
 
 const ProgramadasScreen = (props) => {
@@ -20,11 +22,10 @@ const ProgramadasScreen = (props) => {
     const [isDataLoaded, setDataLoaded] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState({});
 
-    const marked = useRef(utils.getMarkedDates(tasks));
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
 
-    let moveRef = React.createRef();
-    let editRef = React.createRef();
-    let addRef = React.createRef();
+    const marked = useRef(utils.getMarkedDates(tasks));
 
     useEffect(() => {
 
@@ -66,11 +67,11 @@ const ProgramadasScreen = (props) => {
     }, [props.navigation])
 
     const showEditPopUp = (id) => {
-        //TODO const taskToEdit = { task_id: 1, title: 'Task 1, this is the title' }
         const taskToEdit = tasks.find(task => task.task_id === id);
+
         if (taskToEdit) {
-            setEditingTask([taskToEdit]);
-            editRef.show();
+            setEditingTask(taskToEdit);
+            setIsEditModalOpen(true);
         } else {
             console.error(`No se encontró la tarea con ID: ${id}`);
         }
@@ -83,54 +84,26 @@ const ProgramadasScreen = (props) => {
         setSelectedTasks({ ...aux, total: aux.total + factor });
     };
 
-    const hideEditPopUp = () => {
-        editRef.hide();
+    const showMovePopUp = (id) => {
+        const taskToEdit = tasks.find(task => task.task_id === id);
+
+        if (taskToEdit) {
+            setEditingTask(taskToEdit);
+            setIsMoveModalOpen(true);
+        } else {
+            console.error(`No se encontró la tarea con ID: ${id}`);
+        }
     }
-
-    const showMovePopUp = () => {
-        moveRef.show();
-    }
-
-    const hideMovePopUp = () => {
-        moveRef.hide();
-    }
-
-    const popuplist = [
-        {
-            id: 1,
-            title: 'Archivados'
-        },
-        {
-            id: 2,
-            title: 'Hoy'
-        },
-        {
-            id: 3,
-            title: 'Cuanto antes'
-        },
-        {
-            id: 4,
-            title: 'Programadas'
-        },
-        {
-            id: 5,
-            title: 'Algun día'
-        },
-        {
-            id: 6,
-            title: 'Proyecto'
-        },
-
-    ]
 
     const updateTask = async (updatedTask) => {
-        console.log(updatedTask.description.length)
+        console.log(updatedTask)
         const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
-
+        console.log("ID: ", updatedTaskResult)
         if (updatedTaskResult !== -1) {
             const updatedTasks = tasks.map((task) =>
                 task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
             );
+            isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
             setTasks(updatedTasks);
         } else {
             console.error("Error al actualizar la tarea en la base de datos");
@@ -203,22 +176,23 @@ const ProgramadasScreen = (props) => {
         <NativeBaseProvider>
             <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
                 {/* MOVE MODAL   */}
-                <PopUpModal
-                    title="Mover a"
-                    ref={(target) => moveRef = target}
-                    touch={hideMovePopUp}
-                    data={popuplist}
-                    mode='move'
+                <MoveTaskModal
+                    title="Move"
+                    // touch={hideEditPopUp}
+                    editingTask={editingTask}
+                    onAccept={updateTask}
+                    isModalOpen={isMoveModalOpen}
+                    setIsModalOpen={setIsMoveModalOpen}
                 />
 
                 {/* EDIT MODAL   */}
-                <PopUpModal
+                <CreateTaskModal
                     title="Editar"
-                    ref={(target) => editRef = target}
-                    touch={hideEditPopUp}
-                    data={editingTask}
+                    // touch={hideEditPopUp}
+                    editingTask={editingTask}
                     onAccept={updateTask}
-                    mode='edit'
+                    isModalOpen={isEditModalOpen}
+                    setIsModalOpen={setIsEditModalOpen}
                 />
 
                 {/* ADD MODAL   */}

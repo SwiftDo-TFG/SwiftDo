@@ -11,6 +11,7 @@ const DatePickerModal = (props) => {
             animationType={'fade'}
             visible={props.state.showDatePicker}
             onRequestClose={() => props.setState({ ...props.state, showDatePicker: false })}
+            // {...props}
         >
             <View style={styles.modalDatePickerContainer}>
 

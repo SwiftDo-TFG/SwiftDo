@@ -69,14 +69,16 @@ function CreateTaskModal(props) {
         };
 
         const onDescriptionChange = (text) => {
-            //setState({ ...state, editedDescription: text })
             setDescription(text)
         };
 
         const onTitleChange = (text) => {
-            // setState({ ...state, editedTitle: text })
             setTitle(text)
         };
+
+        const openDatePickerModal = () =>{
+            setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
+        }
 
         return (
             <>
@@ -87,6 +89,7 @@ function CreateTaskModal(props) {
                         value={title}
                         placeholder="Nueva Tarea"
                         onChangeText={onTitleChange}
+                        onEndEditing={()=>{console.log("THIS END")}}
                         maxLength={50}
                         multiline={true}
                     />
@@ -107,7 +110,7 @@ function CreateTaskModal(props) {
                             </View>
                             <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <TouchableOpacity onPress={() => setState({ ...state, showDatePicker: true })}>
+                                    <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
                                             <Ionicons name="calendar-outline" size={22} color="#a0a0a0" />
                                             &nbsp; {state.date_name}
@@ -169,7 +172,7 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
                                     
-                                    <SelectStateModal state={state} setState={setState} handleSelectState={handleSelectState}/>
+                                    <SelectStateModal state={state} setState={setState} handleSelectState={handleSelectState} onCloseModal={() => setState({ ...state, showStatusSelector: false })}/>
 
                                     <TouchableOpacity
                                         style={styles.acceptButton}
