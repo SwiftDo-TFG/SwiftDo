@@ -15,7 +15,7 @@ const getTaskItemStyle = () => {
   };
 };
 
-const LeftSwipeActions = (showMovePopUp, id) => {
+const LeftSwipeActions = (showMovePopUp, id, isMenuVisible) => {
   // const width = translateX.interpolate({
   //   inputRange: [0, 1],
   //   outputRange: ['30%', '100%'],
@@ -36,42 +36,23 @@ const LeftSwipeActions = (showMovePopUp, id) => {
     // <Animated.View
     <TouchableOpacity
       // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
-      style={[styles.leftSwipe]}
+      style={[styles.leftSwipe, {height: (isMenuVisible ? 'auto' : 52)}]}
       onPress={() => showMovePopUp(id)}
     >
-      <Text
-        style={{
-          paddingHorizontal: '5%',
-          paddingVertical: '10%',
-        }}
-      // style={{
-      //   paddingHorizontal: 10,
-      //   fontWeight: "600",
-      //   paddingHorizontal: 30,
-      //   paddingVertical: 20,
-      // }}
-      >
+      <Text>
         <Entypo name="archive" size={20} color="white" />
       </Text>
     </TouchableOpacity>
   );
 };
 
-const RightSwipeActions = ({ onDelete, id, translateX }) => {
+const RightSwipeActions = ({ onDelete, id, translateX, isMenuVisible }) => {
   return (
     <TouchableOpacity
-      style={[styles.rightSwipe, { transform: [{ translateX: translateX }], }]}
+      style={[styles.rightSwipe, { transform: [{ translateX: translateX }], height: (isMenuVisible ? 'auto' : 52)}]}
       onPress={() => onDelete(id)}
     >
-      <Text
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: '5%',
-          paddingVertical: '10%',
-        }}
-      >
+      <Text>
         <FontAwesome5
           name="trash"
           size={20}
@@ -101,9 +82,9 @@ function recortarTitle(title){
 const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
-  const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id);
-  const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ onDelete, id: task.task_id, translateX });
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id, isMenuVisible);
+  const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ onDelete, id: task.task_id, translateX, isMenuVisible });
   // const backgroundTask = translateX.interpolate({
   //   inputRange: [0, 1],
   //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
@@ -161,7 +142,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
         setIsMenuVisible(!isMenuVisible);
       }}
     >
-      <Animated.View style={[getTaskItemStyle(), { backgroundColor: selectedTasks[task.task_id] ? '#ebd7b5' : (isMenuVisible ? '#bdecb6' : '#f2f2f2'), transform: [{ scale }], opacity, height: (isMenuVisible ? 'auto' : '52') }]}>
+      <Animated.View style={[getTaskItemStyle(), { backgroundColor: selectedTasks[task.task_id] ? '#ebd7b5' : (isMenuVisible ? '#bdecb6' : '#f2f2f2'), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
         {isSwiped && (
           <View style={{ flexDirection: 'column' }}>
             <View style={styles.innerContainer}>
@@ -179,8 +160,8 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                     <FontAwesome name="check-circle" size={24} color="#f39f18" />
                   )}
                 </TouchableOpacity>
-                <Text style={{ fontWeight: (isMenuVisible ? 'bold' : 'normal') }}>
-                  {(task.title.length > 37 && !isMenuVisible) ? `${task.title.substring(0, 30)}...` : task.title}
+                <Text style={{ fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
+                  {(task.title.length > 37 && (!isMenuVisible || selectedTasks[task.task_id])) ? `${task.title.substring(0, 30)}...` : task.title}
                 </Text>
               </View>
               <View
