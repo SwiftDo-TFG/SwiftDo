@@ -9,10 +9,11 @@ function SelectionPanel (props){
     const [selectAll, setSelectAll] = useState(false);
     
     const archiveSelectedTask = () => {
-        const updatedTasks = tasks.filter((task) => selectedTasks.includes(task.task_id));
-        const updatedArchiveTasks = [...archiveTask, ...updatedTasks]
-        setArchiveTask(updatedArchiveTasks);
-        deleteSelectedTask()
+        // const updatedTasks = tasks.filter((task) => selectedTasks.includes(task.task_id));
+        // const updatedArchiveTasks = [...archiveTask, ...updatedTasks]
+        // setArchiveTask(updatedArchiveTasks);
+        // deleteSelectedTask()
+        props.setIsMoveModalOpen(true)
     }
 
     const deleteSelectedTask = () => {

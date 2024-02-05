@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -25,9 +25,6 @@ function ActionScreen(props) {
   const [editingTask, setEditingTask] = useState({});
   const [isDataLoaded, setDataLoaded] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  let moveRef = React.createRef();
-  let editRef = React.createRef();
-  let addRef = React.createRef();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
@@ -67,13 +64,13 @@ function ActionScreen(props) {
   const addTask = async (task) => {
     console.log("Nueva task", task)
     if (task.title.trim() !== "") {
-      const taskId = await taskService.createTask(task);
-      if (taskId !== -1) {
-        task.task_id = taskId;
+      const newTask = await taskService.createTask(task);
+      
+      if (newTask.task_id !== -1) {
+        task.task_id = newTask.task_id;
+        
         setTasks([...tasks, task]);
         setIsCreateModalOpen(false);
-        // setTaskText("");
-        // setIsModalVisible(false);
       } else {
         console.error("Error al agregar tarea a la base de datos");
       }
@@ -94,6 +91,15 @@ function ActionScreen(props) {
     setSelectedTasks([]);
   }
 
+  const handleUpdateTasks = async (updatedTask) => {
+
+    if (selectedTasks.total > 0) {
+      await updateTaskList(updatedTask.state);
+    } else {
+      await updateTask(updatedTask);
+    }
+  }
+
   const updateTask = async (updatedTask) => {
     console.log(updatedTask)
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
@@ -109,6 +115,15 @@ function ActionScreen(props) {
     }
   };
 
+  const updateTaskList = async (state) => {
+
+    const list_ids = Object.keys(selectedTasks).filter(key => selectedTasks[key] === true);
+
+    const total = await taskService.moveTaskList(list_ids, state);
+
+    setIsMoveModalOpen(false);
+  };
+
   // Hay que cambiarlo ya que no solo se le pasa el id y el title si no que tambien se le pasa toda la info de la tarea
   const ArchiveTask = (id, text) => {
     setArchiveTask([...archiveTask, { task_id: id, title: text }]);
@@ -122,42 +137,9 @@ function ActionScreen(props) {
     deleteSelectedTask()
   }
 
-  const moveTask = (id, destiny) => {
-    const gettask = tasks.find(id);
-    const updatedTasks = tasks.filter((task) => !selectedTasks.includes(task.task_id));
-    setTasks(updatedTasks);
-  }
-
-  const toggleSelectTask = (taskId) => {
-    let aux = selectedTasks
-    let factor = aux[taskId] ? -1 : 1
-    aux[taskId] = !aux[taskId];
-    setSelectedTasks({ ...aux, total: aux.total + factor });
-  };
-
-  const toggleSelectAll = () => {
-    // if (selectedTasks.length === tasks.length) {
-    //   setSelectedTasks([]);
-    //   setSelectAll(false);
-    // } else {
-    //   const allTaskIds = tasks.map(task => task.task_id);
-    //   setSelectedTasks(allTaskIds);
-    //   setSelectAll(true);
-    // }
-
-    let selecteds = selectedTasks;
-
-    tasks.forEach(task => {
-      selecteds[task.task_id] = !selectAll;
-    });
-
-    setSelectedTasks({ ...selecteds, total: !selectAll ? tasks.length : 0 })
-    setSelectAll(!selectAll);
-  };
-
   const showMovePopUp = (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
-    
+
     if (taskToEdit) {
       setEditingTask(taskToEdit);
       setIsMoveModalOpen(true);
@@ -168,7 +150,7 @@ function ActionScreen(props) {
 
   const showEditPopUp = (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
-    
+
     if (taskToEdit) {
       setEditingTask(taskToEdit);
       setIsEditModalOpen(true);
@@ -190,7 +172,14 @@ function ActionScreen(props) {
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
 
-          <TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />
+          <TaskList
+            tasks={tasks}
+            showEditPopUp={showEditPopUp}
+            showMovePopUp={showMovePopUp}
+            selectedTasks={selectedTasks}
+            setSelectedTasks={setSelectedTasks}
+            setIsMoveModalOpen={setIsMoveModalOpen}
+          />
 
           {/* <TouchableOpacity style={styles.addButton} onPress={}>
             <FontAwesome5 name="plus" size={24} color="white" />
@@ -244,7 +233,7 @@ function ActionScreen(props) {
             title="Move"
             // touch={hideEditPopUp}
             editingTask={editingTask}
-            onAccept={updateTask}
+            onAccept={handleUpdateTasks}
             isModalOpen={isMoveModalOpen}
             setIsModalOpen={setIsMoveModalOpen}
           />
@@ -258,7 +247,7 @@ function ActionScreen(props) {
             isModalOpen={isEditModalOpen}
             setIsModalOpen={setIsEditModalOpen}
           />
-          
+
           {/* ADD MODAL   */}
           <CreateTaskModal
             title="Añadir"

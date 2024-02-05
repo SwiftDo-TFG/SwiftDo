@@ -95,6 +95,15 @@ const ProgramadasScreen = (props) => {
         }
     }
 
+    const handleUpdateTasks = async (updatedTask) => {
+
+        if (selectedTasks.total > 0) {
+            await updateTaskList(updatedTask.state);
+        } else {
+            await updateTask(updatedTask);
+        }
+    }
+
     const updateTask = async (updatedTask) => {
         console.log(updatedTask)
         const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
@@ -110,13 +119,22 @@ const ProgramadasScreen = (props) => {
         }
     };
 
+    const updateTaskList = async (state) => {
+
+        const list_ids = Object.keys(selectedTasks).filter(key => selectedTasks[key] === true);
+
+        const total = await taskService.moveTaskList(list_ids, state);
+
+        setIsMoveModalOpen(false);
+    };
+
     function TasksCalendar() {
         return (
             <>
                 <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />
                 {selectedTasks.total > 0 &&
                     <View style={styles.selectionPanel}>
-                        <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} />
+                        <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} setIsMoveModalOpen={setIsMoveModalOpen} />
                     </View>
                 }
                 <AgendaList
@@ -180,7 +198,7 @@ const ProgramadasScreen = (props) => {
                     title="Move"
                     // touch={hideEditPopUp}
                     editingTask={editingTask}
-                    onAccept={updateTask}
+                    onAccept={handleUpdateTasks}
                     isModalOpen={isMoveModalOpen}
                     setIsModalOpen={setIsMoveModalOpen}
                 />

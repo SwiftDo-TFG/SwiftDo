@@ -6,7 +6,6 @@ import SelectionPanel from "./SelectionPanel";
 
 
 function TaskList(props) {
-    const [selectedTasks, setSelectedTasks] = useState({});
     const [archiveTask, setArchiveTask] = useState([]);
 
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -21,21 +20,23 @@ function TaskList(props) {
 
         seletedAux.total = 0;
 
-        setSelectedTasks(seletedAux)
+        props.setSelectedTasks(seletedAux)
 
     }, []);
 
     const toggleSelectTask = (taskId) => {
-        let aux = selectedTasks
+        let aux = props.selectedTasks
         let factor = aux[taskId] ? -1 : 1
         aux[taskId] = !aux[taskId];
-        setSelectedTasks({ ...aux, total: aux.total + factor });
+        props.setSelectedTasks({ ...aux, total: aux.total + factor });
+
+        console.log("SELECTED TASKS", props.selectedTasks)
     };
 
     const deleteTask = (taskId) => {
         const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
         setTasks(updatedTasks);
-        setSelectedTasks((prevSelectedTasks) =>
+        props.setSelectedTasks((prevSelectedTasks) =>
             prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId)
         );
     };
@@ -56,7 +57,7 @@ function TaskList(props) {
 
     return (
         <>
-            {selectedTasks.total > 0 && <SelectionPanel selectedTasks={selectedTasks} tasks={props.tasks} setSelectedTasks={setSelectedTasks}/>}
+            {props.selectedTasks.total > 0 && <SelectionPanel selectedTasks={props.selectedTasks} tasks={props.tasks} setSelectedTasks={props.setSelectedTasks} setIsMoveModalOpen={props.setIsMoveModalOpen}/>}
             <Animated.FlatList
                 data={props.tasks}
                 showsVerticalScrollIndicator={false}
@@ -86,7 +87,7 @@ function TaskList(props) {
                         onDelete={deleteTask}
                         scale={scale}
                         opacity={opacity}
-                        selectedTasks={selectedTasks}
+                        selectedTasks={props.selectedTasks}
                         showMovePopUp={props.showMovePopUp}
                         showEditPopUp={props.showEditPopUp}
                     />)
