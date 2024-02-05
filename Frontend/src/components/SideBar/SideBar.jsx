@@ -23,7 +23,7 @@ function getMonthName(month) {
 }
 
 export default ({ navigation }) => {
-    
+
     const [username, setUsername] = React.useState([])
     const [caData, setCaData] = React.useState([])
     const [inboxData, setInboxData] = React.useState([])
@@ -32,10 +32,9 @@ export default ({ navigation }) => {
 
     React.useEffect(() => {
         async function fetchData() {
-        const userAndTasks = await taskService.getInfo();
+            const userAndTasks = await taskService.getInfo();
 
             setUsername(userAndTasks.userName);
-
             setInboxData(userAndTasks.task_inbox);
             setCaData(userAndTasks.task_ca);
             setProgData(userAndTasks.task_prog);
@@ -46,35 +45,35 @@ export default ({ navigation }) => {
     }, [])
 
     return (
-            <DrawerContentScrollView style={sideBar.container}>
-                <Profile name={username} formattedDate={formattedDate}/>
-                
-                <Separator  />
+        <DrawerContentScrollView style={sideBar.container}>
+            <Profile name={username} formattedDate={formattedDate} />
+
+            <Separator />
+            <View style={sideBar.actionContainer}>
+                <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total} />
                 <View style={sideBar.actionContainer}>
-                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total}/>
-                    <View style={sideBar.actionContainer}>
-                        <ActionScheme onPress={() => navigation.navigate('Hoy')} icon={"play"} iconColor={Colors.dark} text={"Hoy"} /> 
-                    </View>
-                    
-                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total}/>
-                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total}/>
-                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total}/>
-
+                    <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
                 </View>
-                
-                <Separator />
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
-                <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"}/>
 
-            </DrawerContentScrollView>
-        
+                <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total} />
+                <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total} />
+                <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
+
+            </View>
+
+            <Separator />
+            <ActionScheme icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            {/* <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
+            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} /> */}
+
+        </DrawerContentScrollView>
+
     )
 }
