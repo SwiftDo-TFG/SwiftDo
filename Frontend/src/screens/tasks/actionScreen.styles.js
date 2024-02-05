@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         marginBottom: 10,
-        height: 52,
     },
     innerContainer: {
         flexDirection: 'row',
@@ -82,16 +81,16 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         width: '30%',
-        height: 52
+        marginBottom: 10,
     },
     leftSwipe: {
         backgroundColor: "#15ba53",
         alignItems: "center",
-        // justifyContent: "center",
+        justifyContent: "center",
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
         width: '30%',
-        height: 52
+        marginBottom: 10,
     },
     menuContainer: {
         marginVertical: 10,
