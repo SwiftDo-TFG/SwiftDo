@@ -30,6 +30,8 @@ function Router() {
   const state = React.useContext(AuthContext);
   const dimensions = useWindowDimensions();
 
+  console.log("THIS IS THE AUTH STATE", state, state.userToken != null)
+
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -96,9 +98,6 @@ function Router() {
       ) : (
         // User is signed in
         <>
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="About" component={AboutScreen} />
-          <Drawer.Screen name="Ejemplo" component={EjemploScreen} />
           <Drawer.Screen
             name="Inbox"
             component={Inbox}
@@ -152,44 +151,6 @@ function Router() {
         </>
       )}
     </Drawer.Navigator>
-  );
-}
-
-const HomeScreen = ({ navigation }) => {
-  const state = React.useContext(AuthContext);
-
-  return (
-    <View style={styles.container}>
-      <Text>Welcome to TFG-GTD APP!</Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <CustomButton
-          text="About"
-          handler={() => navigation.navigate('About')}
-        />
-        <View style={styles.verticleLine}></View>
-        <CustomButton
-          text="Logout"
-          handler={() => state.signOut()}
-        />
-      </View>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const AboutScreen = ({ navigation }) => {
-  const state = React.useContext(AuthContext);
-
-  return (
-    <View style={styles.aboutContainer}>
-      <Text style={{ marginBottom: 10, fontWeight: 'bold' }}>About TFG-GTD APP</Text>
-      <Text style={{ textAlign: 'justify' }}>The Productivity Methodology "Getting Things Done" (GTD), created by David Allen is one of the most effective methods for personal task organization. Its objective is to maximize productivity through the consolidation of all tasks, projects and activities in one place.</Text>
-      <CustomButton
-        text="Go to Home"
-        handler={() => navigation.navigate('Home')}
-      />
-      <StatusBar style="auto" />
-    </View>
   );
 }
 

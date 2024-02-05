@@ -7,6 +7,7 @@ import ActionScheme from './Actions';
 import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
 import CustomButton from '../buttons/Button';
+import AuthContext from '../../services/auth/context/authContext';
 
 const Separator = () => {
     return (
@@ -29,6 +30,7 @@ export default ({ navigation }) => {
     const [inboxData, setInboxData] = React.useState([])
     const [progData, setProgData] = React.useState([])
     const [archData, setArchData] = React.useState([])
+    const authstate = React.useContext(AuthContext);
 
     React.useEffect(() => {
         async function fetchData() {
@@ -72,6 +74,15 @@ export default ({ navigation }) => {
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} /> */}
+            <View style={{ flex: 1, marginTop: '150%', justifyContent: 'flex-start' }}>
+                <CustomButton
+                    text="Logout"
+                    handler={() => {
+                        navigation.closeDrawer();
+                        authstate.signOut()
+                    }}
+                />
+            </View>
 
         </DrawerContentScrollView>
 
