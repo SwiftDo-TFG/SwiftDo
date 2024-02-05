@@ -206,13 +206,12 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                       <TouchableOpacity onPress={() => showEditPopUp(task.task_id)}>
                         <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => showMovePopUp(task.task_id)}>
+                      {/* <TouchableOpacity onPress={() => showMovePopUp(task.task_id)}>
                         <Entypo name="archive" size={22} color="#15ba53" style={{ marginLeft: 6 }} />
                       </TouchableOpacity>
                       <TouchableOpacity>
                         <Octicons name="trash" size={22} color="red" style={{ marginLeft: 6 }} />
-                        {/* <FontAwesome5 name="trash" size={18} color="red" style={{ marginLeft: 6 }} /> */}
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </View>
                   </View>
                   {/* <Text>
