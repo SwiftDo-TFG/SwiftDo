@@ -165,6 +165,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+    stateModalContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
     modalStyle: {
         backgroundColor: 'white',
         margin: 20,

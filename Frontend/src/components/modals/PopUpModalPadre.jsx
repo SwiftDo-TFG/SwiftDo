@@ -33,7 +33,7 @@ function PopUpModal(props) {
     }
 
     return (
-        <Modal animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={props.onCloseModal}>
+        <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={props.onCloseModal} >
             <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end' }}>
                 <OutSide onCloseModal={props.onCloseModal} isModalOpen={props.isModalOpen}/>
                 <Animated.View
