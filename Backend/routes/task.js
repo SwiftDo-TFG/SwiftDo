@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const taskService = require('../services/taskService')
 const taskValidator = require('./validators/taskValidator')
-const checkValidations = require('./validators/validationUtils')
+const checkValidations = require('./validators/validationUtils');
+const userService = require('../services/userService');
+
 
 
 router.get('/', async (req, res) => {
@@ -13,9 +15,9 @@ router.get('/', async (req, res) => {
   try {
     let task;
 
-    if(Object.keys(filters).length === 0){
+    if (Object.keys(filters).length === 0) {
       task = await taskService.findTaskByUserId(user_id);
-    }else{
+    } else {
       task = await taskService.findTasksByFilters(user_id, filters)
     }
 
@@ -40,14 +42,28 @@ router.post('/', taskValidator.validateCreate(), checkValidations, async (req, r
   }
 })
 
+router.post('/movelist', async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const list_ids = req.body.list_ids;
+  const state = req.body.state;
+
+  try {
+    const t = await taskService.moveList(user_id, list_ids, state);
+    res.send(t);
+  } catch (err) {
+    console.log('[Exception]:', err.message)
+    res.sendStatus(409)
+  }
+})
+
 router.post('/addTag', async (req, res) => {
   const tag = req.body.name;
   const id = req.body.task_id;
 
-  try{
-    const t = await taskService.addTag(id,tag);
+  try {
+    const t = await taskService.addTag(id, tag);
     res.send(t);
-  } catch (err){
+  } catch (err) {
     console.log('[Exception]:', err.message)
     res.sendStatus(409)
   }
@@ -67,6 +83,26 @@ router.post('/:id', taskValidator.validateModify(), checkValidations, async (req
   }
 })
 
+
+router.get('/info', async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const filters = req.query;
+
+  try {
+
+    const userInfo = await userService.findUserById(user_id)
+    const task_inbox = await taskService.getInfo(user_id, 1)
+    const task_ca = await taskService.getInfo(user_id, 2)
+    const task_prog = await taskService.getInfo(user_id, 3)
+    const task_arch = await taskService.getInfo(user_id, 4)
+
+    res.send({ userName: userInfo.name, task_inbox: task_inbox, task_ca: task_ca, task_prog: task_prog, task_arch: task_arch });
+  } catch (error) {
+    console.log('[Exception]:', error.message)
+    res.sendStatus(404);
+  }
+})
+
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   console.log(id);
@@ -79,5 +115,6 @@ router.get('/:id', async (req, res) => {
     res.sendStatus(404);
   }
 })
+
 
 module.exports = router;

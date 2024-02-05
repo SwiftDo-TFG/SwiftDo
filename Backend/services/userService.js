@@ -47,6 +47,7 @@ userService.login = async (userData) => {
     return -1;
 }
 
+
 //Aux functions
 async function checkEmailExist(email){
     const res = await db.query('SELECT email FROM users WHERE email = $1', [email])

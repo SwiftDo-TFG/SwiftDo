@@ -5,6 +5,8 @@ const taskService = {}
 
 //Common queries
 const querySearchByID = "SELECT * FROM tasks WHERE task_id = $1"
+const querySearchByListIDS = "SELECT * FROM tasks WHERE task_id = ANY($1) and user_id = $2"
+
 
 taskService.createTask = async (task_data)=>{
     const task = completeTaskDefValues(task_data)
@@ -89,7 +91,36 @@ taskService.addTag = async (id, tag)=>{
             throw new Error('The tag was relationate to the task')
         }
     }
+    
+}
 
+taskService.moveList = async (user_id, list_ids, state) => {
+    const conn = await db.getClient();
+    let res = await conn.query(querySearchByListIDS, [list_ids, user_id]);
+
+    if(res.rows.length !== list_ids.length){
+        conn.release();
+        throw new Error('Unexpected Error')
+    }
+    let setStatement = "SET state = $1";
+
+    if(res.rows.length > 0 && res.rows[0].state === '3'){
+        setStatement = setStatement.concat(", date_limit = null");
+    }
+
+    const query = "UPDATE tasks "+ setStatement + " WHERE task_id = ANY($2) and user_id = $3"
+    
+    res = await conn.query(query, [state, list_ids, user_id]);
+    conn.release();
+
+    return {moved: res.rowCount};
+}
+
+
+// Obtenemos los datos de la sesion del usuario y las tareas asociadas segun el action.
+taskService.getInfo = async(user_id, state) => {
+    const res = await db.query('SELECT count (*) as total FROM tasks where user_id = $1 and state = $2 and completed is false group by important_fixed', [user_id, state])
+    return res.rows;
 }
 
 
@@ -132,6 +163,8 @@ function updateTaskDefValues(task, newTask){
 
     return newTask
 }
+
+
 
 function addFiltersToQuery(query, filters){
     let finalQuery = query;
