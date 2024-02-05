@@ -38,7 +38,6 @@ const sideBar = StyleSheet.create({
         paddingBottom: 20,
     },
     actionWrapper:{ // Wrapper que estructura un solo actionScheme
-        width: "80%",
         flexDirection: "row",
         alignItems: 'center',
         alignSelf: 'center',
@@ -78,14 +77,10 @@ const sideBar = StyleSheet.create({
     },
     countContainer: {
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        gap: 5,
-        marginRight: 10
+        gap: 2,
     },
     count:{
-        paddingHorizontal: 9,
-        paddingVertical: 1,
+        paddingHorizontal: 10,
         borderRadius: 10,
     }
 })

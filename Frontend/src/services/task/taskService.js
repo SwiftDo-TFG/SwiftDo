@@ -70,10 +70,9 @@ const updateTask = async (taskId, taskData) => {
 }
 const getInfo = async () => {
     try {
-        const url = '/task/'
-        const res = await instance.get(url)
+        const res = await instance.get('/task/info')
         const tasksAndUsername = res.data;
-        console.log("??????:", tasksAndUsername)
+
         return tasksAndUsername;
     }
     catch(e){
