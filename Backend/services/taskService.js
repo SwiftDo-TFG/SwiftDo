@@ -155,6 +155,8 @@ function updateTaskDefValues(task, newTask){
     task.num_version = parseInt(task.num_version);
     task.num_version += 1;
 
+    console.log("Prueba en entorno", newTask.state, task.state, parseInt(task.state), parseInt(task.state) === 3)
+
     if(newTask.state !== task.state && parseInt(task.state) === 3){
         task.date_limit = null;
         newTask.date_limit = null;
