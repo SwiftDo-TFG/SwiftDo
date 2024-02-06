@@ -157,6 +157,7 @@ function updateTaskDefValues(task, newTask){
 
     if(newTask.state !== task.state && parseInt(task.state) === 3){
         task.date_limit = null;
+        newTask.date_limit = null;
     }
     
     newTask = Object.assign(task, newTask)
