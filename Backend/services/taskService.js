@@ -105,7 +105,11 @@ taskService.moveList = async (user_id, list_ids, state) => {
     let setStatement = "SET state = $1";
 
     if(res.rows.length > 0 && res.rows[0].state === '3'){
-        setStatement = setStatement.concat(", date_limit = null");
+        setStatement = setStatement.concat(", date_limit = null ");
+    }
+
+    if(state === '3'){
+        setStatement = setStatement.concat(", date_limit = current_date");
     }
 
     const query = "UPDATE tasks "+ setStatement + " WHERE task_id = ANY($2) and user_id = $3"
@@ -154,8 +158,6 @@ function updateTaskDefValues(task, newTask){
     task.date_changed = new Date();
     task.num_version = parseInt(task.num_version);
     task.num_version += 1;
-
-    console.log("Prueba en entorno", newTask.state, task.state, parseInt(task.state), parseInt(task.state) === 3)
 
     if(newTask.state !== task.state && parseInt(task.state) === 3){
         task.date_limit = null;
