@@ -8,6 +8,7 @@ import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
 import CustomButton from '../buttons/Button';
 import AuthContext from '../../services/auth/context/authContext';
+import ConfirmButton from '../common/ConfirmButton';
 
 const Separator = () => {
     return (
@@ -74,15 +75,12 @@ export default ({ navigation }) => {
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
             <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} /> */}
-            <View style={{ flex: 1, marginTop: '150%', justifyContent: 'flex-start' }}>
-                <CustomButton
-                    text="Logout"
-                    handler={() => {
-                        navigation.closeDrawer();
-                        authstate.signOut()
-                    }}
-                />
-            </View>
+            <ConfirmButton 
+                onPress={() => {
+                    navigation.closeDrawer();
+                    authstate.signOut()
+                }} text="Logout"/>
+                
 
         </DrawerContentScrollView>
 
