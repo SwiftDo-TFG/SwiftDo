@@ -17,7 +17,7 @@ function CompleteTaskModal(props) {
             <View style={styles.confirmModalContainer}>
                 {/* <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal}/> */}
                 <View style={styles.modalStyle}>
-                    <View style={{ alignItems: 'center', height: '100%'}}>
+                    <View style={{ alignItems: 'center'}}>
                         <Text style={{ color: '#182E44', fontSize: 16, fontWeight: '500' }}>
                             Completar tarea/s
                         </Text>

@@ -177,7 +177,8 @@ const styles = StyleSheet.create({
     },
     confirmModalContainer: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: "center"
+        // maxHeight: 500
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalStyle: {
