@@ -32,8 +32,8 @@ taskService.modifyTask = async (task_id, task)=>{
     task = updateTaskDefValues(res.rows[0], task);
 
     if(task.user_id !== 0){ 
-        let res = await conn.query("UPDATE tasks SET user_id = $1, context_id = $2, project_id = $3, title = $4, description = $5, state = $6, verification_list = $7, important_fixed = $8, date_added = $9, date_completed = $10, date_limit = $11, date_changed = $12, num_version = $13 WHERE task_id = $14 RETURNING task_id",
-            [task.user_id, task.context_id, task.project_id, task.title, task.description, task.state, task.verification_list, task.important_fixed, task.date_added, task.date_completed, task.date_limit, task.date_changed, task.num_version, task_id]);
+        let res = await conn.query("UPDATE tasks SET user_id = $1, context_id = $2, project_id = $3, title = $4, description = $5, state = $6, verification_list = $7, important_fixed = $8, date_added = $9, date_completed = $10, date_limit = $11, date_changed = $12, num_version = $13, completed = $14 WHERE task_id = $15 RETURNING task_id",
+            [task.user_id, task.context_id, task.project_id, task.title, task.description, task.state, task.verification_list, task.important_fixed, task.date_added, task.date_completed, task.date_limit, task.date_changed, task.num_version, task.completed, task_id]);
         if(res.rowCount !== 1){
             throw new Error('The task does not exist');
         }else{
@@ -158,6 +158,10 @@ function updateTaskDefValues(task, newTask){
     task.date_changed = new Date();
     task.num_version = parseInt(task.num_version);
     task.num_version += 1;
+
+    if(newTask.completed){
+        task.date_completed = new Date();;
+    }
 
     if(newTask.state !== task.state && parseInt(task.state) === 3){
         task.date_limit = null;

@@ -25,6 +25,7 @@ taskValidators.validateModify = () => {
         context_id: {optional: true, isInt: { min: 0 } },
         project_id: {optional: true, isInt: { min: 0 } },
         date_limit: {optional: true, isISO8601: true},
+        completed: {optional: true, isBoolean: true},
         //TODO Verification list
     })
 }
