@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Profile from './Profile';
 import { sideBar } from '../../styles/globalStyles';
 import ActionScheme from './Actions';
 import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
-import CustomButton from '../buttons/Button';
 import AuthContext from '../../services/auth/context/authContext';
 import ConfirmButton from '../common/ConfirmButton';
+import projectService from '../../services/project/projectService';
 
 const Separator = () => {
     return (
@@ -31,6 +31,7 @@ export default ({ navigation }) => {
     const [inboxData, setInboxData] = React.useState([])
     const [progData, setProgData] = React.useState([])
     const [archData, setArchData] = React.useState([])
+    const [projects, setProjects] = React.useState([])
     const authstate = React.useContext(AuthContext);
 
     React.useEffect(() => {
@@ -43,9 +44,20 @@ export default ({ navigation }) => {
             setProgData(userAndTasks.task_prog);
             setArchData(userAndTasks.task_arch);
 
+            const projectData = await projectService.showProjectsByUser();
+            setProjects(projectData)
         }
         fetchData();
     }, [])
+
+    const addProjects = () => {
+        return projects.map((project, i) => (
+            <View key={i}>
+                <ActionScheme onPress={() => navigation.navigate(project.title)} icon={"folder-open"} iconColor={Colors.noir} text={project.title} />
+            </View>
+            
+        ));
+    };
 
     return (
         <DrawerContentScrollView style={sideBar.container}>
@@ -65,23 +77,16 @@ export default ({ navigation }) => {
             </View>
 
             <Separator />
-            <ActionScheme icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            {/* <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} />
-            <ActionScheme onPress={() => navigation.navigate('Project')} icon={"folder-open"} iconColor={Colors.noir} text={"Proyecto"} /> */}
-            <ConfirmButton 
-                onPress={() => {
-                    navigation.closeDrawer();
-                    authstate.signOut()
-                }} text="Logout"/>
-                
+            
+            {addProjects()}
 
+            <View style={{marginTop: '50%'}}>
+                <ConfirmButton 
+                    onPress={() => {
+                        navigation.closeDrawer();
+                        authstate.signOut()
+                    }} text="Logout"/>
+            </View>
         </DrawerContentScrollView>
 
     )
