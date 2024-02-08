@@ -87,6 +87,24 @@ const moveTaskList = async (list_ids, state) => {
     }
 }
 
+const completeTaskList = async (list_ids, completed) => {
+    try {
+        const dir = '/task/completelist'
+        const data = {
+            list_ids: list_ids,
+            completed: completed
+        }
+        
+        const response = await instance.post(dir, data);
+        const taskid = response.data;
+
+        return taskid;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
 const getInfo = async () => {
     try {
         const res = await instance.get('/task/info')
@@ -100,4 +118,4 @@ const getInfo = async () => {
     }
 }
 
-export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList}
+export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList}

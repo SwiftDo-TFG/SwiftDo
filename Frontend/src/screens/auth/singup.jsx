@@ -8,6 +8,7 @@ import ConfirmButton from '../../components/common/ConfirmButton';
 
 
 function SingUpScren({navigation}){
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -16,8 +17,13 @@ function SingUpScren({navigation}){
         setError({isError: false, msg:''})
         
         try {
-            if(password === password2){
-                const res = await authService.signup({ email: email, password: password });
+            if(username.length === 0 || email.length === 0 || password.length === 0){
+                setError({isError: true, msg:'Rellene todos los campos'});
+                setTimeout(()=>{
+                    setError({isError: false, msg:''})
+                }, 1500)
+            }else if(password === password2){
+                const res = await authService.signup({ name: username, email: email, password: password });
 
                 if(!res){
                     setError({isError: true, msg:'Algo fue mal...'});
@@ -47,6 +53,12 @@ function SingUpScren({navigation}){
                 
                 {error.isError && <Text style={textStyle.textError}>{error.msg}</Text>}
                 <View>
+                    <TextInput 
+                        placeholder="Usuario"
+                        value={username}
+                        onChangeText={setUsername}
+                        style={formStyle.textInput}
+                    />
                     <TextInput 
                         placeholder="Email"
                         value={email}

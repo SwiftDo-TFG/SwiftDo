@@ -6,7 +6,6 @@ import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Center } 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import styles from './actionScreen.styles'
-import { PopUpModal } from "../../components/PopUpModal";
 import AuthContext from '../../services/auth/context/authContext';
 
 const getTaskItemStyle = () => {
@@ -46,11 +45,11 @@ const LeftSwipeActions = (showMovePopUp, id, isMenuVisible) => {
   );
 };
 
-const RightSwipeActions = ({ onDelete, id, translateX, isMenuVisible }) => {
+const RightSwipeActions = ({ showCompleteModal, id, translateX, isMenuVisible }) => {
   return (
     <TouchableOpacity
       style={[styles.rightSwipe, { transform: [{ translateX: translateX }], height: (isMenuVisible ? 'auto' : 52)}]}
-      onPress={() => onDelete(id)}
+      onPress={() => showCompleteModal(id)}
     >
       <Text>
         <FontAwesome5
@@ -79,12 +78,12 @@ function recortarTitle(title){
   return `${t.substring(0, 20)}...`;
 }
 
-const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp }) => {
+const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id, isMenuVisible);
-  const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ onDelete, id: task.task_id, translateX, isMenuVisible });
+  const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ showCompleteModal, id: task.task_id, translateX, isMenuVisible });
   // const backgroundTask = translateX.interpolate({
   //   inputRange: [0, 1],
   //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],

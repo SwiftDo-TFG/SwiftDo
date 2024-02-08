@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+import Colors from "../../styles/colors";
 
 const styles = StyleSheet.create({
     container: {
@@ -149,6 +150,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    comfirmButtonText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     deleteButton: {
         backgroundColor: 'red',
         padding: 10,
@@ -167,6 +173,11 @@ const styles = StyleSheet.create({
     stateModalContainer: {
         flex: 1,
         justifyContent: 'flex-end',
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    confirmModalContainer: {
+        flex: 1,
+        justifyContent: 'center',
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalStyle: {
@@ -220,6 +231,23 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         zIndex: 2,
+    },
+    emptyListPanel: {
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyListPanelText:{
+        fontSize: 12,
+        color: Colors.grey
+    },  
+    roundedPanel:{
+        borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+        width: Dimensions.get('window').width * 0.5,
+        height: Dimensions.get('window').width * 0.5,
+        backgroundColor: Colors.softGrey,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

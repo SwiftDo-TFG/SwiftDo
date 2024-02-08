@@ -1,17 +1,17 @@
-import { View, Text, Animated, TouchableOpacity } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
-import { PopUpModal } from "../../components/PopUpModal";
 import { Ionicons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import CreateTaskModal from "../../components/modals/CreateTaskModal"
 import MoveTaskModal from "../../components/modals/MoveTaskModal"
+import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
 
 
 const ProgramadasScreen = (props) => {
@@ -22,39 +22,15 @@ const ProgramadasScreen = (props) => {
     const [isDataLoaded, setDataLoaded] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState({});
 
+    //Modal states
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
+    const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+
 
     const marked = useRef(utils.getMarkedDates(tasks));
 
     useEffect(() => {
-
-        async function fetchData() {
-            let tasksDB = await taskService.getTasks({ date_limit: '?' });
-            if (tasksDB.error) {
-                return authState.signOut();
-            }
-
-            const seletedAux = {}
-            tasksDB.forEach(task => {
-                seletedAux[task.task_id] = false;
-            })
-
-            seletedAux.total = 0;
-            setSelectedTasks(seletedAux)
-            setTasks(tasksDB);
-
-            tasksDB = tasksDB.reduce((acumulador, task) => {
-
-                if (!acumulador[task.date_limit]) {
-                    acumulador[task.date_limit] = { title: task.date_limit, data: [] };
-                }
-                acumulador[task.date_limit].data.push(task);
-                return acumulador;
-            }, {});
-
-            setCalendarTasks(Object.values(tasksDB))
-        }
 
         const unsubscribe = props.navigation.addListener('focus', () => {
             if (!isDataLoaded) {
@@ -65,6 +41,39 @@ const ProgramadasScreen = (props) => {
 
         return unsubscribe;
     }, [props.navigation])
+
+    async function fetchData() {
+        let tasksDB = await taskService.getTasks({ date_limit: '?', completed: false });
+        if (tasksDB.error) {
+            return authState.signOut();
+        }
+
+        const seletedAux = {}
+        tasksDB.forEach(task => {
+            seletedAux[task.task_id] = false;
+        })
+
+        seletedAux.total = 0;
+        setSelectedTasks(seletedAux)
+        setTasks(tasksDB);
+
+        tasksDB = tasksDB.reduce((acumulador, task) => {
+
+            if (!acumulador[task.date_limit]) {
+                acumulador[task.date_limit] = { title: task.date_limit, data: [] };
+            }
+            acumulador[task.date_limit].data.push(task);
+            return acumulador;
+        }, {});
+
+        setCalendarTasks(Object.values(tasksDB))
+    }
+
+    const reloadData = () => {
+        setDataLoaded(false)
+        fetchData()
+        setDataLoaded(true)
+    }
 
     const showEditPopUp = (id) => {
         const taskToEdit = tasks.find(task => task.task_id === id);
@@ -114,6 +123,7 @@ const ProgramadasScreen = (props) => {
             );
             isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
             setTasks(updatedTasks);
+            reloadData();
         } else {
             console.error("Error al actualizar la tarea en la base de datos");
         }
@@ -126,12 +136,46 @@ const ProgramadasScreen = (props) => {
         const total = await taskService.moveTaskList(list_ids, state);
 
         setIsMoveModalOpen(false);
+        reloadData();
     };
+
+    const completeTask = async () => {
+        const updatedTask = { ...editingTask };
+        const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, { completed: true });
+
+        if (updatedTaskResult !== -1) {
+            const updatedTasks = tasks.map((task) =>
+                task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
+            );
+            setIsCompleteModalOpen(false);
+            setTasks(updatedTasks);
+            reloadData();
+        } else {
+            console.error("Error al actualizar la tarea en la base de datos");
+        }
+    };
+
+    const showCompleteModal = (id) => {
+        const taskToEdit = tasks.find(task => task.task_id === id);
+
+        if (taskToEdit) {
+            setEditingTask(taskToEdit);
+            setIsCompleteModalOpen(true);
+        } else {
+            console.error(`No se encontró la tarea con ID: ${id}`);
+        }
+    }
 
     function TasksCalendar() {
         return (
             <>
-                <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />
+                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />: <ExpandableCalendar
+                    testID={"expandableCalendar"}
+                    firstDay={1}
+                    markedDates={marked.current}
+                    initialPosition={ExpandableCalendar.positions.CLOSED}
+                />}
+                
                 {selectedTasks.total > 0 &&
                     <View style={styles.selectionPanel}>
                         <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} setIsMoveModalOpen={setIsMoveModalOpen} />
@@ -158,11 +202,12 @@ const ProgramadasScreen = (props) => {
                         })
 
                         return (
-                            <View style={styles.taskContainer}>
+                            <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
                                 <SelectableTask
                                     task={item.item} selectedTasks={selectedTasks}
                                     showEditPopUp={showEditPopUp}
                                     showMovePopUp={showMovePopUp}
+                                    showCompleteModal={showCompleteModal}
                                     onPress={() => toggleSelectTask(item.item.task_id)}
                                     scale={scale}
                                     opacity={opacity}
@@ -211,6 +256,15 @@ const ProgramadasScreen = (props) => {
                     onAccept={updateTask}
                     isModalOpen={isEditModalOpen}
                     setIsModalOpen={setIsEditModalOpen}
+                />
+
+                <CompleteTaskModal
+                    title="Test"
+                    // touch={hideEditPopUp}
+                    // editingTask={editingTask}
+                    onAccept={completeTask}
+                    isModalOpen={isCompleteModalOpen}
+                    setIsModalOpen={setIsCompleteModalOpen}
                 />
 
                 {/* ADD MODAL   */}

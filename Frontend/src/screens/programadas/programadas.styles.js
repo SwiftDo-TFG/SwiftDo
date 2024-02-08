@@ -4,7 +4,11 @@ const styles = StyleSheet.create({
     taskContainer: {
         flex: 1,
         paddingHorizontal: 15,
-        marginVertical: 10,
+    },
+    taskContainerFirst: {
+        flex: 1,
+        paddingHorizontal: 15,
+        marginTop: 10,
     },
     taskItem: {
 

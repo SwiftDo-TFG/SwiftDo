@@ -1,4 +1,4 @@
-import PopUpModal from "./PopUpModalPadre"
+import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';

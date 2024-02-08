@@ -6,7 +6,6 @@ import projectService from "../../services/project/projectService";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TaskList from "../tasks/TaskList";
 import { NativeBaseProvider } from "native-base";
-import { PopUpModal } from "../../components/PopUpModal";
 
 
 function Project() {

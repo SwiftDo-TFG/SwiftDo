@@ -6,8 +6,6 @@ import SelectionPanel from "./SelectionPanel";
 
 
 function TaskList(props) {
-    const [archiveTask, setArchiveTask] = useState([]);
-
     const scrollY = useRef(new Animated.Value(0)).current;
     const ITEM_SIZE = 62; //Tamaño tarea + margin
 
@@ -57,7 +55,15 @@ function TaskList(props) {
 
     return (
         <>
-            {props.selectedTasks.total > 0 && <SelectionPanel selectedTasks={props.selectedTasks} tasks={props.tasks} setSelectedTasks={props.setSelectedTasks} setIsMoveModalOpen={props.setIsMoveModalOpen}/>}
+            {props.selectedTasks.total > 0 && 
+                <SelectionPanel 
+                    selectedTasks={props.selectedTasks} 
+                    tasks={props.tasks} 
+                    setSelectedTasks={props.setSelectedTasks} 
+                    setIsMoveModalOpen={props.setIsMoveModalOpen}
+                    setIsCompleteModalOpen={props.setIsCompleteModalOpen}
+                />
+            }
             <Animated.FlatList
                 data={props.tasks}
                 showsVerticalScrollIndicator={false}
@@ -90,6 +96,7 @@ function TaskList(props) {
                         selectedTasks={props.selectedTasks}
                         showMovePopUp={props.showMovePopUp}
                         showEditPopUp={props.showEditPopUp}
+                        showCompleteModal={props.showCompleteModal}
                     />)
                 }}
             // ItemSeparatorComponent={() => <Separator />}

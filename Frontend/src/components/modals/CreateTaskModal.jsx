@@ -1,4 +1,4 @@
-import PopUpModal from "./PopUpModalPadre"
+import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
@@ -22,12 +22,18 @@ function CreateTaskModal(props) {
 
     function setValuesToEdit() {
         if (props.editingTask) {
+            let fecha = 'Fecha'
+            if(props.editingTask.date_limit){
+                fecha = new Date(props.editingTask.date_limit);
+                fecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')} 00:00`
+            }
             setState({
                 ...state,
                 editedTitle: props.editingTask.title ? props.editingTask.title : '',
                 editedDescription: props.editingTask.description ? props.editingTask.description : '',
                 isImportant: props.editingTask.important_fixed ? props.editingTask.important_fixed : false,
-                state: props.editingTask.state ? props.editingTask.state : "1"
+                state: props.editingTask.state ? props.editingTask.state : "1",
+                date_name: fecha
             })
         }
     }
