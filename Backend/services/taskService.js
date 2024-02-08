@@ -121,6 +121,25 @@ taskService.moveList = async (user_id, list_ids, state) => {
 }
 
 
+taskService.completeList = async (user_id, list_ids, completed) => {
+    const conn = await db.getClient();
+    let res = await conn.query(querySearchByListIDS, [list_ids, user_id]);
+    console.log(completed)
+    if(res.rows.length !== list_ids.length){
+        conn.release();
+        throw new Error('Unexpected Error')
+    }
+    let setStatement = "SET completed = $1 , date_completed = current_date";
+
+    const query = "UPDATE tasks " + setStatement + " WHERE task_id = ANY($2) and user_id = $3"
+    
+    res = await conn.query(query, [completed, list_ids, user_id]);
+    conn.release();
+
+    return {completed: res.rowCount};
+}
+
+
 // Obtenemos los datos de la sesion del usuario y las tareas asociadas segun el action.
 taskService.getInfo = async(user_id, state) => {
     const res = await db.query('SELECT count (*) as total FROM tasks where user_id = $1 and state = $2 and completed is false group by important_fixed', [user_id, state])

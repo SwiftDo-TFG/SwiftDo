@@ -30,4 +30,19 @@ taskValidators.validateModify = () => {
     })
 }
 
+
+taskValidators.validateMoveList = () => {
+    return checkSchema({
+        list_ids: {notEmpty: true, isArray: true},
+        state: { notEmpty: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
+    })
+}
+
+taskValidators.validateCompleteList = () => {
+    return checkSchema({
+        list_ids: {notEmpty: true, isArray: true},
+        completed: {notEmpty: true, isBoolean: true},
+    })
+}
+
 module.exports = taskValidators;

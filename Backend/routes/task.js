@@ -42,13 +42,27 @@ router.post('/', taskValidator.validateCreate(), checkValidations, async (req, r
   }
 })
 
-router.post('/movelist', async (req, res) => {
+router.post('/movelist', taskValidator.validateMoveList(), checkValidations, async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;
   const list_ids = req.body.list_ids;
   const state = req.body.state;
 
   try {
     const t = await taskService.moveList(user_id, list_ids, state);
+    res.send(t);
+  } catch (err) {
+    console.log('[Exception]:', err.message)
+    res.sendStatus(409)
+  }
+})
+
+router.post('/completelist', taskValidator.validateCompleteList(), checkValidations,async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const list_ids = req.body.list_ids;
+  const completed = req.body.completed;
+
+  try {
+    const t = await taskService.completeList(user_id, list_ids, completed);
     res.send(t);
   } catch (err) {
     console.log('[Exception]:', err.message)
