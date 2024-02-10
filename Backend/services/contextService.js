@@ -20,6 +20,12 @@ contextService.deleteContext = async (id) => {
     }
 }
 
+contextService.showContextsByUser = async (user_id) => {
+    
+    const res = await db.query("SELECT * FROM areas_contexts WHERE user_id = $1", [user_id]);
+    return res.rows;
+}
+
 contextService.findContext = async (id) => {
     const res = await db.query('SELECT * FROM areas_contexts WHERE context_id = $1', [id])
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Alert } from "react-native";
+import projectService from "../../services/project/projectService"
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import TaskList from "./TaskList";
@@ -9,6 +10,7 @@ import AddButton from "../../components/common/addButton";
 import styles from './actionScreen.styles'
 import MoveTaskModal from "../../components/modals/MoveTaskModal";
 import CreateTaskModal from "../../components/modals/CreateTaskModal";
+import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { actStyle } from "../../styles/globalStyles";
@@ -30,6 +32,7 @@ function ActionScreen(props) {
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
 
   useEffect(() => {
@@ -84,6 +87,34 @@ function ActionScreen(props) {
       }
     }
   };
+
+  const addProject = async (project) => {
+    console.log("Nuevo proyecto", project)
+    if (project.title.trim() !== "") {
+      const newProject = await projectService.createProject(project);
+      console.log(newProject);
+      if (newProject.project_id !== -1) {
+
+        setIsCreateProjectOpen(false);
+      } else {
+        console.error("Error al agregar tarea a la base de datos");
+      }
+    }
+  };
+
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
+    setTasks(updatedTasks);
+    setSelectedTasks((prevSelectedTasks) =>
+      prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId)
+    );
+  };
+
+  const deleteSelectedTask = () => {
+    const updatedTasks = tasks.filter((task) => !selectedTasks.includes(task.task_id));
+    setTasks(updatedTasks);
+    setSelectedTasks([]);
+  }
 
   const handleUpdateTasks = async (updatedTask) => {
 
@@ -193,7 +224,7 @@ function ActionScreen(props) {
     setIsCreateModalOpen(true);
   }
 
-  const EmptyTaskListPanel = ({icon}) => {
+  const EmptyTaskListPanel = ({ icon }) => {
     return (
       <View style={styles.emptyListPanel}>
         <View style={styles.roundedPanel}>
@@ -212,7 +243,7 @@ function ActionScreen(props) {
         </TouchableOpacity>
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
-          {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon}/> :
+          {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
             <TaskList
               tasks={tasks}
               showEditPopUp={showEditPopUp}
@@ -232,6 +263,7 @@ function ActionScreen(props) {
             isModalVisible={isModalVisible}
             setIsModalVisible={setIsModalVisible}
             showAddTaskPopUp={showAddTaskPopUp}
+            setIsCreateProjectOpen={setIsCreateProjectOpen}
           />
 
           {/* MOVE MODAL   */}
@@ -254,7 +286,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsEditModalOpen}
           />
 
-          {/* ADD MODAL   */}
+          {/* ADD TASK MODAL   */}
           <CreateTaskModal
             title="Añadir"
             // touch={hideEditPopUp}
@@ -271,6 +303,15 @@ function ActionScreen(props) {
             onAccept={handleCompleteTasks}
             isModalOpen={isCompleteModalOpen}
             setIsModalOpen={setIsCompleteModalOpen}
+          />
+          {/* ADD PROJECT MODAL   */}
+          <CreateProjectModal
+            title="Añadir"
+            // touch={hideEditPopUp}
+            // editingTask={editingTask}
+            onAccept={addProject}
+            isModalOpen={isCreateProjectOpen}
+            setIsModalOpen={setIsCreateProjectOpen}
           />
         </NativeBaseProvider>
 

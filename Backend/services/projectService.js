@@ -11,8 +11,8 @@ projectService.createProject = async (project_data) =>{
         throw new Error("El proyecto se ha intentado crear sin titulo")
     }
  
-    let res = await db.query("INSERT INTO projects(title, description, user_id, completed, date_added, date_changed, date_completed) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING project_id", 
-        [project.title, project.description, project.user_id, project.completed, project.date_added, project.date_changed, project.date_completed])
+    let res = await db.query("INSERT INTO projects(title, description, user_id, completed, date_added, date_changed, date_completed, color) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING project_id", 
+        [project.title, project.description, project.user_id, project.completed, project.date_added, project.date_changed, project.date_completed, project.color])
     
     return res.rowCount === 1 ? res.rows[0] : -1
 }

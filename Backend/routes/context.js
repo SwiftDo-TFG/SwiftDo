@@ -3,6 +3,8 @@ const router = express.Router();
 const contextService = require('../services/contextService')
 const contextValidator = require('./validators/contextValidator')
 const checkValidations = require('./validators/validationUtils')
+
+
 router.post('/', contextValidator.validateCreate(), checkValidations, async (req, res)=>{//create
     try{
         const context = req.body;
@@ -12,6 +14,19 @@ router.post('/', contextValidator.validateCreate(), checkValidations, async (req
         console.log('[Exception]:',err.message)
         res.sendStatus(404);
     }
+})
+
+// Mostrar los contexts asociados a un usuario
+router.get('/', async(req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  try{
+      const contexts = await contextService.showContextsByUser(user_id);
+      res.send(contexts);
+  }
+  catch(e){
+      console.log('[Exception]: ', e.message)
+      res.status(500).send({ error: e.message })
+  }
 })
 
 router.delete('/:id', async (req, res)=>{//delete

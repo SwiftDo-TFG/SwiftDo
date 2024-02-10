@@ -38,7 +38,7 @@ export default ({ navigation }) => {
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
 
-            setUsername(userAndTasks.userName);
+             setUsername(userAndTasks.userName);
             setInboxData(userAndTasks.task_inbox);
             setCaData(userAndTasks.task_ca);
             setProgData(userAndTasks.task_prog);
