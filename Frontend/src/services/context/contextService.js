@@ -37,4 +37,16 @@ const showContextsByUser = async () => {
     }
 }
 
-export default { showContextsByUser }
+const createContext = async (context) => {
+    try {
+        const response = await instance.post('/context/', context);
+        const contextdata = response.data;
+
+        return contextdata;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+export default { showContextsByUser, createContext }

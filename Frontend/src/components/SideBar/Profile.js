@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, Animated } from "react-native";
+import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator  } from "react-native";
 import { sideBar, textStyle } from "../../styles/globalStyles";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 
@@ -10,7 +10,10 @@ const Profile = ({ name, formattedDate }) => {
     const [mostrarAreas, setMostrarAreas] = useState(false);
     const [animatedHeight] = useState(new Animated.Value(0));
     const [iconRotation] = useState(new Animated.Value(0));
-    const [userContext, setUserContext] = useState(['hola', 'adios', 'buenas']);
+    const [userContext, setUserContext] = useState([]);
+    const [newContextName, setNewContextName] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+
 
 
     useEffect(() => {
@@ -36,7 +39,7 @@ const Profile = ({ name, formattedDate }) => {
         } else {
             setMostrarAreas(!mostrarAreas);
             Animated.timing(animatedHeight, {
-                toValue: Object.keys(userContext).length * 31,
+                toValue: (Object.keys(userContext).length + 1) * 31,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -53,6 +56,14 @@ const Profile = ({ name, formattedDate }) => {
         outputRange: ['0deg', '90deg'],
     });
 
+    const handleNewContextSubmit = async () => {
+        setIsSaving(true);
+        await contextService.createContext({ name: newContextName });
+        setUserContext([...userContext, { name: newContextName }]);
+        setNewContextName('');
+        setIsSaving(false);
+    };
+
     return (
         <>
             <View style={sideBar.profileContainer}>
@@ -65,26 +76,44 @@ const Profile = ({ name, formattedDate }) => {
                     <Text style={[textStyle.smallText, { color: Colors.grey }]}>{formattedDate}</Text>
                 </View>
             </View>
-            <TouchableOpacity onPress={toggleAreas}>
-                <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'column' }}>
+                <TouchableOpacity onPress={toggleAreas}>
                     <View style={sideBar.areaContainer}>
                         <Text style={sideBar.areaText}>Áreas</Text>
                         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
                             <AntDesign name="caretright" size={24} color="#272c34" />
                         </Animated.View>
                     </View>
-                    {mostrarAreas && (
-                        <Animated.View style={{ height: animatedHeight, overflow: 'hidden', paddingHorizontal: 22 }}>
-                            {Object.keys(userContext).map((key, index) => (
-                                <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                    <AntDesign name="caretdown" size={16} color="#272c34" />
-                                    <Text style={{ fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
-                                </View>
-                            ))}
-                        </Animated.View>
-                    )}
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                {mostrarAreas && (
+                    <Animated.View style={{ height: animatedHeight, overflow: 'hidden', paddingHorizontal: 22 }}>
+                        {Object.keys(userContext).map((key, index) => (
+                            <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <AntDesign name="caretdown" size={16} color="#272c34" />
+                                <Text style={{ fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+                            </View>
+                        ))}
+                        <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <FontAwesome name="plus-square" size={17} color="#272c34" />
+                            <TextInput
+                                style={{ fontSize: 16, marginLeft: 15, width: '60%' }}
+                                placeholder="Nueva área"
+                                value={newContextName}
+                                onChangeText={text => setNewContextName(text)}
+                            />
+                            {newContextName.length > 0 && (
+                                <TouchableOpacity onPress={handleNewContextSubmit}>
+                                    {isSaving ? (
+                                        <ActivityIndicator color="#272c34" size="small" />
+                                    ) : (
+                                        <FontAwesome name="cloud-upload" size={17} color="#272c34" />
+                                    )}
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </Animated.View>
+                )}
+            </View>
         </>
     );
 };
