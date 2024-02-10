@@ -8,6 +8,7 @@ const checkValidations = require('./validators/validationUtils')
 router.post('/', contextValidator.validateCreate(), checkValidations, async (req, res)=>{//create
     try{
         const context = req.body;
+        context.user_id = res.locals.oauth.token.user.id;
         const t = contextService.createContext(context);
         res.send(t);
     }catch(err){

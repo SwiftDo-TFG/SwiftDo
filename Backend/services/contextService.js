@@ -4,8 +4,8 @@ const contextService = {}
 
 contextService.createContext = async (context) => {
     if (context !== null && context.length !== 0) {
-        let res = await db.query("INSERT INTO areas_contexts(name) VALUES ($1)", [context.name]);
-        return true;
+        let res = await db.query("INSERT INTO areas_contexts(name, user_id) VALUES ($1, $2)", [context.name, context.user_id]);
+        return res.rowCount === 1 ? res.rows[0].context_id: -1;
     } else {
         throw new Error("Tienen que estar rellenos los campos indicados");
     }
