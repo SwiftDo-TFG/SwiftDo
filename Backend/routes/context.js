@@ -9,8 +9,8 @@ router.post('/', contextValidator.validateCreate(), checkValidations, async (req
     try{
         const context = req.body;
         context.user_id = res.locals.oauth.token.user.id;
-        const t = contextService.createContext(context);
-        res.send(t);
+        const t = await contextService.createContext(context);
+        res.send({ context_id: t });
     }catch(err){
         console.log('[Exception]:',err.message)
         res.sendStatus(404);
