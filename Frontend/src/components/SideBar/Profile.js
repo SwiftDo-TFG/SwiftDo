@@ -15,8 +15,8 @@ const Profile = ({ name, formattedDate }) => {
 
     useEffect(() => {
         async function getAreas() {
-            // const userContext = await contextService.showContextsByUser();
-
+            const userContext = await contextService.showContextsByUser();
+            console.log(userContext)
         }
         getAreas();
     }, [])
