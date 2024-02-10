@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
+import projectService from "../../services/project/projectService"
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
@@ -12,6 +13,7 @@ import PopUpModal2 from "../../components/PopUpModalAux";
 import PopUpModalPadre from "../../components/modals/PopUpModalPadre";
 import MoveTaskModal from "../../components/modals/MoveTaskModal";
 import CreateTaskModal from "../../components/modals/CreateTaskModal";
+import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { actStyle } from "../../styles/globalStyles";
@@ -29,6 +31,7 @@ function ActionScreen(props) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
 
   useEffect(() => {
@@ -71,6 +74,20 @@ function ActionScreen(props) {
         
         setTasks([...tasks, task]);
         setIsCreateModalOpen(false);
+      } else {
+        console.error("Error al agregar tarea a la base de datos");
+      }
+    }
+  };
+
+  const addProject = async (project) => {
+    console.log("Nuevo proyecto", project)
+    if (project.title.trim() !== "") {
+      const newProject = await projectService.createProject(project);
+      console.log(newProject);
+      if (newProject.project_id !== -1) {
+       
+        setIsCreateProjectOpen(false);
       } else {
         console.error("Error al agregar tarea a la base de datos");
       }
@@ -210,7 +227,8 @@ function ActionScreen(props) {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
-                    setIsModalVisible(false)
+                    setIsModalVisible(false);
+                    setIsCreateProjectOpen(true);
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -223,6 +241,7 @@ function ActionScreen(props) {
                       <Text style={{ color: "#2C3E50" }}>Planifica tus actividades para progresar de manera metódica y alcanza cada objetivo en tu proyecto GTD.</Text>
                     </View>
                   </TouchableOpacity>
+
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -248,7 +267,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsEditModalOpen}
           />
 
-          {/* ADD MODAL   */}
+          {/* ADD TASK MODAL   */}
           <CreateTaskModal
             title="Añadir"
             // touch={hideEditPopUp}
@@ -256,6 +275,15 @@ function ActionScreen(props) {
             onAccept={addTask}
             isModalOpen={isCreateModalOpen}
             setIsModalOpen={setIsCreateModalOpen}
+          />
+          {/* ADD PROJECT MODAL   */}
+          <CreateProjectModal
+            title="Añadir"
+            // touch={hideEditPopUp}
+            // editingTask={editingTask}
+            onAccept={addProject}
+            isModalOpen={isCreateProjectOpen}
+            setIsModalOpen={setIsCreateProjectOpen}
           />
         </NativeBaseProvider>
 
