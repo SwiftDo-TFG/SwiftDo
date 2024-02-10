@@ -16,7 +16,7 @@ const Profile = ({ name, formattedDate }) => {
     useEffect(() => {
         async function getAreas() {
             const userContext = await contextService.showContextsByUser();
-            console.log(userContext)
+            setUserContext(userContext);
         }
         getAreas();
     }, [])
@@ -36,7 +36,7 @@ const Profile = ({ name, formattedDate }) => {
         } else {
             setMostrarAreas(!mostrarAreas);
             Animated.timing(animatedHeight, {
-                toValue: 100, // Ajusta el valor según sea necesario para mostrar todo el contenido
+                toValue: Object.keys(userContext).length * 31,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -75,10 +75,10 @@ const Profile = ({ name, formattedDate }) => {
                     </View>
                     {mostrarAreas && (
                         <Animated.View style={{ height: animatedHeight, overflow: 'hidden', paddingHorizontal: 22 }}>
-                            {userContext.map((context, index) => (
+                            {Object.keys(userContext).map((key, index) => (
                                 <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                                     <AntDesign name="caretdown" size={16} color="#272c34" />
-                                    <Text style={{ fontSize: 16, marginLeft: 15 }}>{context}</Text>
+                                    <Text style={{ fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
                                 </View>
                             ))}
                         </Animated.View>
