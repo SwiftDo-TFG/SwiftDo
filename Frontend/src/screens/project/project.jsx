@@ -22,7 +22,7 @@ function Project() {
     const [tasks, set_tasks] = React.useState([])
     React.useEffect(() => {
         async function fetchData() {
-            const project = await projectService.showContent(1);
+            const project = await projectService.showContent(3);
             set_project_data(project.project);
             set_tasks(project.tasks);
             console.log(project.tasks);

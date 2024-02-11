@@ -4,7 +4,7 @@ import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import * as React from 'react';
-import InputColor from 'react-input-color';
+// import InputColor from 'react-input-color';
 
 function CreateProjectModal(props) {
 

@@ -48,6 +48,9 @@ export default ({ navigation }) => {
             setProjects(projectData)
         }
         fetchData();
+        const interval = setInterval(fetchData, 20000); // Llamada a fetchData cada 20 segundos
+
+        return () => clearInterval(interval); // Reseteamos el contador del intervalo
     }, [])
 
     const addProjects = () => {
