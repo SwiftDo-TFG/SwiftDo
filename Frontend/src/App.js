@@ -21,7 +21,7 @@ import SideBar from './components/SideBar/SideBar';
 import ProjectScreen from './screens/project/project';
 import Archivadas from './screens/actions/archivadas';
 import { sideBar } from './styles/globalStyles';
-
+import projectService from './services/project/projectService';
 const Drawer = createDrawerNavigator();
 const LoginStack = createNativeStackNavigator();
 
@@ -29,9 +29,9 @@ const LoginStack = createNativeStackNavigator();
 function Router() {
   const state = React.useContext(AuthContext);
   const dimensions = useWindowDimensions();
+  const [projects, setProjects] = React.useState([])
 
   console.log("THIS IS THE AUTH STATE", state, state.userToken != null)
-
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -50,10 +50,31 @@ function Router() {
       // screen will be unmounted and thrown away.
       state.checkSession();
     };
-
     bootstrapAsync();
+    async function fetchData() {
+      const projectData = await projectService.showProjectsByUser();
+      setProjects(projectData)
+      console.log("[DATA]: ", projectData)
+    }
+    fetchData();
   }, []);
-
+  const addProjects = () => {
+    return projects.map((project, i) => (
+          
+          <Drawer.Screen
+            key={i}
+            name={project.title}
+            component={ProjectScreen}
+            options={{
+              title: project.title,
+              drawerIcon: () => (
+                <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
+              ),
+              headerShown: false
+            }}
+          />
+    ));
+};
   function HomeNotLogged() {
     return (
       <LoginStack.Navigator>
@@ -98,6 +119,7 @@ function Router() {
       ) : (
         // User is signed in
         <>
+        {/* Actions: */}
           <Drawer.Screen
             name="Inbox"
             component={Inbox}
@@ -125,18 +147,20 @@ function Router() {
               headerShown: false
             }}
           />
-          {/* <Drawer.Screen name="Project" component={ProjectScreen} /> */}
-          <Drawer.Screen
-            name="Project"
-            component={Project}
+         {/* Proyectos: */}
+         {/* <Drawer.Screen
+            
+            name={"TFG-GTD"}
+            component={ProjectScreen}
             options={{
-              title: 'Project',
+              title: "TFG-GTD",
               drawerIcon: () => (
                 <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
               ),
-              // headerShown: false
+              headerShown: false
             }}
-          />
+          /> */}
+          {addProjects()}
           <Drawer.Screen
             name="Programadas"
             component={Programadas}

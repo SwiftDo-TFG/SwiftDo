@@ -161,32 +161,32 @@ function Project() {
                 <MaterialCommunityIcons style={styles.icon} name="hexagon-slice-6" size={26} color= {project_data.color}  />
                 <Text style={styles.title}> {project_data.title} </Text>
             </Text>
-            <NativeBaseProvider>
+            {/* <NativeBaseProvider>
                 <View style={styles.header}>
                     {<TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />}
-                </View>
+                </View> */}
                 {/* MOVE MODAL   */}
-            <PopUpModal
+            {/* <PopUpModal
                 title="Mover a"
                 ref={(target) => moveRef = target}
                 touch={hideMovePopUp}
                 data={editingTask}
                 onAccept={updateTask}
                 mode='move'
-            />
+            /> */}
 
             {/* EDIT MODAL   */}
-            <PopUpModal
+            {/* <PopUpModal
                 title="Editar"
                 ref={(target) => editRef = target}
                 touch={hideEditPopUp}
                 data={editingTask}
                 onAccept={updateTask}
                 mode='edit'
-            />
+            /> */}
 
             {/* ADD MODAL   */}
-            <PopUpModal
+            {/* <PopUpModal
                 title="Añadir"
                 ref={(target) => addRef = target}
                 touch={hideAddTaskPopUp}
@@ -194,7 +194,7 @@ function Project() {
                 onAccept={addTask}
                 mode='add'
             />
-            </NativeBaseProvider>
+            </NativeBaseProvider> */}
         </View>
 
     )
