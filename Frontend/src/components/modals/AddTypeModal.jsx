@@ -31,6 +31,7 @@ const AddTypeModal = (props) =>{
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     props.setIsModalVisible(false)
+                    props.setIsCreateProjectOpen(true);
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>

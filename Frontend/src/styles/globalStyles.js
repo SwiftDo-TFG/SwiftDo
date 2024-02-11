@@ -45,7 +45,13 @@ const sideBar = StyleSheet.create({
     },
     actionText:{
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#272c34'
+    },
+    areaText:{
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: '#272c34'
     },
     iconStyle:{
         fontSize: 22
@@ -57,23 +63,23 @@ const sideBar = StyleSheet.create({
         alignItems: 'flex-start'
     },
 
-    todasAreasContainer: {
-        marginTop: 10,
-        marginBottom: 15,
-        backgroundColor: '#e3e4e5',
+    areaContainer: {
+        marginVertical: 10,
+        // backgroundColor: '#e3e4e5',
         paddingHorizontal: 22,
-        paddingVertical: 5,
-        borderRadius: 16,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
+        // paddingVertical: 5,
+        // borderRadius: 16,
+        // shadowColor: '#000000',
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 2,
+        // },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 4,
+        // elevation: 5,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     countContainer: {
         flexDirection: 'row',

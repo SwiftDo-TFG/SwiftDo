@@ -38,7 +38,7 @@ export default ({ navigation }) => {
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
 
-            setUsername(userAndTasks.userName);
+             setUsername(userAndTasks.userName);
             setInboxData(userAndTasks.task_inbox);
             setCaData(userAndTasks.task_ca);
             setProgData(userAndTasks.task_prog);
@@ -66,14 +66,10 @@ export default ({ navigation }) => {
             <Separator />
             <View style={sideBar.actionContainer}>
                 <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total} />
-                <View style={sideBar.actionContainer}>
-                    <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
-                </View>
-
+                <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
                 <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total} />
                 <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total} />
                 <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
-
             </View>
 
             <Separator />

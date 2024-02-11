@@ -25,7 +25,8 @@ CREATE TABLE tags (
 
 CREATE TABLE areas_contexts (
     context_id serial PRIMARY KEY,
-    name VARCHAR
+    name VARCHAR,
+    user_id INTEGER references "users" (user_id),
 );
 
 CREATE TABLE tasks (
