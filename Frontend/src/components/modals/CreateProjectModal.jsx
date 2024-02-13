@@ -46,7 +46,7 @@ function CreateProjectModal(props) {
         return (
             <>
                 {/* Title */}
-                <View style={{ flexDirection: 'row', justifyContent: 'start', alignItems: 'flex-start', marginTop: 10, marginLeft: 20, marginRight: 8 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8 }}>
 
                     <MaterialCommunityIcons name="hexagon-slice-6" size={26} color={color} />
                     <TextInput
@@ -60,9 +60,8 @@ function CreateProjectModal(props) {
                     />
                 </View>
                 {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-end' }}>
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-                        <View style={{ height: '50%' }}>
+                <View style={{ height: '100%', justifyContent: 'flex-start' }}>
+                    <View style={{ height: '70%', marginLeft: 20, marginRight: 8 }}>
                             <TextInput
                                 style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                                 value={description}
@@ -72,16 +71,13 @@ function CreateProjectModal(props) {
                                 maxLength={200}
                             />
                             <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8 }}> Color: </Text>
-                            <View style={[]}>
                                 <ColorPicker
                                     color={color}
                                     swatchesOnly={true}
                                     onColorChangeComplete={onColorChange}
                                     palette={['#000000', '#808080', '#A52A2A', '#FF0000', '#FFA500', '#FFFF00', '#0000FF', '#008000', '#EE82EE', '#FFC0CB', ]}
                                 />
-                            </View>
-                        </View>
-
+                        
 
                         <View style={{ flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: 13 }}>
                             <TouchableOpacity
