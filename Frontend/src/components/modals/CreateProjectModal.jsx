@@ -5,7 +5,6 @@ import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/ve
 import { useState, useEffect } from "react"
 import * as React from 'react';
 import { GithubPicker } from 'react-color'
-// import InputColor from 'react-input-color';
 
 function CreateProjectModal(props) {
 
