@@ -4,6 +4,7 @@ import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import * as React from 'react';
+import { GithubPicker } from 'react-color'
 // import InputColor from 'react-input-color';
 
 function CreateProjectModal(props) {
@@ -21,7 +22,7 @@ function CreateProjectModal(props) {
         const [color, setColor] = React.useState({});
 
         const onAcceptFunction = () => {
-            const createProject = {title: title, description: description, color: color};
+            const createProject = { title: title, description: description, color: color };
 
             // if (props.editingTask) {
             //     Object.keys(props.editingTask).forEach(key => {
@@ -41,7 +42,9 @@ function CreateProjectModal(props) {
         const onTitleChange = (text) => {
             setTitle(text)
         };
-
+        const onColorChange = (color) => {
+            setColor(color.hex)
+        };
         return (
             <>
                 {/* Title */}
@@ -68,11 +71,9 @@ function CreateProjectModal(props) {
                                 multiline={true}
                                 maxLength={200}
                             />
-                            <input
-                                type="color"
-                                value={color.hex}
-                                onChange={e => setColor(e.target.value)}
-                            />
+
+                            <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8}}> Color:</Text>
+                            <GithubPicker onChangeComplete={ onColorChange }/>
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: 13 }}>
