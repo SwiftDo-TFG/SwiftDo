@@ -63,30 +63,26 @@ export default ({ navigation }) => {
     };
 
     return (
-        <DrawerContentScrollView style={sideBar.container}>
-            <Profile name={username} formattedDate={formattedDate} />
-
-            <Separator />
-            <View style={sideBar.actionContainer}>
-                <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total} />
-                <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
-                <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total} />
-                <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total} />
-                <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
-            </View>
-
-            <Separator />
+        <View style={sideBar.container}>
+            <DrawerContentScrollView showsVerticalScrollIndicator={false}>
+                <Profile name={username} formattedDate={formattedDate} />
+                <Separator />
+                <View style={sideBar.actionContainer}>
+                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total} />
+                    <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
+                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total} />
+                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total} />
+                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
+                </View>
+                <Separator />
+                
+                {addProjects()}
+            </DrawerContentScrollView>
             
-            {addProjects()}
-
-            <View style={{marginTop: '50%'}}>
-                <ConfirmButton 
-                    onPress={() => {
-                        navigation.closeDrawer();
-                        authstate.signOut()
-                    }} text="Logout"/>
-            </View>
-        </DrawerContentScrollView>
+            <ConfirmButton onPress={() => { navigation.closeDrawer(); authstate.signOut() }} text="Logout"/>
+            
+        </View>
+        
 
     )
 }

@@ -168,7 +168,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                   { flexDirection: 'row' },
                 ]}>
                 {task.important_fixed && (
-                  <Ionicons name="flag" size={22} color="#be201c" />
+                  <Ionicons name="flag" size={15} color="#be201c" />
                 )}
               </View>
             </View>

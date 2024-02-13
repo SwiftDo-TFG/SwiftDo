@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService"
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
+import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
-
-import styles from './actionScreen.styles'
 import MoveTaskModal from "../../components/modals/MoveTaskModal";
 import CreateTaskModal from "../../components/modals/CreateTaskModal";
 import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
-import { actStyle } from "../../styles/globalStyles";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import styles from "./actionScreen.styles";
 
 
 function ActionScreen(props) {
@@ -48,7 +46,12 @@ function ActionScreen(props) {
   }, [authState, props.navigation]);
 
   async function fetchData() {
-    const tasksDB = await taskService.getTasks({ state: props.state, completed: false });
+    console.log("LLEGA AL FETCH")
+    let filter = { state: props.state, completed: false }
+    if(props.state === 5){
+      filter = { project_id: props.project_id, completed: false }
+    }
+    const tasksDB = await taskService.getTasks(filter);
     if (tasksDB.error) {
       return authState.signOut();
     }
@@ -238,9 +241,18 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-          {props.children}
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'flex-end', marginTop: 25}}>
+          { Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+            <Feather name="sidebar" size={28} color="black" />
+          </TouchableOpacity>)}
+          <View style={{minWidth: 50, alignItems: 'flex-end'}}>
+            <TouchableOpacity style={styles.area}>
+              <Text>Area</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        {props.children}
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :

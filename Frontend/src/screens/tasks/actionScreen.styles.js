@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 5,
-        paddingBottom: 5,
+        paddingBottom: 20,
     },
     checkgroup: {
         flex: 1,
@@ -29,16 +29,6 @@ const styles = StyleSheet.create({
     trashIcon: {
         marginLeft: 'auto',
         marginRight: 10,
-    },
-    addButton: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'orange',
-        borderRadius: 50,
-        padding: 22,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     modalView: {
         flex: 1,
@@ -249,6 +239,14 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.softGrey,
         justifyContent: 'center',
         alignItems: 'center'
+    }, 
+    area:{
+        borderRadius: 40,
+        backgroundColor: 'lightgrey',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
     }
 });
 

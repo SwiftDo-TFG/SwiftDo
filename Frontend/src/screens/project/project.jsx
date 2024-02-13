@@ -35,7 +35,7 @@ function Project() {
             const taskId = await taskService.createTask(task);
             if (taskId !== -1) {
                 task.task_id = taskId;
-                setTasks([...tasks, task]);
+                set_tasks([...tasks, task]);
                 // setTaskText("");
                 // setIsModalVisible(false);
             } else {
@@ -158,7 +158,7 @@ function Project() {
         //div
         <View style={styles.project}>
             <Text style={styles.header}>
-                <MaterialCommunityIcons style={styles.icon} name="hexagon-slice-6" size={26} color= {project_data.color}  />
+                <MaterialCommunityIcons style={styles.icon} name="circle-outline" size={26} color= {project_data.color}  />
                 <Text style={styles.title}> {project_data.title} </Text>
             </Text>
             {/* <NativeBaseProvider>

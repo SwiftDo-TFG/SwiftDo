@@ -128,7 +128,7 @@ const addButton = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     buttonPressed: {
-        transform: [{scale: 1.2}]
+        transform: [{scale: 1.4}]
     },
     iconContainer: {
         flexDirection: 'row',
@@ -168,9 +168,12 @@ const textStyle = StyleSheet.create({
 const formStyle = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 35,
+        marginHorizontal: 10, 
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     textWrapper: {
+        alignSelf: 'center',
         marginTop: -30,
         marginBottom: 30
     },
@@ -178,10 +181,11 @@ const formStyle = StyleSheet.create({
         padding: 10,
         borderWidth: 1,
         borderRadius: 5,
-        backgroundColor: "#EEEDED",
+        backgroundColor: Colors.softGrey,
         borderRadius: 10,
         fontSize: 16,
-        marginBottom: 14
+        marginBottom: 14,
+        
     },
     loadingIndicator: {
         padding: 10
@@ -213,11 +217,28 @@ const taskStyle = StyleSheet.create({
 })
 
 const actStyle = StyleSheet.create({
-    title: {
-        fontWeight: 'bold',
-        fontSize: 60,
-        marginBottom: 25, 
-        marginTop: 10,
+    action: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 30,
+    },
+    iconAction: {
+        fontSize: 30,
+        marginLeft: 10,
+        textAlign: 'center'
+    },
+    actionTitle: {
+        fontSize: 28,
+        marginLeft: 18,
+        fontWeight: 'bold'
+    },
+    emptyIcon: {
+        fontSize: 40
+    },
+    description:{
+        color: Colors.dark,
+        fontWeight: '600', 
+        marginVertical: 15
     }
 })
 

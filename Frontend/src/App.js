@@ -13,15 +13,18 @@ import AuthContext from './services/auth/context/authContext';
 import EjemploScreen from './screens/ejemplo';
 import Inbox from './screens/actions/inbox';
 import CuantoAntes from './screens/actions/cuantoAntes';
-import Project from './screens/project/project';
+// import Project from './screens/actions/project';
 import Programadas from './screens/programadas/programadas';
 // ICONS
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import SideBar from './components/SideBar/SideBar';
-import ProjectScreen from './screens/project/project';
+// import ProjectScreen from './screens/project/project';
 import Archivadas from './screens/actions/archivadas';
 import { sideBar } from './styles/globalStyles';
 import projectService from './services/project/projectService';
+import Project from './screens/actions/project';
+// import Project from './screens/project/project';
+
 const Drawer = createDrawerNavigator();
 const LoginStack = createNativeStackNavigator();
 
@@ -59,21 +62,18 @@ function Router() {
     fetchData();
   }, []);
   const addProjects = () => {
-    return projects.map((project, i) => (
-          
+
+    return projects && Array.isArray(projects) ? projects.map((project, i) => (
           <Drawer.Screen
             key={i}
             name={project.title}
-            component={ProjectScreen}
+            initialParams={{id:project.project_id, color: project.color, description: project.description}}
+            component={Project}
             options={{
               title: project.title,
-              drawerIcon: () => (
-                <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
-              ),
               headerShown: false
             }}
-          />
-    ));
+          />)) : console.log("Projects no es un array")
 };
   function HomeNotLogged() {
     return (
@@ -148,19 +148,6 @@ function Router() {
             }}
           />
          {/* Proyectos: */}
-         {/* <Drawer.Screen
-            
-            name={"TFG-GTD"}
-            component={ProjectScreen}
-            options={{
-              title: "TFG-GTD",
-              drawerIcon: () => (
-                <MaterialCommunityIcons name="hexagon-slice-6" size={26} color="red" />
-              ),
-              headerShown: false
-            }}
-          /> */}
-          {addProjects()}
           <Drawer.Screen
             name="Programadas"
             component={Programadas}
@@ -172,6 +159,7 @@ function Router() {
               headerShown: false
             }}
           />
+          {addProjects()}
         </>
       )}
     </Drawer.Navigator>
@@ -189,21 +177,3 @@ export default function App() {
 }
 
 registerRootComponent(App);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  aboutContainer: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
-  verticleLine: {
-    padding: 10
-  }
-});
