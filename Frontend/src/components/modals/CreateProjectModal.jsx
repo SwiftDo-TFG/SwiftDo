@@ -4,8 +4,7 @@ import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import * as React from 'react';
-import { GithubPicker } from 'react-color'
-
+import ColorPicker from 'react-native-wheel-color-picker'
 function CreateProjectModal(props) {
 
     const [state, setState] = useState({
@@ -18,7 +17,7 @@ function CreateProjectModal(props) {
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
         const [description, setDescription] = useState(state.editedDescription);
-        const [color, setColor] = React.useState({});
+        const [color, setColor] = React.useState('#000000');
 
         const onAcceptFunction = () => {
             const createProject = { title: title, description: description, color: color };
@@ -42,14 +41,16 @@ function CreateProjectModal(props) {
             setTitle(text)
         };
         const onColorChange = (color) => {
-            setColor(color.hex)
+            setColor(color)
         };
         return (
             <>
                 {/* Title */}
-                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8 }}>
+
+                    <MaterialCommunityIcons name="hexagon-slice-6" size={26} color={color} />
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
+                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
                         value={title}
                         placeholder="Nuevo Proyecto"
                         onChangeText={onTitleChange}
@@ -59,9 +60,8 @@ function CreateProjectModal(props) {
                     />
                 </View>
                 {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-end' }}>
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-                        <View style={{ height: '50%' }}>
+                <View style={{ height: '100%', justifyContent: 'flex-start' }}>
+                    <View style={{ height: '70%', marginLeft: 20, marginRight: 8 }}>
                             <TextInput
                                 style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                                 value={description}
@@ -70,10 +70,14 @@ function CreateProjectModal(props) {
                                 multiline={true}
                                 maxLength={200}
                             />
-
-                            <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8}}> Color:</Text>
-                            <GithubPicker onChangeComplete={ onColorChange }/>
-                        </View>
+                            <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8 }}> Color: </Text>
+                                <ColorPicker
+                                    color={color}
+                                    swatchesOnly={true}
+                                    onColorChangeComplete={onColorChange}
+                                    palette={['#000000', '#808080', '#A52A2A', '#FF0000', '#FFA500', '#FFFF00', '#0000FF', '#008000', '#EE82EE', '#FFC0CB', ]}
+                                />
+                        
 
                         <View style={{ flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: 13 }}>
                             <TouchableOpacity
