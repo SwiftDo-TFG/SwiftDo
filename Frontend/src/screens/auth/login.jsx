@@ -25,20 +25,22 @@ function SignInScreen({navigation}) {
     const authState = useContext(AuthContext);
     
     const handlePress = async () => {
-        setError(false); 
-        
-        try {
-          const res = await authState.signIn({ email, password });
-      
-          if (res === -1) {
-            setError(true);
+        if(email.length > 0 && password.length > 0){
+            setError(false); 
             
-            setTimeout(() => {
-              setError(false);
-            }, 1500);
-          }
-        } catch (error) {
-          console.error('Error al iniciar sesión:', error);
+            try {
+              const res = await authState.signIn({ email, password });
+          
+              if (res === -1) {
+                setError(true);
+                
+                setTimeout(() => {
+                  setError(false);
+                }, 1500);
+              }
+            } catch (error) {
+              console.error('Error al iniciar sesión:', error);
+            }
         }
     };
     return (

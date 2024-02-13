@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/tfggtdicon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.pabluskagamo.GTDApp"
     },
     "web": {
       "": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cf21098b-449e-4027-bf41-aeecc3d45d06"
+      }
     }
   }
 }
