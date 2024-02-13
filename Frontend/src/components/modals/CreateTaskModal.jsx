@@ -58,13 +58,23 @@ function CreateTaskModal(props) {
             if (description !== '') updatedTask.description = description;
             updatedTask.title = title;
             updatedTask.important_fixed = state.isImportant;
-            updatedTask.state = stateAux;
-            console.log(updatedTask)
+            if(state.project_id){
+                updatedTask.project_id = state.project_id;
+            }else{
+                updatedTask.state = stateAux;
+            }
+            console.log("UPDATED TASK",updatedTask)
             props.onAccept(updatedTask);
         }
 
-        const handleSelectState = (stateAux) => {
-            setState({...state, state: stateAux, showStatusSelector: false}); 
+        const handleSelectState = (stateAux, project) => {
+            if(!project){
+                console.log("HANDLE STATE", stateAux, project)
+                setState({...state, state: stateAux, showStatusSelector: false}); 
+            }else{
+                console.log("HANDLE STATE 2", stateAux, project)
+                setState({...state, project_id: stateAux, project: project, state: null, showStatusSelector: false}); 
+            }
         }
 
         const toggleImportant = () => {
@@ -168,10 +178,15 @@ function CreateTaskModal(props) {
                                                         <Entypo name="archive" size={20} color="#d2b48c" />
                                                         &nbsp; Archivadas
                                                     </>
-                                                ) : (
+                                                ) : (state.state === "1") ? (
                                                     <>
                                                         <FontAwesome5 name="inbox" size={20} color="#f39f18" />
                                                         &nbsp; Inbox
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={20} color={state.project.color} />
+                                                        &nbsp; {state.project.title}
                                                     </>
                                                 )
                                             }
