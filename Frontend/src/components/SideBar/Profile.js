@@ -62,6 +62,11 @@ const Profile = ({ name, formattedDate }) => {
         setUserContext([...userContext, { name: newContextName }]);
         setNewContextName('');
         setIsSaving(false);
+        Animated.timing(animatedHeight, {
+            toValue: (Object.keys(userContext).length + 2) * 31,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
     };
 
     return (
