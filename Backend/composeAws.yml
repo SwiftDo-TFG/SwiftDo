@@ -9,7 +9,7 @@ services:
       - ./:/Backend
     environment:
       NODE_ENV: production
-      PORT: 3000
+      PORT: 443
       POSTGRES_HOST: db 
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69
