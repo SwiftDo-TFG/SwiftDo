@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     moveContainer: {
-        flex: 1,
+        //flex: 1,
         justifyContent: 'flex-end',
     },
     moveStyle:{
