@@ -61,9 +61,9 @@ function MoveTaskModal(props) {
         const ProjectsSelection = () => {
             return (
                 <View>
-                    {projects.map(pro => {
+                    {projects.map((pro, index) => {
                         return (
-                            <TouchableOpacity key={pro.project_id} onPress={() => {
+                            <TouchableOpacity key={pro.project_id} style={index + 1 === projects.length ? {marginBottom: 50} :{}} onPress={() => {
                                 onAcceptFunction(pro.project_id, true);
                             }}>
                                 <View style={styles.textContainer}>
