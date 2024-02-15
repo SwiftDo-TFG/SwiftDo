@@ -179,12 +179,16 @@ function updateTaskDefValues(task, newTask){
     task.num_version += 1;
 
     if(newTask.completed){
-        task.date_completed = new Date();;
+        task.date_completed = new Date();
     }
 
     if(newTask.state !== task.state && parseInt(task.state) === 3){
         task.date_limit = null;
         newTask.date_limit = null;
+    }
+    
+    if(newTask.project_id && task.project_id === null){
+        task.state = null;
     }
     
     newTask = Object.assign(task, newTask)
