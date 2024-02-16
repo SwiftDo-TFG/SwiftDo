@@ -13,6 +13,7 @@ import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import AssignToProjectModal from "../../components/modals/AsingToProjectModal";
 import styles from "./actionScreen.styles";
 
 
@@ -29,6 +30,7 @@ function ActionScreen(props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [isAssingProjectModalOpen, setIsAssingProjectModalOpen] = useState(false);
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
@@ -48,7 +50,7 @@ function ActionScreen(props) {
   async function fetchData() {
     console.log("LLEGA AL FETCH")
     let filter = { state: props.state, completed: false }
-    if(props.state === 5){
+    if (props.state === 5) {
       filter = { project_id: props.project_id, completed: false }
     }
     const tasksDB = await taskService.getTasks(filter);
@@ -241,17 +243,17 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems: 'flex-end', marginTop: 25}}>
-          { Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 25 }}>
+          {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
             <Feather name="sidebar" size={28} color="black" />
           </TouchableOpacity>)}
-          <View style={{minWidth: 50, alignItems: 'flex-end'}}>
+          <View style={{ minWidth: 50, alignItems: 'flex-end' }}>
             <TouchableOpacity style={styles.area}>
               <Text>Area</Text>
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {props.children}
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
@@ -323,6 +325,15 @@ function ActionScreen(props) {
             // editingTask={editingTask}
             onAccept={addProject}
             isModalOpen={isCreateProjectOpen}
+            setIsModalOpen={setIsCreateProjectOpen}
+          />
+
+          <AssignToProjectModal
+            title="Añadir"
+            // touch={hideEditPopUp}
+            // editingTask={editingTask}
+            // onAccept={addProject}
+            isModalOpen={isAssingProjectModalOpen}
             setIsModalOpen={setIsCreateProjectOpen}
           />
         </NativeBaseProvider>

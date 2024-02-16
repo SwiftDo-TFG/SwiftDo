@@ -165,6 +165,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+    assignProjectModalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
     confirmModalContainer: {
         flex: 1,
         justifyContent: "center"

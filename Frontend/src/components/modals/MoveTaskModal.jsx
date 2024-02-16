@@ -4,20 +4,8 @@ import { useEffect, useState } from "react";
 import styles from '../../screens/tasks/actionScreen.styles'
 import { sideBar } from '../../styles/globalStyles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
-import projectService from "../../services/project/projectService";
 
 function MoveTaskModal(props) {
-    const [projects, setProjects] = useState([]);
-
-    useEffect(() => {
-        async function fetchProjects() {
-            const data = await projectService.showProjectsByUser();
-            // console.log("PROJECTS", data)
-            setProjects(data);
-        }
-
-        fetchProjects();
-    }, [])
 
     const Title = () => {
         return (
@@ -29,11 +17,11 @@ function MoveTaskModal(props) {
         )
     }
 
-    const Separator = () => {
-        return (
-            <View style={sideBar.separator} />
-        )
-    }
+    // const Separator = () => {
+    //     return (
+    //         <View style={sideBar.separator} />
+    //     )
+    // }
 
 
     const Body = () => {
@@ -58,24 +46,24 @@ function MoveTaskModal(props) {
         }
 
 
-        const ProjectsSelection = () => {
-            return (
-                <View>
-                    {projects.map((pro, index) => {
-                        return (
-                            <TouchableOpacity key={pro.project_id} style={index + 1 === projects.length ? {marginBottom: 50} :{}} onPress={() => {
-                                onAcceptFunction(pro.project_id, true);
-                            }}>
-                                <View style={styles.textContainer}>
-                                    <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={26} color={pro.color} />
-                                    <Text style={{ fontSize: 17 }}>{pro.title}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )
-                    })}
-                </View>
-            )
-        }
+        // const ProjectsSelection = () => {
+        //     return (
+        //         <View>
+        //             {projects.map((pro, index) => {
+        //                 return (
+        //                     <TouchableOpacity key={pro.project_id} style={index + 1 === projects.length ? {marginBottom: 50} :{}} onPress={() => {
+        //                         onAcceptFunction(pro.project_id, true);
+        //                     }}>
+        //                         <View style={styles.textContainer}>
+        //                             <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={26} color={pro.color} />
+        //                             <Text style={{ fontSize: 17 }}>{pro.title}</Text>
+        //                         </View>
+        //                     </TouchableOpacity>
+        //                 )
+        //             })}
+        //         </View>
+        //     )
+        // }
 
         return (
             <View style={{ height: '100%', justifyContent: 'flex-end' }}>
@@ -116,8 +104,6 @@ function MoveTaskModal(props) {
                                             <Text style={{ fontSize: 17 }}>Inbox</Text>
                                         </View>
                                     </TouchableOpacity>
-                                    <Separator />
-                                    <ProjectsSelection />
                                 </View>
                             </View>
                         </View>
