@@ -7,7 +7,7 @@ const ActionScheme = ({ onPress, icon, iconColor, text, totalTasks, importantTas
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <TouchableOpacity onPress={onPress} style={{ width: '63%' }}>
+            <TouchableOpacity onPress={onPress}>
                 <View style={sideBar.actionWrapper}>
                     <View style={sideBar.iconWrapper}>
                         {type === 'M' ? (<MaterialCommunityIcons name={icon} style={[sideBar.matIconStyle, { color: iconColor }]} />) : (<FontAwesome5 name={icon} style={[sideBar.iconStyle, { color: iconColor }]} />)}
@@ -27,7 +27,7 @@ const ActionScheme = ({ onPress, icon, iconColor, text, totalTasks, importantTas
                     </View>
                 )}
                 {totalTasks !== undefined && totalTasks !== 0 && (
-                    <View style={[sideBar.count, { backgroundColor: Colors.green }]}>
+                    <View style={[sideBar.count, { backgroundColor: Colors.green, marginLeft: 2 }]}>
                         {totalTasks <= 99 ? (
                             <Text>{totalTasks}</Text>
                         ) : (

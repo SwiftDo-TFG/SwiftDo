@@ -85,13 +85,13 @@ const sideBar = StyleSheet.create({
     countContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '37%',
-        marginTop: 10
+        minWidth: '31%',
+        marginTop: 10,
     },
     count: {
         flexDirection: 'row',
-        maxWidth: '50%',
-        minWidth: '45%',
+        // maxWidth: '50%',
+        minWidth: '15%',
         justifyContent: 'center',
         paddingHorizontal: 10,
         borderRadius: 10,
