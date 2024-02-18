@@ -268,6 +268,16 @@ const actStyle = StyleSheet.create({
     }
 })
 
+const contextModal = StyleSheet.create({
+    context: {
+        paddingVertical: 8,
+        marginLeft: 15, flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderRadius: 10
+    }
+})
+
 export {
     actStyle,
     sideBar,
@@ -275,5 +285,6 @@ export {
     formStyle,
     buttonStyle,
     taskStyle,
-    textStyle
+    textStyle,
+    contextModal
 }

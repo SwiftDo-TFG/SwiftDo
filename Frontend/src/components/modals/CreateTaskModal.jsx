@@ -1,10 +1,12 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform  } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
+import SelectContextModal from "./SelectContextModal";
+
 
 
 
@@ -18,12 +20,13 @@ function CreateTaskModal(props) {
         showDatePicker: false,
         state: "1",
         showStatusSelector: false,
+        showContextSelector: false,
     });
 
     function setValuesToEdit() {
         if (props.editingTask) {
             let fecha = 'Fecha'
-            if(props.editingTask.date_limit){
+            if (props.editingTask.date_limit) {
                 fecha = new Date(props.editingTask.date_limit);
                 fecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')} 00:00`
             }
@@ -56,25 +59,30 @@ function CreateTaskModal(props) {
             if (state.date_name !== 'Fecha') updatedTask.date_limit = new Date(state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
             else if (stateAux === "3") updatedTask.date_limit = today
             if (description !== '') updatedTask.description = description;
+            if(state.context_id) updatedTask.context_id = state.context_id;
             updatedTask.title = title;
             updatedTask.important_fixed = state.isImportant;
-            if(state.project_id){
+            if (state.project_id) {
                 updatedTask.project_id = state.project_id;
-            }else{
+            } else {
                 updatedTask.state = stateAux;
             }
-            console.log("UPDATED TASK",updatedTask)
+            console.log("UPDATED TASK", updatedTask)
             props.onAccept(updatedTask);
         }
 
         const handleSelectState = (stateAux, project) => {
-            if(!project){
+            if (!project) {
                 console.log("HANDLE STATE", stateAux, project)
-                setState({...state, state: stateAux, showStatusSelector: false}); 
-            }else{
+                setState({ ...state, state: stateAux, showStatusSelector: false });
+            } else {
                 console.log("HANDLE STATE 2", stateAux, project)
-                setState({...state, project_id: stateAux, project: project, state: null, showStatusSelector: false}); 
+                setState({ ...state, project_id: stateAux, project: project, state: null, showStatusSelector: false });
             }
+        }
+
+        const handleContextAction = (context_id, context_name) => {
+            setState({ ...state, context_id: context_id, contex_name: context_name, showContextSelector: false });
         }
 
         const toggleImportant = () => {
@@ -92,7 +100,7 @@ function CreateTaskModal(props) {
             setTitle(text)
         };
 
-        const openDatePickerModal = () =>{
+        const openDatePickerModal = () => {
             setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
         }
 
@@ -105,7 +113,7 @@ function CreateTaskModal(props) {
                         value={title}
                         placeholder="Nueva Tarea"
                         onChangeText={onTitleChange}
-                        onEndEditing={()=>{console.log("THIS END")}}
+                        onEndEditing={() => { console.log("THIS END") }}
                         maxLength={50}
                         multiline={true}
                     />
@@ -133,9 +141,13 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '30%' }}>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => setState({ ...state, showContextSelector: true })}>
                                             <Text>
-                                                <FontAwesome5 name="user" size={22} color="#a0a0a0" />
+                                                {state.contex_name ? (
+                                                    state.contex_name
+                                                ) : (
+                                                    <FontAwesome5 name="user" size={22} color="#a0a0a0" />
+                                                )}
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity>
@@ -192,8 +204,9 @@ function CreateTaskModal(props) {
                                             }
                                         </Text>
                                     </TouchableOpacity>
-                                    
-                                    <SelectStateModal state={state} setState={setState} handleSelectState={handleSelectState} onCloseModal={() => setState({ ...state, showStatusSelector: false })}/>
+
+                                    <SelectStateModal state={state} setState={setState} handleSelectState={handleSelectState} onCloseModal={() => setState({ ...state, showStatusSelector: false })} />
+                                    <SelectContextModal state={state} setState={setState} handleContextAction={handleContextAction} onCloseModal={() => setState({ ...state, showContextSelector: false })} />
 
                                     <TouchableOpacity
                                         style={styles.acceptButton}
@@ -217,7 +230,7 @@ function CreateTaskModal(props) {
         <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
-                <DatePickerModal state={state} setState={setState}/>
+                <DatePickerModal state={state} setState={setState} />
             </KeyboardAvoidingView>
         </PopUpModal>
     )
