@@ -20,7 +20,7 @@ const AddTypeModal = (props) =>{
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
+                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="checkbox-intermediate" size={26} color="#2C3E50" />
                       <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
                         Tarea
                       </Text>
@@ -35,7 +35,7 @@ const AddTypeModal = (props) =>{
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="hexagon-slice-6" size={26} color="#2C3E50" />
+                      <MaterialCommunityIcons style={{ marginRight: 10 }} name="circle-slice-8" size={26} color="#2C3E50" />
                       <Text style={{ fontSize: 17, fontWeight: 'bold', color: "#2C3E50" }}>
                         Proyecto
                       </Text>

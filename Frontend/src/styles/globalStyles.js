@@ -7,7 +7,6 @@ const sideBar = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: Colors.light
     },
     profileContainer: {
         padding: 2,
@@ -20,9 +19,7 @@ const sideBar = StyleSheet.create({
     profileImage: {
         width: 65,
         height: 65,
-        borderWidth: 2,
-        borderColor: '#f2f2f2',
-        borderRadius: 15,
+        borderRadius: 15
     },
 
     separator: {
@@ -55,6 +52,9 @@ const sideBar = StyleSheet.create({
     },
     iconStyle:{
         fontSize: 22
+    },
+    matIconStyle: {
+        fontSize: 28
     },
     iconWrapper: {
         width: 40,
@@ -125,10 +125,10 @@ const addButton = StyleSheet.create({
         backgroundColor: Colors.orange,
         alignItems: 'center',
         justifyContent: 'center',
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
     buttonPressed: {
-        transform: [{scale: 1.4}]
+        transform: [{scale: 1.4}],
     },
     iconContainer: {
         flexDirection: 'row',
@@ -196,23 +196,42 @@ const formStyle = StyleSheet.create({
 })
 
 const taskStyle = StyleSheet.create({
-    checkBox: {
-        width: 15,
-        height: 15, 
-        backgroundColor: Colors.dark,
+    completed: {
+        width: 22,
+        height: 22, 
+        backgroundColor: Colors.orange,
         alignItems: 'center',
         justifyContent: 'center',
+        borderRadius: 5,
         // para ios
-        shadowColor: Colors.noir,
+        shadowColor: Colors.dark,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
         shadowRadius: 2, // desenfocamos un poco la sombra
         elevation: 2, // para android
     },
+    unCompleted : {
+        width: 20,
+        height: 20, 
+        borderColor: Colors.softGrey,
+        borderRadius: '5',
+        borderWidth: '2',
+        // borderColor: Colors.grey,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // borderRadius: 5,
+        // // para ios
+        // shadowColor: Colors.grey,
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.2,
+        // shadowRadius: 2, // desenfocamos un poco la sombra
+        // elevation: 2, // para android
+    }, 
     text: {
         fontSize: 15, 
         fontWeight: 300, 
         color: Colors.noir,
+        alignItems: 'center'
     }
 })
 
@@ -246,6 +265,7 @@ export {    actStyle,
             sideBar, 
             addButton, 
             formStyle, 
-            buttonStyle, 
+            buttonStyle,
+            taskStyle, 
             textStyle
         }

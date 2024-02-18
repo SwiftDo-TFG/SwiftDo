@@ -13,14 +13,15 @@ function Project(props) {
         async function fetchData() {
             const project = await projectService.showContent(props.route.params.id);
             setData(project);
-            console.log("ID PROJECT, ", project.project.title)
+            console.log("ID PROJECT, ", project)
         }
         fetchData();
     }, []);
 
     const progressIcon = () => {
-        const slice = Math.ceil(projectData.percentage / 12.5);
-        return slice === 0 ? "circle-outline" : `circle-slice-${slice}`;
+        let slice = Math.ceil(projectData.percentage / 12.5);
+        if(isNaN(slice)) slice = 0
+        return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
     }
     return (
         <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.id}>

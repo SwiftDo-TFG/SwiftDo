@@ -8,8 +8,6 @@ import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
 import AuthContext from '../../services/auth/context/authContext';
 import ConfirmButton from '../common/ConfirmButton';
-import projectService from '../../services/project/projectService';
-
 const Separator = () => {
     return (
         <View style={sideBar.separator} />
@@ -24,46 +22,54 @@ function getMonthName(month) {
     return monthNames[month];
 }
 
-export default ({ navigation }) => {
+export default ({ navigation, projectAttributes}) => {
 
+    // const [projects, setProjects] = React.useState([])
     const [username, setUsername] = React.useState([])
     const [caData, setCaData] = React.useState([])
     const [inboxData, setInboxData] = React.useState([])
     const [progData, setProgData] = React.useState([])
     const [archData, setArchData] = React.useState([])
-    const [projects, setProjects] = React.useState([])
     const authstate = React.useContext(AuthContext);
 
     React.useEffect(() => {
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
-
-             setUsername(userAndTasks.userName);
+            
+            setUsername(userAndTasks.userName);
             setInboxData(userAndTasks.task_inbox);
             setCaData(userAndTasks.task_ca);
             setProgData(userAndTasks.task_prog);
             setArchData(userAndTasks.task_arch);
-
-            const projectData = await projectService.showProjectsByUser();
-            setProjects(projectData)
         }
         fetchData();
-        const interval = setInterval(fetchData, 20000); // Llamada a fetchData cada 20 segundos
-
+        const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
+        
         return () => clearInterval(interval); // Reseteamos el contador del intervalo
     }, [])
+    
+    const progressIcon = (percentage) => {
+        if(percentage === null)
+            percentage = 0
+        let slice = Math.ceil(percentage / 12.5);
+        if(isNaN(slice)) slice = 0
+        return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
 
+    }
+    
     const addProjects = () => {
-        return projects.map((project, i) => (
+        return projectAttributes.map((project, i) => (
             <View key={i}>
-                <ActionScheme onPress={() => navigation.navigate(project.title)} icon={"folder-open"} iconColor={Colors.noir} text={project.title} />
+                <ActionScheme onPress={() => navigation.navigate(project.title)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} />
             </View>
             
-        ));
+            ));
+
     };
 
     return (
         <View style={sideBar.container}>
+
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
                 <Profile name={username} formattedDate={formattedDate} />
                 <Separator />
