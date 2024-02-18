@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { TouchableOpacity, View } from "react-native"
+import { TouchableOpacity, View, Platform  } from "react-native"
 import { addButton } from "../../styles/globalStyles"
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
