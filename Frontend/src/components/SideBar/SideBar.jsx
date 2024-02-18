@@ -22,7 +22,7 @@ function getMonthName(month) {
     return monthNames[month];
 }
 
-export default ({ navigation, projectAttributes}) => {
+export default ({ navigation, projectAttributes }) => {
 
     // const [projects, setProjects] = React.useState([])
     const [username, setUsername] = React.useState([])
@@ -35,7 +35,7 @@ export default ({ navigation, projectAttributes}) => {
     React.useEffect(() => {
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
-            
+
             setUsername(userAndTasks.userName);
             setInboxData(userAndTasks.task_inbox);
             setCaData(userAndTasks.task_ca);
@@ -44,26 +44,26 @@ export default ({ navigation, projectAttributes}) => {
         }
         fetchData();
         const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
-        
+
         return () => clearInterval(interval); // Reseteamos el contador del intervalo
     }, [])
-    
+
     const progressIcon = (percentage) => {
-        if(percentage === null)
+        if (percentage === null)
             percentage = 0
         let slice = Math.ceil(percentage / 12.5);
-        if(isNaN(slice)) slice = 0
+        if (isNaN(slice)) slice = 0
         return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
 
     }
-    
+
     const addProjects = () => {
         return projectAttributes.map((project, i) => (
             <View key={i}>
                 <ActionScheme onPress={() => navigation.navigate(project.title)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} />
             </View>
-            
-            ));
+
+        ));
 
     };
 
@@ -81,14 +81,14 @@ export default ({ navigation, projectAttributes}) => {
                     <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
                 </View>
                 <Separator />
-                
+
                 {addProjects()}
             </DrawerContentScrollView>
-            
-            <ConfirmButton onPress={() => { navigation.closeDrawer(); authstate.signOut() }} text="Logout"/>
-            
+
+            <ConfirmButton onPress={() => { navigation.closeDrawer(); authstate.signOut() }} text="Logout" />
+
         </View>
-        
+
 
     )
 }
