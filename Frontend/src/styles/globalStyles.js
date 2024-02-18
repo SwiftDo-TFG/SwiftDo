@@ -33,27 +33,28 @@ const sideBar = StyleSheet.create({
         marginVertical: 10,
         borderRadius: 50
     },
-    actionContainer:{ // estilo para el container de todos los actionScheme
+    actionContainer: { // estilo para el container de todos los actionScheme
         paddingTop: 20,
         paddingBottom: 20,
     },
-    actionWrapper:{ // Wrapper que estructura un solo actionScheme
+    actionWrapper: { // Wrapper que estructura un solo actionScheme
         flexDirection: "row",
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        alignSelf: 'center',
+        // alignSelf: 'center',
         paddingTop: 10
     },
-    actionText:{
-        fontSize: 18,
+    actionText: {
+        fontSize: 16.5,
         fontWeight: 'bold',
         color: '#272c34'
     },
-    areaText:{
+    areaText: {
         fontSize: 25,
         fontWeight: 'bold',
         color: '#272c34'
     },
-    iconStyle:{
+    iconStyle: {
         fontSize: 22
     },
     iconWrapper: {
@@ -83,9 +84,15 @@ const sideBar = StyleSheet.create({
     },
     countContainer: {
         flexDirection: 'row',
-        gap: 2,
+        alignItems: 'center',
+        width: '37%',
+        marginTop: 10
     },
-    count:{
+    count: {
+        flexDirection: 'row',
+        maxWidth: '50%',
+        minWidth: '45%',
+        justifyContent: 'center',
         paddingHorizontal: 10,
         borderRadius: 10,
     }
@@ -96,7 +103,7 @@ const buttonStyle = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    confirmButton:{
+    confirmButton: {
         width: '60%',
         borderRadius: 15,
         backgroundColor: Colors.noir,
@@ -128,7 +135,7 @@ const addButton = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     buttonPressed: {
-        transform: [{scale: 1.4}]
+        transform: [{ scale: 1.4 }]
     },
     iconContainer: {
         flexDirection: 'row',
@@ -147,11 +154,11 @@ const textStyle = StyleSheet.create({
     },
     smallText: {
         fontSize: 12,
-        fontWeight: 'bold' 
+        fontWeight: 'bold'
     },
     textError: {
         fontSize: 10,
-        marginVertical: 5 ,
+        marginVertical: 5,
         color: 'white',
         textAlign: 'center',
         padding: 5,
@@ -168,7 +175,7 @@ const textStyle = StyleSheet.create({
 const formStyle = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 10, 
+        marginHorizontal: 10,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -177,7 +184,7 @@ const formStyle = StyleSheet.create({
         marginTop: -30,
         marginBottom: 30
     },
-    textInput:{
+    textInput: {
         padding: 10,
         borderWidth: 1,
         borderRadius: 5,
@@ -185,12 +192,12 @@ const formStyle = StyleSheet.create({
         borderRadius: 10,
         fontSize: 16,
         marginBottom: 14,
-        
+
     },
     loadingIndicator: {
         padding: 10
     },
-    linkContainer:{
+    linkContainer: {
         flexDirection: 'row',
     },
 })
@@ -198,7 +205,7 @@ const formStyle = StyleSheet.create({
 const taskStyle = StyleSheet.create({
     checkBox: {
         width: 15,
-        height: 15, 
+        height: 15,
         backgroundColor: Colors.dark,
         alignItems: 'center',
         justifyContent: 'center',
@@ -210,8 +217,8 @@ const taskStyle = StyleSheet.create({
         elevation: 2, // para android
     },
     text: {
-        fontSize: 15, 
-        fontWeight: 300, 
+        fontSize: 15,
+        fontWeight: 300,
         color: Colors.noir,
     }
 })
@@ -235,17 +242,18 @@ const actStyle = StyleSheet.create({
     emptyIcon: {
         fontSize: 40
     },
-    description:{
+    description: {
         color: Colors.dark,
-        fontWeight: '600', 
+        fontWeight: '600',
         marginVertical: 15
     }
 })
 
-export {    actStyle, 
-            sideBar, 
-            addButton, 
-            formStyle, 
-            buttonStyle, 
-            textStyle
-        }
+export {
+    actStyle,
+    sideBar,
+    addButton,
+    formStyle,
+    buttonStyle,
+    textStyle
+}
