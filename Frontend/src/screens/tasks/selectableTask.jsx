@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
-import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Center } from "native-base";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import styles from './actionScreen.styles'
 import AuthContext from '../../services/auth/context/authContext';
+import Checkbox from "../../components/common/Tickbox";
+import Colors from "../../styles/colors";
 
 const getTaskItemStyle = () => {
   return {
@@ -141,7 +142,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
         setIsMenuVisible(!isMenuVisible);
       }}
     >
-      <Animated.View style={[getTaskItemStyle(), { backgroundColor: selectedTasks[task.task_id] ? '#ebd7b5' : (isMenuVisible ? '#bdecb6' : '#f2f2f2'), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
+      <Animated.View style={[getTaskItemStyle(), { backgroundColor: selectedTasks[task.task_id] ? '#FFFCFC' : (isMenuVisible ? '#FFFCFC' : Colors.paper), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
         {isSwiped && (
           <View style={{ flexDirection: 'column' }}>
             <View style={styles.innerContainer}>
@@ -153,13 +154,15 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
               ]}>
                 <TouchableOpacity onPress={() => { onPress(task.task_id) }} style={{ marginRight: '5%' }}>
                   {!selectedTasks[task.task_id] && (
-                    <FontAwesome name="circle-o" size={24} color="#a0a0a0" />
-                  )}
+                    <Checkbox/>
+                    // <FontAwesome name="circle-o" size={24} color="#a0a0a0" /> 
+                    )}
                   {selectedTasks[task.task_id] && (
-                    <FontAwesome name="check-circle" size={24} color="#f39f18" />
+                    <Checkbox/>
+                    // <FontAwesome name="check-circle" size={24} color="#f39f18" />
                   )}
                 </TouchableOpacity>
-                <Text style={{ fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
+                <Text style={{ textAlign: 'center', fontSize: 15,  fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
                   {(task.title.length > 37 && (!isMenuVisible || selectedTasks[task.task_id])) ? `${task.title.substring(0, 30)}...` : task.title}
                 </Text>
               </View>

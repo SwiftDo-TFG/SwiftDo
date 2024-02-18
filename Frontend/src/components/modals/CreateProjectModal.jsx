@@ -18,10 +18,12 @@ function CreateProjectModal(props) {
         const [title, setTitle] = useState(state.editedTitle);
         const [description, setDescription] = useState(state.editedDescription);
         const [color, setColor] = React.useState('#000000');
-
+        
         const onAcceptFunction = () => {
-            const createProject = { title: title, description: description, color: color };
-
+            let createProject = {};
+            createProject = { title: title, color: color };
+            if(description) 
+                createProject.description = description;
             // if (props.editingTask) {
             //     Object.keys(props.editingTask).forEach(key => {
             //         if (props.editingTask[key] !== null) {
@@ -48,7 +50,7 @@ function CreateProjectModal(props) {
                 {/* Title */}
                 <View style={{ flexDirection: 'row', justifyContent: 'start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8 }}>
 
-                    <MaterialCommunityIcons name="hexagon-slice-6" size={26} color={color} />
+                    <MaterialCommunityIcons name="circle-outline" size={26} color={color} />
                     <TextInput
                         style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
                         value={title}

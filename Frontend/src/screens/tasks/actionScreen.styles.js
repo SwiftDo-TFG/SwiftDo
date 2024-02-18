@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 20,
+        backgroundColor: 'white'
     },
     checkgroup: {
         flex: 1,

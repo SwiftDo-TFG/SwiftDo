@@ -1,5 +1,5 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
@@ -215,8 +215,10 @@ function CreateTaskModal(props) {
 
     return (
         <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
-            <Body />
-            <DatePickerModal state={state} setState={setState}/>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <Body />
+                <DatePickerModal state={state} setState={setState}/>
+            </KeyboardAvoidingView>
         </PopUpModal>
     )
 }

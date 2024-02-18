@@ -86,7 +86,8 @@ function completeDefValues(project){
     project.completed = false;
     project.date_added = new Date();
     project.date_changed = new Date();
-    project.num_version = 1 ;
+    project.num_version = 1;
+    project.percentage = 0;
     return project
 }
 

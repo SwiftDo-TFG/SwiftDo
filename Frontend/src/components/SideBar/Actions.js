@@ -1,16 +1,16 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons';
+import {FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { sideBar } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
 
-const ActionScheme = ({ onPress, icon, iconColor, text, totalTasks, importantTasks }) => {
+const ActionScheme = ({onPress, icon, iconColor, text, totalTasks, importantTasks, type}) =>{
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <TouchableOpacity onPress={onPress} style={{ width: '63%' }}>
                 <View style={sideBar.actionWrapper}>
                     <View style={sideBar.iconWrapper}>
-                        <FontAwesome5 name={icon} style={[sideBar.iconStyle, { color: iconColor }]} />
+                        {type === 'M' ? (<MaterialCommunityIcons name={icon} style={[sideBar.matIconStyle, {color: iconColor}]} /> ): (<FontAwesome5 name={icon} style={[sideBar.iconStyle, {color: iconColor}]}/>)}
                     </View>
 
                     <Text style={[sideBar.actionText,]}>{text}</Text>

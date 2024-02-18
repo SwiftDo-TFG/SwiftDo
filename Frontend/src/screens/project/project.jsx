@@ -154,13 +154,7 @@ function Project() {
         addRef.hide();
     }
 
-    return ( //html aqui
-        //div
-        <View style={styles.project}>
-            <Text style={styles.header}>
-                <MaterialCommunityIcons style={styles.icon} name="circle-outline" size={26} color= {project_data.color}  />
-                <Text style={styles.title}> {project_data.title} </Text>
-            </Text>
+    return ( 
             {/* <NativeBaseProvider>
                 <View style={styles.header}>
                     {<TaskList tasks={tasks} showEditPopUp={showEditPopUp} showMovePopUp={showMovePopUp} />}

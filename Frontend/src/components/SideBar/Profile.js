@@ -74,7 +74,7 @@ const Profile = ({ name, formattedDate }) => {
             <View style={sideBar.profileContainer}>
                 <Image
                     style={sideBar.profileImage}
-                    source={require('../../assets/perfil.png')}
+                    source={require('../../assets/icon.png')}
                 />
                 <View style={{ marginLeft: 15 }}>
                     <Text style={[textStyle.largeText, { fontWeight: '600', paddingBottom: 5 }]}>{name}</Text>
@@ -86,7 +86,7 @@ const Profile = ({ name, formattedDate }) => {
                     <View style={sideBar.areaContainer}>
                         <Text style={sideBar.areaText}>Áreas</Text>
                         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-                            <AntDesign name="caretright" size={24} color="#272c34" />
+                            <AntDesign name="caretright" size={22} color="#272c34" />
                         </Animated.View>
                     </View>
                 </TouchableOpacity>
