@@ -6,6 +6,7 @@ import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/ve
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
+import AssignToProjectModal from "./AsingToProjectModal";
 
 
 
@@ -18,10 +19,14 @@ function CreateTaskModal(props) {
         isImportant: false,
         date_name: 'Fecha',
         showDatePicker: false,
-        state: "1",
-        showStatusSelector: false,
-        showContextSelector: false,
+        state: "1"
     });
+
+    //Modals state
+    const [showStatusSelector, setShowStatusSelector] = useState(false);
+    const [showContextSelector, setShowContextSelector] = useState(false)
+    const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
+
 
     function setValuesToEdit() {
         if (props.editingTask) {
@@ -59,36 +64,38 @@ function CreateTaskModal(props) {
             if (state.date_name !== 'Fecha') updatedTask.date_limit = new Date(state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
             else if (stateAux === "3") updatedTask.date_limit = today
             if (description !== '') updatedTask.description = description;
-            if(state.context_id) updatedTask.context_id = state.context_id;
+            if (state.context_id) updatedTask.context_id = state.context_id;
             updatedTask.title = title;
             updatedTask.important_fixed = state.isImportant;
+            updatedTask.state = stateAux;
             if (state.project_id) {
                 updatedTask.project_id = state.project_id;
-            } else {
-                updatedTask.state = stateAux;
             }
             console.log("UPDATED TASK", updatedTask)
             props.onAccept(updatedTask);
         }
 
-        const handleSelectState = (stateAux, project) => {
-            if (!project) {
-                console.log("HANDLE STATE", stateAux, project)
-                setState({ ...state, state: stateAux, showStatusSelector: false });
-            } else {
-                console.log("HANDLE STATE 2", stateAux, project)
-                setState({ ...state, project_id: stateAux, project: project, state: null, showStatusSelector: false });
-            }
+        const handleSelectState = (stateAux) => {
+            setState({ ...state, state: stateAux });
+            setShowStatusSelector(false);
+        }
+
+        const handleSelectProject = (project_id, project) => {
+            setState({ ...state, project_id: project_id, project: project });
+            setShowAssProjectSelector(false);
         }
 
         const handleContextAction = (context_id, context_name) => {
-            setState({ ...state, context_id: context_id, contex_name: context_name, showContextSelector: false });
+            setState({ ...state, context_id: context_id, contex_name: context_name });
+            setShowContextSelector(false);
         }
 
         const toggleImportant = () => {
             setState((prevState) => ({
                 ...prevState,
                 isImportant: !prevState.isImportant,
+                editedTitle: title, 
+                editedDescription: description
             }));
         };
 
@@ -102,6 +109,19 @@ function CreateTaskModal(props) {
 
         const openDatePickerModal = () => {
             setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
+        }
+
+        const ProjectBadge = ({ project }) => {
+            return (
+                <TouchableOpacity onPress={() => {
+                    const { project, project_id, ...newState } = state
+                    setState(newState)
+                }}>
+                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: project.color }}>
+                        <Text style={{ color: 'white' }}>{project.title} <MaterialCommunityIcons name="close" size={14} color="#FFFFFF" /></Text>
+                    </View>
+                </TouchableOpacity>
+            )
         }
 
         return (
@@ -133,6 +153,9 @@ function CreateTaskModal(props) {
                                 />
                             </View>
                             <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
+                                    {state.project && <ProjectBadge project={state.project} />}
+                                </View>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
@@ -141,7 +164,10 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '30%' }}>
-                                        <TouchableOpacity onPress={() => setState({ ...state, showContextSelector: true })}>
+                                        <TouchableOpacity onPress={() => {
+                                            setState({ ...state, editedTitle: title, editedDescription: description })
+                                            setShowContextSelector(true)
+                                        }}>
                                             <Text>
                                                 {state.contex_name ? (
                                                     state.contex_name
@@ -150,7 +176,10 @@ function CreateTaskModal(props) {
                                                 )}
                                             </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => {
+                                            setState({ ...state, editedTitle: title, editedDescription: description })
+                                            setShowAssProjectSelector(true)
+                                        }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
                                             </Text>
@@ -172,7 +201,10 @@ function CreateTaskModal(props) {
                                     </View>
                                 </View>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'ceneter', marginTop: 13 }}>
-                                    <TouchableOpacity onPress={() => setState({ ...state, showStatusSelector: true })}>
+                                    <TouchableOpacity onPress={() => {
+                                        setState({ ...state, editedTitle: title, editedDescription: description })
+                                        setShowStatusSelector(true)
+                                    }}>
                                         <Text style={{ fontSize: 18 }}>
                                             {
                                                 (state.state === "2") ? (
@@ -205,8 +237,9 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
 
-                                    <SelectStateModal state={state} setState={setState} handleSelectState={handleSelectState} onCloseModal={() => setState({ ...state, showStatusSelector: false })} />
-                                    <SelectContextModal state={state} setState={setState} handleContextAction={handleContextAction} onCloseModal={() => setState({ ...state, showContextSelector: false })} />
+                                    <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
+                                    <SelectContextModal modalVisible={showContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
+                                    <AssignToProjectModal modalVisible={showAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
 
                                     <TouchableOpacity
                                         style={styles.acceptButton}

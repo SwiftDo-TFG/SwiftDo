@@ -13,7 +13,6 @@ import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
-import AssignToProjectModal from "../../components/modals/AsingToProjectModal";
 import styles from "./actionScreen.styles";
 
 
@@ -30,7 +29,6 @@ function ActionScreen(props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const [isAssingProjectModalOpen, setIsAssingProjectModalOpen] = useState(false);
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
@@ -326,15 +324,6 @@ function ActionScreen(props) {
             // editingTask={editingTask}
             onAccept={addProject}
             isModalOpen={isCreateProjectOpen}
-            setIsModalOpen={setIsCreateProjectOpen}
-          />
-
-          <AssignToProjectModal
-            title="Añadir"
-            // touch={hideEditPopUp}
-            // editingTask={editingTask}
-            // onAccept={addProject}
-            isModalOpen={isAssingProjectModalOpen}
             setIsModalOpen={setIsCreateProjectOpen}
           />
         </NativeBaseProvider>

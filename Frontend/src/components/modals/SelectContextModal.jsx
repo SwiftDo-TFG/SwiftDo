@@ -34,11 +34,11 @@ const SelectContextModal = (props) => {
         <Modal
             animationType="slide"
             transparent={true}
-            visible={props.state.showContextSelector}
+            visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showContextSelector: false })}
         >
             <View style={styles.stateModalContainer}>
-                <OutSide isModalOpen={props.state.showContextSelector} onCloseModal={props.onCloseModal} />
+                <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
                 <View style={styles.modalStyle}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (

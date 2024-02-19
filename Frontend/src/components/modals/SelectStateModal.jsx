@@ -8,18 +8,6 @@ import { sideBar } from '../../styles/globalStyles'
 
 const SelectStateModal = (props) => {
 
-    const [projects, setProjects] = useState([]);
-
-    useEffect(() => {
-        async function fetchProjects() {
-            const data = await projectService.showProjectsByUser();
-            console.log("PROJECTS", data)
-            setProjects(data);
-        }
-
-        fetchProjects();
-    }, [])
-
     const OutSide = ({ onCloseModal, isModalOpen }) => {
         const view = <View style={{ flex: 1, width: '100%' }} />;
         if (!isModalOpen) return view;
@@ -30,32 +18,15 @@ const SelectStateModal = (props) => {
         );
     }
 
-    const ProjectsSelection = () => {
-        return (
-            <View>
-                {projects.map(pro => {
-                    return (
-                        <TouchableOpacity key={pro.project_id} onPress={() => props.handleSelectState(pro.project_id, pro)}>
-                            <View style={styles.textContainer}>
-                                <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={26} color={pro.color} />
-                                <Text style={{ fontSize: 17 }}>{pro.title}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
-        )
-    }
-
     return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={props.state.showStatusSelector}
+            visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showStatusSelector: false })}
         >
             <View style={styles.stateModalContainer}>
-                <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal} />
+                <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
                 <View style={styles.modalStyle}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
@@ -82,8 +53,6 @@ const SelectStateModal = (props) => {
                                 <Text style={{ fontSize: 17 }}>Inbox</Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={sideBar.separator} />
-                        <ProjectsSelection />
                     </ScrollView>
                 </View>
             </View>

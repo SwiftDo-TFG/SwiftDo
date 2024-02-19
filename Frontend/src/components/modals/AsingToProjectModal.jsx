@@ -12,22 +12,31 @@ const AssignToProjectModal = (props) => {
     useEffect(() => {
         async function fetchProjects() {
             const data = await projectService.showProjectsByUser();
+            console.log("PROJECTS EN MODAL", data)
             setProjects(data);
         }
 
         fetchProjects();
     }, [])
 
+    const OutSide = ({ onCloseModal, isModalOpen }) => {
+        const view = <View style={{ flex: 1, width: '100%' }} />;
+        if (!isModalOpen) return view;
+        return (
+            <TouchableWithoutFeedback onPress={() => { onCloseModal() }} style={{ flex: 1, width: '100%' }}>
+                {view}
+            </TouchableWithoutFeedback>
+        );
+    }
+
     const ProjectsSelection = () => {
         return (
             <View>
-                {projects.map((pro, index) => {
+                {projects.map(pro => {
                     return (
-                        <TouchableOpacity key={pro.project_id} style={index + 1 === projects.length ? { marginBottom: 50 } : {}} onPress={() => {
-                            onAcceptFunction(pro.project_id, true);
-                        }}>
+                        <TouchableOpacity key={pro.project_id} onPress={() => props.handleSelectProject(pro.project_id, pro)}>
                             <View style={styles.textContainer}>
-                                <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={26} color={pro.color} />
+                                <MaterialCommunityIcons style={{ width: '15%' }} name="circle-slice-8" size={26} color={pro.color} />
                                 <Text style={{ fontSize: 17 }}>{pro.title}</Text>
                             </View>
                         </TouchableOpacity>
@@ -37,35 +46,20 @@ const AssignToProjectModal = (props) => {
         )
     }
 
-    const OutSide = ({ onCloseModal, isModalOpen, children }) => {
-        const view = <View style={{ flex: 1}}>
-            {children}
-        </View>;
-        if (!isModalOpen) return view;
-        return (
-            <TouchableWithoutFeedback onPress={() => { onCloseModal() }} >
-                {view}
-            </TouchableWithoutFeedback>
-        );
-    }
-
     return (
-        <Modal animationType="slide"
+        <Modal
+            animationType="slide"
             transparent={true}
-            visible={props.isModalOpen}
-        // onRequestClose={() => props.setState({ ...props.state, showStatusSelector: false })}
+            visible={props.modalVisible}
+            onRequestClose={() => props.setState({ ...props.state, showAssProjectSelector: false })}
         >
-            <View style={styles.assignProjectModalContainer}>
-                <OutSide isModalOpen={props.isModalOpen} onCloseModal={props.onCloseModal} />
+            <View style={styles.stateModalContainer}>
+                <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
                 <View style={styles.modalStyle}>
-                    <Text style={{ color: '#182E44', fontSize: 18, fontWeight: '500', marginBottom: 15, textAlign: 'center' }}>
-                        Asignar a Proyecto
-                    </Text>
                     <ScrollView>
                         <ProjectsSelection />
                     </ScrollView>
                 </View>
-                <OutSide isModalOpen={props.isModalOpen} onCloseModal={props.onCloseModal} />
             </View>
         </Modal>
     )
