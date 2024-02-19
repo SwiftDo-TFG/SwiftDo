@@ -187,11 +187,6 @@ function updateTaskDefValues(task, newTask){
         newTask.date_limit = null;
     }
     
-    if(newTask.project_id && task.project_id === null){
-        task.state = null;
-        newTask.state = null;
-    }
-    
     newTask = Object.assign(task, newTask)
 
     return newTask
