@@ -10,7 +10,7 @@ import CreateProjectModal from "../../components/modals/CreateProjectModal";
 
 
 function Project(props) {
-    const [projectData, setData] = React.useState([])
+    const [projectData, setData] = React.useState({})
     const [isCompleteModalVisible, setIsCompleteModalVisible] = React.useState(false);
     const [completeModalText, setCompleteModalText] = React.useState('');
     const [completeModalTitle, setCompleteModalTitle] = React.useState('');
@@ -26,6 +26,7 @@ function Project(props) {
     async function fetchData() {
         const project = await projectService.showContent(props.route.params.id);
         setData(project);
+        setDataLoaded(true);
         console.log("ID PROJECT, ", project)
     }
     const progressIcon = () => {
@@ -56,7 +57,6 @@ function Project(props) {
     const reloadData = () => {
         setDataLoaded(false)
         fetchData()
-        setDataLoaded(true)
     }
 
     const closeModal = () => {
@@ -86,17 +86,19 @@ function Project(props) {
     };
     return (
         <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.id}>
-            <View style={actStyle.action} >
-                <TouchableOpacity onPress={handlePress}>
-                    <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={props.route.params.color} />
-                </TouchableOpacity>
-                <Text style={actStyle.actionTitle}>{props.route.name}</Text>
-                <TouchableOpacity onPress={() => showEditPopUp(props.route.params.id)}>
-                    <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
-                </TouchableOpacity>
-            </View>
-            <Text style={actStyle.description}> {props.route.params.description === null ? "Descripcion" : props.route.params.description} </Text>
-            <CompleteTaskModal
+            {isDataLoaded &&
+                <>
+                    <View style={actStyle.action} >
+                        <TouchableOpacity onPress={handlePress}>
+                            <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={projectData.project.color} />
+                        </TouchableOpacity>
+                        <Text style={actStyle.actionTitle}>{projectData.project.title}</Text>
+                        <TouchableOpacity onPress={() => showEditPopUp(projectData.project.project_id)}>
+                            <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={actStyle.description}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
+                </>}<CompleteTaskModal
                 title={completeModalTitle}
                 texto={completeModalText}
                 isModalOpen={isCompleteModalVisible}
