@@ -163,6 +163,11 @@ function completeTaskDefValues(task){
     if(task.important_fixed){
         task.important_fixed = false;
     }
+
+    if(task.date_limit){
+        console.log("TASK DATE LIMIT CREATE", newTask.date_limit, new Date(newTask.date_limit), new Date(newTask.date_limit).getTime())
+        task.date_limit = new Date(newTask.date_limit)
+    }
     
     return task
 }
