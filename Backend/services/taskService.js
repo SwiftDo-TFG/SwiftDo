@@ -187,6 +187,10 @@ function updateTaskDefValues(task, newTask){
         newTask.date_limit = null;
     }
     
+    if(newTask.date_limit){
+        newTask.date_limit = new Date(newTask.date_limit)
+    }
+
     newTask = Object.assign(task, newTask)
 
     return newTask
