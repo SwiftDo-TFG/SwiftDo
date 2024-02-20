@@ -188,6 +188,7 @@ function updateTaskDefValues(task, newTask){
     }
     
     if(newTask.date_limit){
+        console.log("TASK DATE LIMIT", newTask.date_limit, new Date(newTask.date_limit), new Date(newTask.date_limit).getTime())
         newTask.date_limit = new Date(newTask.date_limit)
     }
 
