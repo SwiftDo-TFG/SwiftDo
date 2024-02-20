@@ -1,5 +1,6 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
+
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
@@ -11,27 +12,39 @@ function CreateProjectModal(props) {
         show: false,
         editedTitle: '',
         editedDescription: '',
+        editedColor: '#000000'
     });
 
+    function setValuesToEdit() {
+        console.log('PROPIEDADESSSSSSS:', props.editingProject);
+        if (props.editingProject) {
+            setState({
+                ...state,
+                editedTitle: props.editingProject.title ? props.editingProject.title : '',
+                editedDescription: props.editingProject.description ? props.editingProject.description : '',
+                editedColor: props.editingProject.color ? props.editingProject.color : '#000000',
+            })
+        }
+    }
 
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
         const [description, setDescription] = useState(state.editedDescription);
-        const [color, setColor] = React.useState('#000000');
-        
+        const [color, setColor] = useState(state.editedColor);
+
         const onAcceptFunction = () => {
             let createProject = {};
-            createProject = { title: title, color: color };
-            if(description) 
-                createProject.description = description;
-            // if (props.editingTask) {
-            //     Object.keys(props.editingTask).forEach(key => {
-            //         if (props.editingTask[key] !== null) {
-            //             updatedTask[key] = props.editingTask[key];
-            //         }
-            //     });
-            // }
+            if (props.editingProject) {
+                Object.keys(props.editingProject).forEach(key => {
+                    if (props.editingProject[key] !== null) {
+                        createProject[key] = props.editingProject[key];
+                    }
+                });
+            }
 
+            createProject = { ... createProject, title: title, color: color };
+            if (description)
+                createProject.description = description;
             props.onAccept(createProject);
         }
 
@@ -64,22 +77,22 @@ function CreateProjectModal(props) {
                 {/* Description */}
                 <View style={{ height: '100%', justifyContent: 'flex-start' }}>
                     <View style={{ height: '70%', marginLeft: 20, marginRight: 8 }}>
-                            <TextInput
-                                style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
-                                value={description}
-                                placeholder="Descripcion..."
-                                onChangeText={onDescriptionChange}
-                                multiline={true}
-                                maxLength={200}
-                            />
-                            <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8 }}> Color: </Text>
-                                <ColorPicker
-                                    color={color}
-                                    swatchesOnly={true}
-                                    onColorChangeComplete={onColorChange}
-                                    palette={['#000000', '#808080', '#A52A2A', '#FF0000', '#FFA500', '#FFFF00', '#0000FF', '#008000', '#EE82EE', '#FFC0CB', ]}
-                                />
-                        
+                        <TextInput
+                            style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
+                            value={description}
+                            placeholder="Descripcion..."
+                            onChangeText={onDescriptionChange}
+                            multiline={true}
+                            maxLength={200}
+                        />
+                        <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8 }}> Color: </Text>
+                        <ColorPicker
+                            color={color}
+                            swatchesOnly={true}
+                            onColorChangeComplete={onColorChange}
+                            palette={['#000000', '#808080', '#A52A2A', '#FF0000', '#FFA500', '#FFFF00', '#0000FF', '#008000', '#EE82EE', '#FFC0CB',]}
+                        />
+
 
                         <View style={{ flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: 13 }}>
                             <TouchableOpacity
@@ -99,9 +112,11 @@ function CreateProjectModal(props) {
     }
 
     return (
-        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal}>
-            <Body />
-        </PopUpModal>
+        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <Body />
+            </KeyboardAvoidingView>
+        </PopUpModal >
     )
 }
 

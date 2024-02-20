@@ -64,8 +64,8 @@ projectService.modifyProject = async (project_id, project) =>{
     
     project = updateProjectDefValues(project_notUpdated.rows[0], project);
     
-    let project_updated = await db.query("UPDATE projects SET title = $1, description = $2, completed = $3, date_changed = $4, date_completed = $5, num_version = $6 WHERE project_id = $7 RETURNING project_id", 
-        [project.title, project.description, project.completed, project.date_changed, project.date_completed, project.num_version, project_id])
+    let project_updated = await db.query("UPDATE projects SET title = $1, description = $2, completed = $3, date_changed = $4, date_completed = $5, num_version = $6, color =$7 WHERE project_id = $8 RETURNING project_id", 
+        [project.title, project.description, project.completed, project.date_changed, project.date_completed, project.num_version, project.color, project_id])
     
     if(project_updated.rows.length !== 1){
         throw new Error("The project does not exist")
