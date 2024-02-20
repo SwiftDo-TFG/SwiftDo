@@ -1,35 +1,43 @@
 import { Text, TouchableOpacity, View } from "react-native";
+import projectService from "../../services/project/projectService"
 import ActionScreen from "../tasks/actionScreen";
-import {MaterialCommunityIcons, Feather} from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import React from "react";
-import projectService from "../../services/project/projectService";
 import TaskStates from "../../utils/enums/taskStates";
 import { actStyle } from "../../styles/globalStyles";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import CreateProjectModal from "../../components/modals/CreateProjectModal";
+
 
 function Project(props) {
-    const [projectData, setData] = React.useState([])
+    const [projectData, setData] = React.useState({})
     const [isCompleteModalVisible, setIsCompleteModalVisible] = React.useState(false);
     const [completeModalText, setCompleteModalText] = React.useState('');
     const [completeModalTitle, setCompleteModalTitle] = React.useState('');
+    const [isDataLoaded, setDataLoaded] = React.useState(false);
+
+    //Modal states
+    const [editingProject, setEditingProject] = React.useState({});
+    const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     React.useEffect(() => {
-        async function fetchData() {
-            const project = await projectService.showContent(props.route.params.id);
-            setData(project);
-            console.log("ID PROJECT, ", project)
-        }
         fetchData();
     }, []);
-    
+
+    async function fetchData() {
+        const project = await projectService.showContent(props.route.params.id);
+        setData(project);
+        setDataLoaded(true);
+        console.log("ID PROJECT, ", project)
+    }
     const progressIcon = () => {
         let slice = Math.ceil(projectData.percentage / 12.5);
-        if(isNaN(slice)) slice = 0
+        if (isNaN(slice)) slice = 0
         return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
     }
 
     const handlePress = () => {
         // se puede completar el proyecto
-        if(projectData.tasks.length === 0){
+        if (projectData.tasks.length === 0) {
             setCompleteModalTitle("Proyecto a punto de completarse")
             setCompleteModalText("¿Desea continuar?");
             // TODO completar proyecto
@@ -37,7 +45,7 @@ function Project(props) {
             console.log(" no TAreas")
         }
         // Se debe avisar al usuario si quiere seguir con la accion de completar todas las tareas antes de completar el proyecto
-        else{
+        else {
             setCompleteModalTitle("Aún hay tareas sin completar")
             setCompleteModalText("Al completar este proyecto se completarán éstas tareas. ¿Desea continuar?");
             // TODO completar proyecto
@@ -46,27 +54,67 @@ function Project(props) {
         }
     }
 
+    const reloadData = () => {
+        setDataLoaded(false)
+        fetchData()
+    }
 
     const closeModal = () => {
         setIsCompleteModalVisible(false);
     }
-    
+
+    const showEditPopUp = (id) => {
+        const projectToEdit = projectData.project;
+        if (projectToEdit) {
+            setEditingProject(projectToEdit);
+            setIsEditModalOpen(true);
+        } else {
+            console.error(`No se encontró el proyecto con ID: ${id}`);
+        }
+    }
+    const updateProject = async (updatedProject) => {
+        console.log(updatedProject)
+        const updatedProjectResult = await projectService.modifyProject(updatedProject.project_id, updatedProject);
+        console.log("ID: ", updatedProjectResult)
+        if (updatedProjectResult !== -1) {
+            setIsEditModalOpen(false);
+            // setData(updatedProject);
+            reloadData();
+        } else {
+            console.error("Error al actualizar la tarea en la base de datos");
+        }
+    };
     return (
         <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.id}>
-            <View style={actStyle.action} >
-                <TouchableOpacity onPress={handlePress}>
-                    <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={props.route.params.color} />
-                </TouchableOpacity>
-                <Text style={actStyle.actionTitle}>{props.route.name}</Text>
-            </View>
-            <Text style={actStyle.description}> {props.route.params.description === null ? "Descripcion" : props.route.params.description} </Text>
-            <CompleteTaskModal
+            {isDataLoaded &&
+                <>
+                    <View style={actStyle.action} >
+                        <TouchableOpacity onPress={handlePress}>
+                            <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={projectData.project.color} />
+                        </TouchableOpacity>
+                        <Text style={actStyle.actionTitle}>{projectData.project.title}</Text>
+                        <TouchableOpacity onPress={() => showEditPopUp(projectData.project.project_id)}>
+                            <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={actStyle.description}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
+                </>}<CompleteTaskModal
                 title={completeModalTitle}
                 texto={completeModalText}
                 isModalOpen={isCompleteModalVisible}
                 setIsModalOpen={closeModal}
             />
+            {/* EDIT PROJECT MODAL   */}
+            <CreateProjectModal
+                title="Editar"
+                // touch={hideEditPopUp}
+                editingProject={editingProject}
+                onAccept={updateProject}
+                isModalOpen={isEditModalOpen}
+                setIsModalOpen={setIsEditModalOpen}
+            />
         </ActionScreen>
+
     )
 }
 
@@ -185,9 +233,8 @@ export default Project;
 //     const taskToEdit = tasks.find(task => task.task_id === id);
 //     if (taskToEdit) {
 //         setEditingTask([taskToEdit]);
-//         moveRef.show(taskToEdit);
-//     } else {
-//         console.error(`No se encontró la tarea con ID: ${id}`);
+//         setIsMoveModalOpen(true);     } else {
+//         console.error(`No se encontró el proyecto con ID: ${id}`);
 //     }
 // }
 
@@ -197,13 +244,14 @@ export default Project;
 
 // const showEditPopUp = (id) => {
 //     const taskToEdit = tasks.find(task => task.task_id === id);
+
 //     if (taskToEdit) {
-//         setEditingTask([taskToEdit]);
-//         editRef.show(taskToEdit);
+//       setEditingTask(taskToEdit);
+//       setIsEditModalOpen(true);
 //     } else {
-//         console.error(`No se encontró la tarea con ID: ${id}`);
+//       console.error(`No se encontró la tarea con ID: ${id}`);
 //     }
-// }
+//   }
 
 // const hideEditPopUp = () => {
 //     editRef.hide();
