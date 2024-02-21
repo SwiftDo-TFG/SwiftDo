@@ -89,7 +89,17 @@ const AppNavigator = ({projects, state}) => {
                     headerShown: false
                     }}
                 />
-                {addProjects}
+                {/* {addProjects} */}
+                <Drawer.Screen
+                // key={i}
+                name={"project"}
+                // initialParams={{id:project.project_id, color: project.color, description: project.description, percentage: project.completionPercentage}}
+                component={Project}
+                options={{
+                title: "Project",
+                headerShown: false
+                }}
+            />
                 </>
             )}
         </Drawer.Navigator>

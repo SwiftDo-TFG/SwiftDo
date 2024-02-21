@@ -56,11 +56,11 @@ export default ({ navigation, projectAttributes }) => {
         return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
 
     }
-
     const addProjects = () => {
         return projectAttributes.map((project, i) => (
             <View key={i}>
-                <ActionScheme onPress={() => navigation.navigate(project.title)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} />
+                {/* <ActionScheme onPress={() => navigation.navigate(project.project_id)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} /> */}
+                <ActionScheme onPress={() => navigation.navigate("project", {project_id: project.project_id})} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} />
             </View>
 
         ));

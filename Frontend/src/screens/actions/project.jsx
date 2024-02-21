@@ -20,14 +20,22 @@ function Project(props) {
     const [editingProject, setEditingProject] = React.useState({});
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     React.useEffect(() => {
-        fetchData();
-    }, []);
+       
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            if (!isDataLoaded) {
+              fetchData()
+            //   setDataLoaded(true)
+            }
+          });
+      
+          return unsubscribe;
+    }, [props.navigation]);
 
     async function fetchData() {
-        const project = await projectService.showContent(props.route.params.id);
+        const project = await projectService.showContent(props.route.params.project_id);
         setData(project);
         setDataLoaded(true);
-        console.log("ID PROJECT, ", project)
+        console.log("ID PROJECT, ", project);
     }
     const progressIcon = () => {
         let slice = Math.ceil(projectData.percentage / 12.5);
@@ -85,7 +93,7 @@ function Project(props) {
         }
     };
     return (
-        <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.id}>
+        <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.project_id}>
             {isDataLoaded &&
                 <>
                     <View style={actStyle.action} >
