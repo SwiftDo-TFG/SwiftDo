@@ -146,6 +146,24 @@ taskService.getInfo = async(user_id, state) => {
     return res.rows;
 }
 
+taskService.newgetInfo = async(user_id, state) => {
+    const res = await db.query('SELECT count (*) as total, state , important_fixed FROM tasks  where user_id = $1 and completed is false  group by important_fixed, state order by state, important_fixed', [user_id])
+    
+    let info = {
+        1: {total: 0, important: 0},
+        2: {total: 0, important: 0},
+        3: {total: 0, important: 0},
+        4: {total: 0, important: 0},
+    }
+    res.rows.forEach(e => {
+        if(e.state != null){
+            e.important_fixed ? info[e.state].important = parseInt(e.total) : info[e.state].total = parseInt(e.total);
+        }
+    })
+
+    return info;
+}
+
 
 function completeTaskDefValues(task){
     if(!task.user_id || !task.title || task.title.length === 0){
