@@ -8,7 +8,7 @@ taskValidators.validateCreate = () => {
         description: { optional: true, notEmpty: false, isLength: { options: { min: 1, max: 200 } } },
         important_fixed: { optional: true, isBoolean: true },
         state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
-        context_id: {optional: true, isInt: { min: 0 } },
+        context_id: {optional: true, isInt: { min: 0 }},
         project_id: {optional: true, isInt: { min: 0 } },
         date_limit: {optional: true, isISO8601: true},
         //TODO Verification list
@@ -22,8 +22,8 @@ taskValidators.validateModify = () => {
         description: { optional: true, notEmpty: false, isLength: { options: { min: 1, max: 200 } } },
         important_fixed: { optional: true, isBoolean: true },
         state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
-        context_id: {optional: true, isInt: { min: 0 } },
-        project_id: {optional: true, isInt: { min: 0 } },
+        context_id: {optional: {options: {values: 'null'}}, isInt: { min: 0 }},
+        project_id: {optional: {options: {values: 'null'}}, isInt: { min: 0 }},
         date_limit: {optional: true, isISO8601: true},
         completed: {optional: true, isBoolean: true},
         //TODO Verification list
