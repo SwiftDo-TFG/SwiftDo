@@ -117,6 +117,25 @@ router.get('/newinfo', async (req, res) => {
   }
 })
 
+router.get('/info', async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const filters = req.query;
+
+  try {
+
+    const userInfo = await userService.findUserById(user_id)
+    const task_inbox = await taskService.getInfo(user_id, 1)
+    const task_ca = await taskService.getInfo(user_id, 2)
+    const task_prog = await taskService.getInfo(user_id, 3)
+    const task_arch = await taskService.getInfo(user_id, 4)
+
+    res.send({ userName: userInfo.name, task_inbox: task_inbox, task_ca: task_ca, task_prog: task_prog, task_arch: task_arch });
+  } catch (error) {
+    console.log('[Exception]:', error.message)
+    res.sendStatus(404);
+  }
+})
+
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   console.log(id);
