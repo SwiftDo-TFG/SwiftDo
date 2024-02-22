@@ -38,7 +38,6 @@ function ActionScreen(props) {
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (!isDataLoaded) {
         fetchData()
-        setDataLoaded(true)
       }
     });
 
@@ -46,7 +45,7 @@ function ActionScreen(props) {
   }, [authState, props.navigation]);
 
   async function fetchData() {
-
+    
     let filter = { state: props.state, completed: false }
     if (props.state === 5) {
       filter = { project_id: props.project_id, completed: false }
@@ -67,12 +66,12 @@ function ActionScreen(props) {
 
     setTasks(tasksDB)
     setSelectedTasks(seletedAux)
+    setDataLoaded(true)
   }
 
   const reloadData = () => {
     setDataLoaded(false)
     fetchData()
-    setDataLoaded(true)
   }
 
   const addTask = async (task) => {
@@ -129,7 +128,7 @@ function ActionScreen(props) {
   }
 
   const updateTask = async (updatedTask) => {
-    console.log(updatedTask)
+    console.log("UPDATING TASK",updatedTask)
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
     console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
