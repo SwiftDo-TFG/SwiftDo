@@ -10,7 +10,7 @@ import CreateProjectModal from "../../components/modals/CreateProjectModal";
 
 
 function Project(props) {
-    const [projectData, setData] = React.useState({})
+    const [projectData, setData] = React.useState({ project: { project_id: props.route.params.project_id } })
     const [isCompleteModalVisible, setIsCompleteModalVisible] = React.useState(false);
     const [completeModalText, setCompleteModalText] = React.useState('');
     const [completeModalTitle, setCompleteModalTitle] = React.useState('');
@@ -19,16 +19,21 @@ function Project(props) {
     //Modal states
     const [editingProject, setEditingProject] = React.useState({});
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+
     React.useEffect(() => {
-       
+        // || projectData.project.project_id !== props.route.params.project_id
+        // if (!isDataLoaded) {
+        //     fetchData()
+        //     //   setDataLoaded(true)
+        // }
         const unsubscribe = props.navigation.addListener('focus', () => {
+            console.log("SE EJECUTA FETCH DATA PROJECT", isDataLoaded, props.route.params)
             if (!isDataLoaded) {
-              fetchData()
-            //   setDataLoaded(true)
+                fetchData()
             }
-          });
-      
-          return unsubscribe;
+        });
+
+        return unsubscribe;
     }, [props.navigation]);
 
     async function fetchData() {
@@ -93,7 +98,7 @@ function Project(props) {
         }
     };
     return (
-        <ActionScreen {...props} state={TaskStates.PROJECT} project_id={props.route.params.project_id}>
+        <ActionScreen {...props} state={TaskStates.PROJECT} project_id={projectData.project.project_id}>
             {isDataLoaded &&
                 <>
                     <View style={actStyle.action} >
@@ -106,7 +111,8 @@ function Project(props) {
                         </TouchableOpacity>
                     </View>
                     <Text style={actStyle.description}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
-                </>}<CompleteTaskModal
+                </>}
+            <CompleteTaskModal
                 title={completeModalTitle}
                 texto={completeModalText}
                 isModalOpen={isCompleteModalVisible}

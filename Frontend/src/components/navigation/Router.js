@@ -46,7 +46,7 @@ export default function Router() {
             console.error("Error al obtener los proyectos:", error);
           }
         };
-        fetchData();
+        // fetchData();
     
     }, []);
 

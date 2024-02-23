@@ -107,7 +107,7 @@ const completeTaskList = async (list_ids, completed) => {
 
 const getInfo = async () => {
     try {
-        const res = await instance.get('/task/info')
+        const res = await instance.get('/task/newinfo')
         const tasksAndUsername = res.data;
 
         return tasksAndUsername;

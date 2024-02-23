@@ -8,6 +8,11 @@ import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
 import AuthContext from '../../services/auth/context/authContext';
 import ConfirmButton from '../common/ConfirmButton';
+import { CommonActions } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import TaskStates from '../../utils/enums/taskStates';
+
+
 const Separator = () => {
     return (
         <View style={sideBar.separator} />
@@ -22,7 +27,7 @@ function getMonthName(month) {
     return monthNames[month];
 }
 
-export default ({ navigation, projectAttributes }) => {
+export default ({ navigation }) => {
 
     // const [projects, setProjects] = React.useState([])
     const [username, setUsername] = React.useState([])
@@ -30,17 +35,20 @@ export default ({ navigation, projectAttributes }) => {
     const [inboxData, setInboxData] = React.useState([])
     const [progData, setProgData] = React.useState([])
     const [archData, setArchData] = React.useState([])
+    const [sideProjects, setSideProjects] = React.useState([])
     const authstate = React.useContext(AuthContext);
 
     React.useEffect(() => {
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
+            console.log("USER AND TASKS", userAndTasks)
 
             setUsername(userAndTasks.userName);
-            setInboxData(userAndTasks.task_inbox);
-            setCaData(userAndTasks.task_ca);
-            setProgData(userAndTasks.task_prog);
-            setArchData(userAndTasks.task_arch);
+            setInboxData([userAndTasks.tasksInfo[TaskStates.INBOX].total, userAndTasks.tasksInfo[TaskStates.INBOX].important]);
+            setCaData([userAndTasks.tasksInfo[TaskStates.CUANTO_ANTES].total, userAndTasks.tasksInfo[TaskStates.CUANTO_ANTES].important]);
+            setProgData([userAndTasks.tasksInfo[TaskStates.PROGRAMADAS].total, userAndTasks.tasksInfo[TaskStates.PROGRAMADAS].important]);
+            setArchData([userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].total, userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].important]);
+            setSideProjects(userAndTasks.projects);
         }
         fetchData();
         const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
@@ -56,11 +64,31 @@ export default ({ navigation, projectAttributes }) => {
         return slice !== 0 ? `circle-slice-${slice}` : "circle-outline";
 
     }
+
+    function navigateFromProjectToProject(navigation, project){
+        navigation.dispatch(state => {
+            const index = state.routes.findIndex(r => r.name === 'project');
+            const routes = state.routes.slice(0, index + 1);
+                    
+            routes.push({
+                name: 'project',
+                params: { project_id: project.project_id },
+            })
+
+            return CommonActions.reset({
+                ...state,
+                routes,
+                index: routes.length - 1,
+            });
+        });
+        navigation.closeDrawer();
+    }
+
     const addProjects = () => {
-        return projectAttributes.map((project, i) => (
+        return sideProjects.map((project, i) => (
             <View key={i}>
                 {/* <ActionScheme onPress={() => navigation.navigate(project.project_id)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} /> */}
-                <ActionScheme onPress={() => navigation.navigate("project", {project_id: project.project_id})} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} />
+                <ActionScheme onPress={() => { navigateFromProjectToProject(navigation, project)}} icon={progressIcon(project.percentage)} type={'M'} iconColor={project.color !== null ? project.color : Colors.paper} text={project.title} />
             </View>
 
         ));
@@ -74,11 +102,11 @@ export default ({ navigation, projectAttributes }) => {
                 <Profile name={username} formattedDate={formattedDate} />
                 <Separator />
                 <View style={sideBar.actionContainer}>
-                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]?.total} importantTasks={inboxData[1]?.total} />
+                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
                     <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
-                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]?.total} importantTasks={caData[1]?.total} />
-                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]?.total} importantTasks={progData[1]?.total} />
-                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]?.total} importantTasks={archData[1]?.total} />
+                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]} importantTasks={caData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]} importantTasks={progData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]} importantTasks={archData[1]} />
                 </View>
                 <Separator />
 
