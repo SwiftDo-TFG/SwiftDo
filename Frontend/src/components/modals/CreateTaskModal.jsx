@@ -94,7 +94,7 @@ function CreateTaskModal(props) {
             setState((prevState) => ({
                 ...prevState,
                 isImportant: !prevState.isImportant,
-                editedTitle: title, 
+                editedTitle: title,
                 editedDescription: description
             }));
         };
@@ -117,8 +117,23 @@ function CreateTaskModal(props) {
                     const { project, project_id, ...newState } = state
                     setState(newState)
                 }}>
-                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: project.color }}>
-                        <Text style={{ color: 'white' }}>{project.title} <MaterialCommunityIcons name="close" size={14} color="#FFFFFF" /></Text>
+                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
+                        <Text style={{ color: '#272c34', fontWeight: 600 }}>
+                            <MaterialCommunityIcons name="circle-outline" size={14} color={project.color} /> {(project.title.length > 8 ? `${project.title.substring(0, 8)}...` : project.title)} <MaterialCommunityIcons name="close" size={14} color={project.color} />
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+
+        const SelectProjectPanel = () => {
+            return (
+                <TouchableOpacity onPress={() => {
+                    setState({ ...state, editedTitle: title, editedDescription: description })
+                    setShowAssProjectSelector(true)
+                }}>
+                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: 'lightgrey', paddingHorizontal: 6, backgroundColor: 'white' }}>
+                        <Text style={{ color: 'lightgrey', fontWeight: 600 }}><MaterialCommunityIcons name="circle-outline" size={16} color='lightgrey' /> Proyecto</Text>
                     </View>
                 </TouchableOpacity>
             )
@@ -153,9 +168,6 @@ function CreateTaskModal(props) {
                                 />
                             </View>
                             <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
-                                    {state.project && <ProjectBadge project={state.project} />}
-                                </View>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
@@ -177,8 +189,7 @@ function CreateTaskModal(props) {
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => {
-                                            setState({ ...state, editedTitle: title, editedDescription: description })
-                                            setShowAssProjectSelector(true)
+                                            
                                         }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
@@ -236,6 +247,9 @@ function CreateTaskModal(props) {
                                             }
                                         </Text>
                                     </TouchableOpacity>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                        {state.project ? <ProjectBadge project={state.project} /> : <SelectProjectPanel />}
+                                    </View>
 
                                     <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
                                     <SelectContextModal modalVisible={showContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
