@@ -21,7 +21,17 @@ projectService.createProject = async (project_data) => {
 
 projectService.showProjectsByUser = async (user_id) => {
 
-    const res = await db.query("SELECT * FROM projects WHERE user_id = $1 AND completed is not true", [user_id]);
+    // const res = await db.query("SELECT * FROM projects WHERE user_id = $1 AND completed is not true", [user_id]);
+
+    const res = await db.query("SELECT pro.*, CASE WHEN per.percentage is NULL THEN 0 ELSE per.percentage END " +
+        "FROM projects pro " +
+        "left join( " +
+            "select c.project_id, (c.completed_tasks / t.total_tasks:: float) * 100 as percentage " +
+            "from(SELECT project_id, COUNT(*) as completed_tasks FROM tasks where completed is true group by project_id) c " +
+            "join(SELECT project_id, COUNT(*) as total_tasks FROM tasks group by project_id) t on c.project_id = t.project_id " +
+        ") per on pro.project_id = per.project_id " +
+        "WHERE user_id = $1 AND completed is not true", [user_id])
+
     return res.rows;
 }
 
