@@ -57,7 +57,7 @@ taskService.findTaskById = async (id)=>{
 }
 
 taskService.findTasksByFilters = async (user_id, filters)=>{
-    const filterdQuery = addFiltersToQuery('SELECT * FROM tasks WHERE user_id = $1', filters);
+    const filterdQuery = addFiltersToQuery('SELECT t.*, p.color as project_color, p.title as project_title FROM tasks t LEFT JOIN Projects p on t.project_id = p.project_id WHERE t.user_id = $1', filters);
     filterdQuery.values.unshift(user_id);
 
     const res = await db.query(filterdQuery.query, filterdQuery.values)
@@ -66,7 +66,7 @@ taskService.findTasksByFilters = async (user_id, filters)=>{
 }
 
 taskService.findTaskByUserId = async (id)=>{
-    const res = await db.query('SELECT * FROM tasks WHERE user_id = $1 AND completed is not true', [id])
+    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title FROM tasks t LEFT JOIN projects p on t.project_id = p.project_id WHERE t.user_id = $1 AND t.completed is not true', [id])
 
     return res.rows;
 }
@@ -229,25 +229,25 @@ function addFiltersToQuery(query, filters){
     let finalFilters = {}
 
     if(filters.context_id){
-        finalQuery = finalQuery.concat(" AND context_id = ")
+        finalQuery = finalQuery.concat(" AND t.context_id = ")
         finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
         finalFilters.context_id = filters.context_id;
     }
 
     if(filters.project_id){
-        finalQuery = finalQuery.concat(" AND project_id = ")
+        finalQuery = finalQuery.concat(" AND t.project_id = ")
         finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
         finalFilters.project_id = filters.project_id;
     }
 
     if(filters.state){
-        finalQuery = finalQuery.concat(" AND state = ")
+        finalQuery = finalQuery.concat(" AND t.state = ")
         finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
         finalFilters.state = filters.state;
     }
 
     if(filters.completed){
-        finalQuery = finalQuery.concat(" AND completed = ")
+        finalQuery = finalQuery.concat(" AND t.completed = ")
         filters.completed = (/true/i).test(filters.completed);
         finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
         finalFilters.completed = filters.completed;
@@ -255,25 +255,25 @@ function addFiltersToQuery(query, filters){
 
     if(filters.date_limit){
         if(filters.date_limit === '?'){
-            finalQuery = finalQuery.concat(" AND date_limit is not null")
+            finalQuery = finalQuery.concat(" AND t.date_limit is not null")
         }else if (filters.date_limit === 'null'){
-            finalQuery = finalQuery.concat(" AND date_limit is null")
+            finalQuery = finalQuery.concat(" AND t.date_limit is null")
         }else if(Date.parse(filters.date_limit)){
-            finalQuery = finalQuery.concat(" AND date_limit = ")
+            finalQuery = finalQuery.concat(" AND t.date_limit = ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
             finalFilters.date_limit = new Date(filters.date_limit);
         }
     }
 
     if(filters.important_fixed){
-        finalQuery = finalQuery.concat(" AND important_fixed = ")
+        finalQuery = finalQuery.concat(" AND t.important_fixed = ")
         filters.important_fixed = (/true/i).test(filters.important_fixed);
         finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
         finalFilters.important_fixed = filters.important_fixed;
     }
 
     if(filters.date_limit){
-        finalQuery = finalQuery.concat(" order by date_limit");
+        finalQuery = finalQuery.concat(" order by t.date_limit");
     }
 
     return {query: finalQuery, values: Object.values(finalFilters)};
