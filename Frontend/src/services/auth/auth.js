@@ -32,7 +32,7 @@ const getAuthCode = async (email, password) => {
 }
 
 const getAuthToken = async (authcode) => {
-    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000/' }
+    const data = { client_id: 1234, client_secret: 1234, grant_type: "authorization_code", code: authcode, redirect_uri: 'http://ec2-16-171-169-109.eu-north-1.compute.amazonaws.com:3000/' }
 
     console.log("[AXIOS] Get OAUTH Token", data)
     try {
@@ -54,7 +54,7 @@ const getAuthToken = async (authcode) => {
 }
 
 const restoreToken = async (token)=> {
-    const data = { client_id: 1234, client_secret: 1234, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000/' }
+    const data = { client_id: 1234, client_secret: 1234, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: 'http://ec2-16-171-169-109.eu-north-1.compute.amazonaws.com:3000/' }
 
     console.log("[AXIOS] Refresh OAUTH Token", data)
     try {
