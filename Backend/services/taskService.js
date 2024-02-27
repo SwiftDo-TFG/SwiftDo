@@ -57,7 +57,9 @@ taskService.findTaskById = async (id)=>{
 }
 
 taskService.findTasksByFilters = async (user_id, filters)=>{
-    const filterdQuery = addFiltersToQuery('SELECT t.*, p.color as project_color, p.title as project_title FROM tasks t LEFT JOIN Projects p on t.project_id = p.project_id WHERE t.user_id = $1', filters);
+    const filterdQuery = addFiltersToQuery('SELECT t.*, p.color as project_color, p.title as project_title, c.name as context_name '+ 
+                    'FROM tasks t LEFT JOIN Projects p on t.project_id = p.project_id ' +
+                    'LEFT JOIN areas_contexts c on t.context_id = c.context_id WHERE t.user_id = $1', filters);
     filterdQuery.values.unshift(user_id);
 
     const res = await db.query(filterdQuery.query, filterdQuery.values)
@@ -66,7 +68,9 @@ taskService.findTasksByFilters = async (user_id, filters)=>{
 }
 
 taskService.findTaskByUserId = async (id)=>{
-    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title FROM tasks t LEFT JOIN projects p on t.project_id = p.project_id WHERE t.user_id = $1 AND t.completed is not true', [id])
+    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title, c.name as context_name '+
+                    'FROM tasks t LEFT JOIN projects p on t.project_id = p.project_id '+
+                    'LEFT JOIN areas_contexts c on t.context_id = c.context_id WHERE t.user_id = $1 AND t.completed is not true', [id])
 
     return res.rows;
 }
