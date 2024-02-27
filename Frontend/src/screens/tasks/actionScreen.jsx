@@ -309,9 +309,8 @@ function ActionScreen(props) {
           />
 
           <CompleteTaskModal
-            title="Test"
-            // touch={hideEditPopUp}
-            // editingTask={editingTask}
+            title="Completar tarea"
+            texto={"¿Desea completar esta tarea?"}
             onAccept={handleCompleteTasks}
             isModalOpen={isCompleteModalOpen}
             setIsModalOpen={setIsCompleteModalOpen}

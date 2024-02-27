@@ -8,6 +8,7 @@ import styles from './actionScreen.styles'
 import AuthContext from '../../services/auth/context/authContext';
 import Checkbox from "../../components/common/Tickbox";
 import Colors from "../../styles/colors";
+import ProjectBadge from "../../components/common/ProjectBadge";
 
 const getTaskItemStyle = () => {
   return {
@@ -36,7 +37,7 @@ const LeftSwipeActions = (showMovePopUp, id, isMenuVisible) => {
     // <Animated.View
     <TouchableOpacity
       // style={[styles.leftSwipe, { borderTopRightRadius }, { borderBottomRightRadius }]}
-      style={[styles.leftSwipe, {height: (isMenuVisible ? 'auto' : 52)}]}
+      style={[styles.leftSwipe, { height: (isMenuVisible ? 'auto' : 52) }]}
       onPress={() => showMovePopUp(id)}
     >
       <Text>
@@ -49,7 +50,7 @@ const LeftSwipeActions = (showMovePopUp, id, isMenuVisible) => {
 const RightSwipeActions = ({ showCompleteModal, id, translateX, isMenuVisible }) => {
   return (
     <TouchableOpacity
-      style={[styles.rightSwipe, { transform: [{ translateX: translateX }], height: (isMenuVisible ? 'auto' : 52)}]}
+      style={[styles.rightSwipe, { transform: [{ translateX: translateX }], height: (isMenuVisible ? 'auto' : 52) }]}
       onPress={() => showCompleteModal(id)}
     >
       <Text>
@@ -74,7 +75,7 @@ function formattedDate(date) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-function recortarTitle(title){
+function recortarTitle(title) {
   let t = title;
   return `${t.substring(0, 20)}...`;
 }
@@ -90,7 +91,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
   //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
   //   extrapolate: 'clamp',
   // });
-  
+
 
   useEffect(() => {
     const subscription = translateX.addListener(({ value }) => {
@@ -152,17 +153,17 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 { alignItems: 'center' },
                 (!selectedTasks[task.task_id] && isMenuVisible) ? null : { marginRight: 20 }
               ]}>
-                <TouchableOpacity onPress={() => { onPress(task.task_id) }} style={{ marginRight: '5%' }}>
+                <TouchableOpacity onPress={() => {onPress(task.task_id) }} style={{ marginRight: '5%' }}>
                   {!selectedTasks[task.task_id] && (
-                    <Checkbox/>
+                    <Checkbox selected={false}/>
                     // <FontAwesome name="circle-o" size={24} color="#a0a0a0" /> 
-                    )}
+                  )}
                   {selectedTasks[task.task_id] && (
-                    <Checkbox/>
+                    <Checkbox selected={true} />
                     // <FontAwesome name="check-circle" size={24} color="#f39f18" />
                   )}
                 </TouchableOpacity>
-                <Text style={{ textAlign: 'center', fontSize: 15,  fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
+                <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
                   {(task.title.length > 37 && (!isMenuVisible || selectedTasks[task.task_id])) ? `${task.title.substring(0, 30)}...` : task.title}
                 </Text>
               </View>
@@ -175,6 +176,9 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 )}
               </View>
             </View>
+            {task.project_id != null && !isMenuVisible && <View style={{marginTop: 3, marginLeft: 3}}>
+              <ProjectBadge project={{ title: task.project_title, color: task.project_color }} little={true}/>
+            </View>}
             {!selectedTasks[task.task_id] && isMenuVisible && (
               // <Menu
               //   trigger={(triggerProps) => (
@@ -192,39 +196,27 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
               //     Editar
               //   </Menu.Item>
               // </Menu>
-              <View style={{flexDirection: 'column'}}>
+              <View style={{ flexDirection: 'column' }}>
                 <View style={{ marginLeft: '11%' }}>
                   <Text>{task.description}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 8, width: '100%', justifyContent: 'flex-end' }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: task.date_limit ? '100%' : 'auto' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: task.date_limit ? '100%' : '100%' }}>
                     {task.date_limit && (
                       <Text style={{ fontSize: 12 }}>
                         <Ionicons name="calendar-outline" size={16} color="#008080" />
                         &nbsp; {formattedDate(task.date_limit)}
                       </Text>
                     )}
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View>
+                      {task.project_id != null && <ProjectBadge project={{ title: task.project_title, color: task.project_color }} />}
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                       <TouchableOpacity onPress={() => showEditPopUp(task.task_id)}>
                         <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                       </TouchableOpacity>
-                      {/* <TouchableOpacity onPress={() => showMovePopUp(task.task_id)}>
-                        <Entypo name="archive" size={22} color="#15ba53" style={{ marginLeft: 6 }} />
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                        <Octicons name="trash" size={22} color="red" style={{ marginLeft: 6 }} />
-                      </TouchableOpacity> */}
                     </View>
                   </View>
-                  {/* <Text>
-                    <FontAwesome5 name="user" size={22} color="#a0a0a0" />
-                  </Text>
-                  <Text>
-                    <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
-                  </Text>
-                  <Text>
-                    <MaterialCommunityIcons name="tag-outline" size={23} color="#a0a0a0" />
-                  </Text> */}
                 </View>
               </View>
             )}

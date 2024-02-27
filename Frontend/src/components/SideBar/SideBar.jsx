@@ -11,6 +11,7 @@ import ConfirmButton from '../common/ConfirmButton';
 import { CommonActions } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import TaskStates from '../../utils/enums/taskStates';
+import { useDrawerStatus } from '@react-navigation/drawer'
 
 
 const Separator = () => {
@@ -28,20 +29,21 @@ function getMonthName(month) {
 }
 
 export default ({ navigation }) => {
-
-    // const [projects, setProjects] = React.useState([])
-    const [username, setUsername] = React.useState([])
+    const [username, setUsername] = React.useState('')
     const [caData, setCaData] = React.useState([])
     const [inboxData, setInboxData] = React.useState([])
     const [progData, setProgData] = React.useState([])
     const [archData, setArchData] = React.useState([])
-    const [sideProjects, setSideProjects] = React.useState([])
+    const [sideProjects, setSideProjects] = React.useState([]);
+    const [sideContexts, setSideContexts] = React.useState([]);
     const authstate = React.useContext(AuthContext);
 
+    const isDrawerOpen = useDrawerStatus() === "open";
+
     React.useEffect(() => {
+
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
-            console.log("USER AND TASKS", userAndTasks)
 
             setUsername(userAndTasks.userName);
             setInboxData([userAndTasks.tasksInfo[TaskStates.INBOX].total, userAndTasks.tasksInfo[TaskStates.INBOX].important]);
@@ -49,12 +51,23 @@ export default ({ navigation }) => {
             setProgData([userAndTasks.tasksInfo[TaskStates.PROGRAMADAS].total, userAndTasks.tasksInfo[TaskStates.PROGRAMADAS].important]);
             setArchData([userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].total, userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].important]);
             setSideProjects(userAndTasks.projects);
-        }
-        fetchData();
-        const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
+            setSideContexts(userAndTasks.contexts);
 
-        return () => clearInterval(interval); // Reseteamos el contador del intervalo
-    }, [])
+        }
+        // const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
+        // return () => clearInterval(interval); // Reseteamos el contador del intervalo
+        if (isDrawerOpen) {
+            // Drawer was focused
+            fetchData();
+            console.log("drawer focused", isDrawerOpen);
+        }
+        return () => {
+            if (isDrawerOpen) {
+                // Drawer was unfocused
+                console.log("drawer was unfocused", isDrawerOpen);
+            }
+        };
+    }, [isDrawerOpen])
 
     const progressIcon = (percentage) => {
         if (percentage === null)
@@ -65,11 +78,11 @@ export default ({ navigation }) => {
 
     }
 
-    function navigateFromProjectToProject(navigation, project){
+    function navigateFromProjectToProject(navigation, project) {
         navigation.dispatch(state => {
             const index = state.routes.findIndex(r => r.name === 'project');
             const routes = state.routes.slice(0, index + 1);
-                    
+
             routes.push({
                 name: 'project',
                 params: { project_id: project.project_id },
@@ -88,7 +101,7 @@ export default ({ navigation }) => {
         return sideProjects.map((project, i) => (
             <View key={i}>
                 {/* <ActionScheme onPress={() => navigation.navigate(project.project_id)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} /> */}
-                <ActionScheme onPress={() => { navigateFromProjectToProject(navigation, project)}} icon={progressIcon(project.percentage)} type={'M'} iconColor={project.color !== null ? project.color : Colors.paper} text={project.title} />
+                <ActionScheme onPress={() => { navigateFromProjectToProject(navigation, project) }} icon={progressIcon(project.percentage)} type={'M'} iconColor={project.color !== null ? project.color : Colors.paper} text={project.title} />
             </View>
 
         ));
@@ -99,7 +112,7 @@ export default ({ navigation }) => {
         <View style={sideBar.container}>
 
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
-                <Profile name={username} formattedDate={formattedDate} />
+                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} />
                 <Separator />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />

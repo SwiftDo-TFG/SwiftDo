@@ -9,8 +9,6 @@ import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
 
 
-
-
 function CreateTaskModal(props) {
     const [state, setState] = useState({
         show: false,
@@ -27,7 +25,7 @@ function CreateTaskModal(props) {
     const [showContextSelector, setShowContextSelector] = useState(false)
     const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
 
-
+    
     function setValuesToEdit() {
         if (props.editingTask) {
             let fecha = 'Fecha'
@@ -41,7 +39,9 @@ function CreateTaskModal(props) {
                 editedDescription: props.editingTask.description ? props.editingTask.description : '',
                 isImportant: props.editingTask.important_fixed ? props.editingTask.important_fixed : false,
                 state: props.editingTask.state ? props.editingTask.state : "1",
-                date_name: fecha
+                date_name: fecha,
+                project_id: props.editingTask.project_id ? props.editingTask.project_id : null, 
+                project: props.editingTask.project_id ? {project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color} : null
             })
         }
     }
@@ -111,7 +111,7 @@ function CreateTaskModal(props) {
             setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
         }
 
-        const ProjectBadge = ({ project }) => {
+        const ProjectBadgeSelectable = ({ project }) => {
             return (
                 <TouchableOpacity onPress={() => {
                     const { project, project_id, ...newState } = state
@@ -248,7 +248,7 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                        {state.project ? <ProjectBadge project={state.project} /> : <SelectProjectPanel />}
+                                        {state.project ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
                                     </View>
 
                                     <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />

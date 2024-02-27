@@ -1,13 +1,20 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+    container:{
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 20,
+        backgroundColor: 'white'
+    },
     taskContainer: {
         flex: 1,
-        paddingHorizontal: 15,
+        paddingHorizontal: 20,
     },
     taskContainerFirst: {
         flex: 1,
-        paddingHorizontal: 15,
+        paddingHorizontal: 20,
         marginTop: 10,
     },
     taskItem: {

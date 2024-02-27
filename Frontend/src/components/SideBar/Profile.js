@@ -6,7 +6,7 @@ import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 
 
-const Profile = ({ name, formattedDate }) => {
+const Profile = ({ name, formattedDate, contexts }) => {
     const [mostrarAreas, setMostrarAreas] = useState(false);
     const [animatedHeight] = useState(new Animated.Value(0));
     const [iconRotation] = useState(new Animated.Value(0));
@@ -14,15 +14,14 @@ const Profile = ({ name, formattedDate }) => {
     const [newContextName, setNewContextName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
-
-
     useEffect(() => {
         async function getAreas() {
             const userContext = await contextService.showContextsByUser();
             setUserContext(userContext);
         }
-        getAreas();
-    }, [])
+        // getAreas();
+        setUserContext(contexts);
+    }, [contexts])
 
     const toggleAreas = () => {
         if (mostrarAreas) {
@@ -77,7 +76,10 @@ const Profile = ({ name, formattedDate }) => {
                     source={require('../../assets/icon.png')}
                 />
                 <View style={{ marginLeft: 15 }}>
-                    <Text style={[textStyle.largeText, { fontWeight: '600', paddingBottom: 5 }]}>{name}</Text>
+                    {name.length === 0 ? 
+                        <ActivityIndicator style={{margin: 5}} color="#272c34" size="small" />:
+                        <Text style={[textStyle.largeText, { fontWeight: '600', paddingBottom: 5 }]}>{name}</Text>
+                        }
                     <Text style={[textStyle.smallText, { color: Colors.grey }]}>{formattedDate}</Text>
                 </View>
             </View>

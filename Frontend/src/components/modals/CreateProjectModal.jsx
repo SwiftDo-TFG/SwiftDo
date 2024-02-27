@@ -42,7 +42,7 @@ function CreateProjectModal(props) {
                 });
             }
 
-            createProject = { ... createProject, title: title, color: color };
+            createProject = { ...createProject, title: title, color: color };
             if (description)
                 createProject.description = description;
             props.onAccept(createProject);
@@ -61,8 +61,7 @@ function CreateProjectModal(props) {
         return (
             <>
                 {/* Title */}
-                <View style={{ flexDirection: 'row', justifyContent: 'start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8 }}>
-
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8, marginBottom: 10 }}>
                     <MaterialCommunityIcons name="circle-outline" size={26} color={color} />
                     <TextInput
                         style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
@@ -75,8 +74,8 @@ function CreateProjectModal(props) {
                     />
                 </View>
                 {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-start' }}>
-                    <View style={{ height: '70%', marginLeft: 20, marginRight: 8 }}>
+                <View style={{ flex: 1, justifyContent: 'space-between', marginHorizontal: 15}}>
+                    <View>
                         <TextInput
                             style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                             value={description}
@@ -85,16 +84,16 @@ function CreateProjectModal(props) {
                             multiline={true}
                             maxLength={200}
                         />
-                        <Text style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', marginBottom: 8 }}> Color: </Text>
+                    </View>
+                    <View>
+                        <Text style={{ fontSize: 16, fontWeight: 600, color: '#182E44', marginBottom: 15 }}>Selecciona un color: </Text>
                         <ColorPicker
                             color={color}
                             swatchesOnly={true}
                             onColorChangeComplete={onColorChange}
                             palette={['#000000', '#808080', '#A52A2A', '#FF0000', '#FFA500', '#FFFF00', '#0000FF', '#008000', '#EE82EE', '#FFC0CB',]}
                         />
-
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: 13 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 40, marginBottom: 10}}>
                             <TouchableOpacity
                                 style={styles.acceptButton}
                                 onPress={() => onAcceptFunction()}>
@@ -103,6 +102,11 @@ function CreateProjectModal(props) {
                         </View>
                     </View>
                 </View>
+                {/* <View>
+                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
+
+                    </View>
+                </View> */}
             </>
         );
     }

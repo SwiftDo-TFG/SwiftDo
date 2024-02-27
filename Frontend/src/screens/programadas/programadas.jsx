@@ -1,17 +1,20 @@
-import { View, Text, Animated, TouchableOpacity, Platform } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform, Dimensions } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
+import stylesAction from '../tasks/actionScreen.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import CreateTaskModal from "../../components/modals/CreateTaskModal"
 import MoveTaskModal from "../../components/modals/MoveTaskModal"
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
+import { actStyle } from "../../styles/globalStyles";
+
 
 
 const ProgramadasScreen = (props) => {
@@ -262,7 +265,8 @@ const ProgramadasScreen = (props) => {
                 />
 
                 <CompleteTaskModal
-                    title="Test"
+                    title="Completar tarea"
+                    texto={"¿Desea completar esta tarea?"}
                     // touch={hideEditPopUp}
                     // editingTask={editingTask}
                     onAccept={completeTask}
@@ -279,13 +283,22 @@ const ProgramadasScreen = (props) => {
                     onAccept={addTask}
                     mode='add'
                 /> */}
-                <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                    <View style={styles.action}>
-                        <Ionicons name="calendar-outline" style={styles.iconAction} color={'#008080'} />
-                        <Text style={styles.actionTitle}>Programadas</Text>
+                <View style={styles.container}>
+                    <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+                        {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                            <Feather name="sidebar" size={28} color="black" />
+                        </TouchableOpacity>)}
+                        <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
+                            <TouchableOpacity style={stylesAction.area}>
+                                <Text>Area</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </TouchableOpacity>
-                {/* {isDataLoaded ? <TasksCalendar /> : <LoadingIndicator />} */}
+                    <View style={actStyle.action}>
+                        <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
+                        <Text style={actStyle.actionTitle}>Programadas</Text>
+                    </View>
+                </View>
                 <TasksCalendar />
             </CalendarProvider>
         </NativeBaseProvider>
