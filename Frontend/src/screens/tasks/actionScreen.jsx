@@ -82,8 +82,9 @@ function ActionScreen(props) {
       if (newTask.task_id !== -1) {
         task.task_id = newTask.task_id;
 
-        setTasks([...tasks, task]);
+        // setTasks([...tasks, task]);
         setIsCreateModalOpen(false);
+        reloadData();
       } else {
         console.error("Error al agregar tarea a la base de datos");
       }
