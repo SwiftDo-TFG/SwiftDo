@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator  } from "react-native";
 import { sideBar, textStyle } from "../../styles/globalStyles";
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 
@@ -96,7 +96,8 @@ const Profile = ({ name, formattedDate, contexts }) => {
                     <Animated.View style={{ height: animatedHeight, overflow: 'hidden', paddingHorizontal: 22 }}>
                         {Object.keys(userContext).map((key, index) => (
                             <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                <AntDesign name="caretdown" size={16} color="#272c34" />
+                                {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}
+                                <MaterialCommunityIcons name="home-city-outline" size={16} color="#272c34" />
                                 <Text style={{ fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
                             </View>
                         ))}

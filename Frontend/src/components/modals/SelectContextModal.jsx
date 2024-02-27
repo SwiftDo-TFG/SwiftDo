@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { contextModal } from '../../styles/globalStyles'
 import contextService from "../../services/context/contextService";
 import Colors from "../../styles/colors";
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 
 const SelectContextModal = (props) => {
@@ -44,15 +46,16 @@ const SelectContextModal = (props) => {
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>
                                 <View key={index} style={contextModal.context}>
-                                    <Text style={{ fontSize: 16, marginLeft: 15 }}>{context[key].name}</Text>
+                                <MaterialCommunityIcons name="home-city-outline" size={16} color="#272c34" /> <Text style={{ fontSize: 16, marginLeft: 15 }}>{context[key].name}</Text>
+                                {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}
                                 </View>
                             </TouchableOpacity>
                         ))}
-                        <TouchableOpacity onPress={() => props.handleContextAction(null, null)}>
+                        {/* <TouchableOpacity onPress={() => props.handleContextAction(null, null)}>
                             <View style={[contextModal.context, {backgroundColor: Colors.red, justifyContent: 'center'}]}>
                                 <Text style={{ fontSize: 16, color: Colors.white, fontWeight: 'bold' }}>Borrar área</Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </ScrollView>
                 </View>
             </View>

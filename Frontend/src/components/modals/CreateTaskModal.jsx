@@ -2,7 +2,7 @@ import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
@@ -25,7 +25,7 @@ function CreateTaskModal(props) {
     const [showContextSelector, setShowContextSelector] = useState(false)
     const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
 
-    
+
     function setValuesToEdit() {
         if (props.editingTask) {
             let fecha = 'Fecha'
@@ -40,8 +40,10 @@ function CreateTaskModal(props) {
                 isImportant: props.editingTask.important_fixed ? props.editingTask.important_fixed : false,
                 state: props.editingTask.state ? props.editingTask.state : "1",
                 date_name: fecha,
-                project_id: props.editingTask.project_id ? props.editingTask.project_id : null, 
-                project: props.editingTask.project_id ? {project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color} : null
+                project_id: props.editingTask.project_id ? props.editingTask.project_id : null,
+                project: props.editingTask.project_id ? { project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color } : null,
+                context_id: props.editingTask.context_id ? props.editingTask.context_id : null,
+                context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
             })
         }
     }
@@ -86,7 +88,7 @@ function CreateTaskModal(props) {
         }
 
         const handleContextAction = (context_id, context_name) => {
-            setState({ ...state, context_id: context_id, contex_name: context_name });
+            setState({ ...state, context_id: context_id, context_name: context_name });
             setShowContextSelector(false);
         }
 
@@ -139,6 +141,22 @@ function CreateTaskModal(props) {
             )
         }
 
+        const ContextBadge = ({ context_name }) => {
+            return (
+                <TouchableOpacity onPress={() => {
+                    handleContextAction(null, null);
+                }}>
+                    <View style={{ borderRadius: 5, borderWidth: 1, borderColor: 'grey', paddingLeft: 2, backgroundColor: 'white' }}>
+                        <Text style={{ marginRight: 5 }}>
+                            <MaterialCommunityIcons name="home-city-outline" size={14} color="#272c34" /> {context_name} <MaterialCommunityIcons name="close" size={14} color="#272c34" />
+                            {/* <AntDesign name="caretdown" size={14} color="#272c34" /> */}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+
+            )
+        }
+
         return (
             <>
                 {/* Title */}
@@ -175,21 +193,19 @@ function CreateTaskModal(props) {
                                             &nbsp; {state.date_name}
                                         </Text>
                                     </TouchableOpacity>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '30%' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: state.context_name ? '50%' : '30%' }}>
                                         <TouchableOpacity onPress={() => {
                                             setState({ ...state, editedTitle: title, editedDescription: description })
                                             setShowContextSelector(true)
                                         }}>
-                                            <Text>
-                                                {state.contex_name ? (
-                                                    state.contex_name
-                                                ) : (
-                                                    <FontAwesome5 name="user" size={22} color="#a0a0a0" />
-                                                )}
-                                            </Text>
+                                            {state.context_name ? (
+                                                <ContextBadge context_name={state.context_name} />
+                                            ) : (
+                                                <FontAwesome5 name="user" size={22} color="#a0a0a0" />
+                                            )}
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => {
-                                            
+
                                         }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
