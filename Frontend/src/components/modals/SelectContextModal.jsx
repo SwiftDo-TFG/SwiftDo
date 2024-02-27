@@ -46,7 +46,7 @@ const SelectContextModal = (props) => {
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>
                                 <View key={index} style={contextModal.context}>
-                                <MaterialCommunityIcons name="home-city-outline" size={16} color="#272c34" /> <Text style={{ fontSize: 16, marginLeft: 15 }}>{context[key].name}</Text>
+                                <Text style={{ fontSize: 16, marginLeft: 15 }}><MaterialCommunityIcons name="home-city-outline" size={16} color="#272c34" /> {context[key].name}</Text>
                                 {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}
                                 </View>
                             </TouchableOpacity>
