@@ -6,7 +6,7 @@ import CustomButton from "../buttons/Button";
 
 
 
-function CompleteTaskModal(props) {
+function CompleteTaskModal({texto, ...props}) {
 
     function onCloseModal() {
         props.setIsModalOpen(false);
@@ -18,8 +18,11 @@ function CompleteTaskModal(props) {
                 {/* <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal}/> */}
                 <View style={styles.modalStyle}>
                     <View style={{ alignItems: 'center'}}>
+                        <Text style={{fontSize: 16, fontWeight: '500'}}>
+                            {props.title}
+                        </Text>
                         <Text style={{ color: '#182E44', fontSize: 16, fontWeight: '500' }}>
-                            Completar tarea/s
+                            {texto}
                         </Text>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                             <View style={{marginRight: 10}}>

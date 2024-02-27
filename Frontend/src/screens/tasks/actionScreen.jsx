@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Alert } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
+import projectService from "../../services/project/projectService"
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
+import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
-
-import styles from './actionScreen.styles'
 import MoveTaskModal from "../../components/modals/MoveTaskModal";
 import CreateTaskModal from "../../components/modals/CreateTaskModal";
+import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
-import { actStyle } from "../../styles/globalStyles";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import styles from "./actionScreen.styles";
 
 
 function ActionScreen(props) {
@@ -30,6 +30,7 @@ function ActionScreen(props) {
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
 
   useEffect(() => {
@@ -37,7 +38,6 @@ function ActionScreen(props) {
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (!isDataLoaded) {
         fetchData()
-        setDataLoaded(true)
       }
     });
 
@@ -45,7 +45,12 @@ function ActionScreen(props) {
   }, [authState, props.navigation]);
 
   async function fetchData() {
-    const tasksDB = await taskService.getTasks({ state: props.state, completed: false });
+    
+    let filter = { state: props.state, completed: false }
+    if (props.state === 5) {
+      filter = { project_id: props.project_id, completed: false }
+    }
+    const tasksDB = await taskService.getTasks(filter);
     if (tasksDB.error) {
       return authState.signOut();
     }
@@ -61,12 +66,12 @@ function ActionScreen(props) {
 
     setTasks(tasksDB)
     setSelectedTasks(seletedAux)
+    setDataLoaded(true)
   }
 
   const reloadData = () => {
     setDataLoaded(false)
     fetchData()
-    setDataLoaded(true)
   }
 
   const addTask = async (task) => {
@@ -85,6 +90,34 @@ function ActionScreen(props) {
     }
   };
 
+  const addProject = async (project) => {
+    console.log("Nuevo proyecto", project)
+    if (project.title.trim() !== "") {
+      const newProject = await projectService.createProject(project);
+      console.log(newProject);
+      if (newProject.project_id !== -1) {
+
+        setIsCreateProjectOpen(false);
+      } else {
+        console.error("Error al agregar tarea a la base de datos");
+      }
+    }
+  };
+
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.task_id !== taskId);
+    setTasks(updatedTasks);
+    setSelectedTasks((prevSelectedTasks) =>
+      prevSelectedTasks.filter((selectedTask) => selectedTask !== taskId)
+    );
+  };
+
+  const deleteSelectedTask = () => {
+    const updatedTasks = tasks.filter((task) => !selectedTasks.includes(task.task_id));
+    setTasks(updatedTasks);
+    setSelectedTasks([]);
+  }
+
   const handleUpdateTasks = async (updatedTask) => {
 
     if (selectedTasks.total > 0) {
@@ -95,7 +128,7 @@ function ActionScreen(props) {
   }
 
   const updateTask = async (updatedTask) => {
-    console.log(updatedTask)
+    console.log("UPDATING TASK",updatedTask)
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
     console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
@@ -193,7 +226,7 @@ function ActionScreen(props) {
     setIsCreateModalOpen(true);
   }
 
-  const EmptyTaskListPanel = ({icon}) => {
+  const EmptyTaskListPanel = ({ icon }) => {
     return (
       <View style={styles.emptyListPanel}>
         <View style={styles.roundedPanel}>
@@ -207,12 +240,22 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-          {props.children}
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' :  'flex-end', alignItems: 'flex-end', marginTop: 25}}>
+          { Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+            <Feather name="sidebar" size={28} color="black" />
+          </TouchableOpacity>)}
+          <View style={{minWidth: 50, justifyContent: 'flex-end'}}>
+            <TouchableOpacity style={styles.area}>
+              <Text>Area</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {props.children}
+        
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
-          {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon}/> :
+          {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
             <TaskList
               tasks={tasks}
               showEditPopUp={showEditPopUp}
@@ -232,6 +275,7 @@ function ActionScreen(props) {
             isModalVisible={isModalVisible}
             setIsModalVisible={setIsModalVisible}
             showAddTaskPopUp={showAddTaskPopUp}
+            setIsCreateProjectOpen={setIsCreateProjectOpen}
           />
 
           {/* MOVE MODAL   */}
@@ -254,7 +298,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsEditModalOpen}
           />
 
-          {/* ADD MODAL   */}
+          {/* ADD TASK MODAL   */}
           <CreateTaskModal
             title="Añadir"
             // touch={hideEditPopUp}
@@ -265,12 +309,20 @@ function ActionScreen(props) {
           />
 
           <CompleteTaskModal
-            title="Test"
-            // touch={hideEditPopUp}
-            // editingTask={editingTask}
+            title="Completar tarea"
+            texto={"¿Desea completar esta tarea?"}
             onAccept={handleCompleteTasks}
             isModalOpen={isCompleteModalOpen}
             setIsModalOpen={setIsCompleteModalOpen}
+          />
+          {/* ADD PROJECT MODAL   */}
+          <CreateProjectModal
+            title="Añadir"
+            // touch={hideEditPopUp}
+            // editingTask={editingTask}
+            onAccept={addProject}
+            isModalOpen={isCreateProjectOpen}
+            setIsModalOpen={setIsCreateProjectOpen}
           />
         </NativeBaseProvider>
 

@@ -30,7 +30,7 @@ function SelectionPanel (props){
     return (
         <VStack>
             <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
-                <Text>Seleccionado: ({props.selectedTasks.total})</Text>
+                <Text>({props.selectedTasks.total}) {props.selectedTasks.total > 1 ? 'tareas seleccionadas' : 'tarea seleccionada'} </Text>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => archiveSelectedTask()}>
                         <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
@@ -38,7 +38,7 @@ function SelectionPanel (props){
                     <TouchableOpacity onPress={() => deleteSelectedTask()}>
                         <FontAwesome5 name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
                     </TouchableOpacity>
-                    <Menu
+                    {/* <Menu
                         trigger={(triggerProps) => (
                             <TouchableOpacity {...triggerProps}>
                                 <Entypo name="dots-three-vertical" size={20} color="#a0a0a0" />
@@ -48,7 +48,7 @@ function SelectionPanel (props){
                         placement="left"
                     >
                         <Menu.Item style={styles.menuItem} onPress={props.showMovePopUp}>Mover a</Menu.Item>
-                    </Menu>
+                    </Menu> */}
                 </View>
             </Box>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>

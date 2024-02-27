@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 5,
-        paddingBottom: 5,
+        paddingBottom: 20,
+        backgroundColor: 'white'
     },
     checkgroup: {
         flex: 1,
@@ -29,16 +30,6 @@ const styles = StyleSheet.create({
     trashIcon: {
         marginLeft: 'auto',
         marginRight: 10,
-    },
-    addButton: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'orange',
-        borderRadius: 50,
-        padding: 22,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     modalView: {
         flex: 1,
@@ -175,6 +166,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+    assignProjectModalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
     confirmModalContainer: {
         flex: 1,
         justifyContent: "center"
@@ -194,7 +190,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        maxHeight: '25%'
     },
     moveContainer: {
         //flex: 1,
@@ -249,6 +246,14 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.softGrey,
         justifyContent: 'center',
         alignItems: 'center'
+    }, 
+    area:{
+        borderRadius: 40,
+        backgroundColor: 'lightgrey',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
     }
 });
 

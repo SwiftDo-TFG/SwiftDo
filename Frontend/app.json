@@ -2,7 +2,7 @@
   "expo": {
     "name": "GTD-App",
     "slug": "GTD-App",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./src/assets/tfggtdicon.png",
     "userInterfaceStyle": "light",

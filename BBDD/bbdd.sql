@@ -25,7 +25,8 @@ CREATE TABLE tags (
 
 CREATE TABLE areas_contexts (
     context_id serial PRIMARY KEY,
-    name VARCHAR
+    name VARCHAR,
+    user_id INTEGER references "users" (user_id),
 );
 
 CREATE TABLE tasks (
@@ -41,7 +42,7 @@ CREATE TABLE tasks (
     important_fixed BOOLEAN,
     date_added DATE,
     date_completed DATE,
-    date_limit DATE,
+    date_limit TIMESTAMP,
     date_changed TIMESTAMP,
     num_version NUMERIC
 );

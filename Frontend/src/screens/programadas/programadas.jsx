@@ -1,17 +1,20 @@
-import { View, Text, Animated, TouchableOpacity, Platform } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform, Dimensions } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
+import stylesAction from '../tasks/actionScreen.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import CreateTaskModal from "../../components/modals/CreateTaskModal"
 import MoveTaskModal from "../../components/modals/MoveTaskModal"
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
+import { actStyle } from "../../styles/globalStyles";
+
 
 
 const ProgramadasScreen = (props) => {
@@ -35,7 +38,6 @@ const ProgramadasScreen = (props) => {
         const unsubscribe = props.navigation.addListener('focus', () => {
             if (!isDataLoaded) {
                 fetchData()
-                setDataLoaded(true)
             }
         });
 
@@ -67,12 +69,12 @@ const ProgramadasScreen = (props) => {
         }, {});
 
         setCalendarTasks(Object.values(tasksDB))
+        setDataLoaded(true)
     }
 
     const reloadData = () => {
         setDataLoaded(false)
         fetchData()
-        setDataLoaded(true)
     }
 
     const showEditPopUp = (id) => {
@@ -169,68 +171,72 @@ const ProgramadasScreen = (props) => {
     function TasksCalendar() {
         return (
             <>
-                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} />: <ExpandableCalendar
+                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} /> : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}
                     initialPosition={ExpandableCalendar.positions.CLOSED}
                 />}
-                
+
                 {selectedTasks.total > 0 &&
                     <View style={styles.selectionPanel}>
                         <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} setIsMoveModalOpen={setIsMoveModalOpen} />
                     </View>
                 }
-                <AgendaList
-                    sections={calendarTasks}
-                    renderItem={(item, firstItemInDay) => {
-                        const scrollY = useRef(new Animated.Value(0)).current;
-                        const ITEM_SIZE = 62; //Tamaño tarea + margin
 
-                        const inputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + 2)]
-                        const scale = scrollY.interpolate({
-                            inputRange,
-                            outputRange: [1, 1, 1, 0],
-                            extrapolate: 'clamp',
-                        })
+                {!isDataLoaded ? <LoadingIndicator /> :
+                    <AgendaList
+                        sections={calendarTasks}
+                        renderItem={(item, firstItemInDay) => {
+                            const scrollY = useRef(new Animated.Value(0)).current;
+                            const ITEM_SIZE = 62; //Tamaño tarea + margin
 
-                        const opacityinputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + .5)]
-                        const opacity = scrollY.interpolate({
-                            inputRange: opacityinputRange,
-                            outputRange: [1, 1, 1, 0],
-                            extrapolate: 'clamp',
-                        })
+                            const inputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + 2)]
+                            const scale = scrollY.interpolate({
+                                inputRange,
+                                outputRange: [1, 1, 1, 0],
+                                extrapolate: 'clamp',
+                            })
 
-                        return (
-                            <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
-                                <SelectableTask
-                                    task={item.item} selectedTasks={selectedTasks}
-                                    showEditPopUp={showEditPopUp}
-                                    showMovePopUp={showMovePopUp}
-                                    showCompleteModal={showCompleteModal}
-                                    onPress={() => toggleSelectTask(item.item.task_id)}
-                                    scale={scale}
-                                    opacity={opacity}
-                                />
-                            </View>
-                        );
-                    }}
-                    markedDates={marked.current}
+                            const opacityinputRange = [-1, 0, ITEM_SIZE * item.index, ITEM_SIZE * (item.index + .5)]
+                            const opacity = scrollY.interpolate({
+                                inputRange: opacityinputRange,
+                                outputRange: [1, 1, 1, 0],
+                                extrapolate: 'clamp',
+                            })
 
-                    // renderSectionHeader={(info) => {
-                    //     console.log("THIS IS INFO", info)
-                    //     return (
-                    //         <View style={styles.dayItem}>
-                    //             <Text style={styles.dateText}>{utils.parseDatetoPretty(info)}</Text>
-                    //             <View style={styles.horizontalLine} />
-                    //         </View>
-                    //     )
-                    // }}
+                            return (
+                                <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
+                                    <SelectableTask
+                                        task={item.item} selectedTasks={selectedTasks}
+                                        showEditPopUp={showEditPopUp}
+                                        showMovePopUp={showMovePopUp}
+                                        showCompleteModal={showCompleteModal}
+                                        onPress={() => toggleSelectTask(item.item.task_id)}
+                                        scale={scale}
+                                        opacity={opacity}
+                                    />
+                                </View>
+                            );
+                        }}
+                        markedDates={marked.current}
 
-                    // scrollToNextEvent
-                    sectionStyle={styles.section}
-                // dayFormat={'yyyy-MM-d'}
-                />
+
+                        // renderSectionHeader={(info) => {
+                        //     console.log("THIS IS INFO", info)
+                        //     return (
+                        //         <View style={styles.dayItem}>
+                        //             <Text style={styles.dateText}>{utils.parseDatetoPretty(info)}</Text>
+                        //             <View style={styles.horizontalLine} />
+                        //         </View>
+                        //     )
+                        // }}
+
+                        // scrollToNextEvent
+                        sectionStyle={styles.section}
+                    // dayFormat={'yyyy-MM-d'}
+                    />
+                }
             </>
         )
     }
@@ -259,7 +265,8 @@ const ProgramadasScreen = (props) => {
                 />
 
                 <CompleteTaskModal
-                    title="Test"
+                    title="Completar tarea"
+                    texto={"¿Desea completar esta tarea?"}
                     // touch={hideEditPopUp}
                     // editingTask={editingTask}
                     onAccept={completeTask}
@@ -276,13 +283,23 @@ const ProgramadasScreen = (props) => {
                     onAccept={addTask}
                     mode='add'
                 /> */}
-                <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                    <View style={styles.action}>
-                        <Ionicons name="calendar-outline" style={styles.iconAction} color={'#008080'} />
-                        <Text style={styles.actionTitle}>Programadas</Text>
+                <View style={styles.container}>
+                    <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+                        {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                            <Feather name="sidebar" size={28} color="black" />
+                        </TouchableOpacity>)}
+                        <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
+                            <TouchableOpacity style={stylesAction.area}>
+                                <Text>Area</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </TouchableOpacity>
-                {isDataLoaded ? <TasksCalendar /> : <LoadingIndicator />}
+                    <View style={actStyle.action}>
+                        <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
+                        <Text style={actStyle.actionTitle}>Programadas</Text>
+                    </View>
+                </View>
+                <TasksCalendar />
             </CalendarProvider>
         </NativeBaseProvider>
     )

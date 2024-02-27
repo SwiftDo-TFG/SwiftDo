@@ -4,15 +4,16 @@ import TaskStates from '../../utils/enums/taskStates'
 import { View, Text } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
-import styles from "./ActionCommon.styles";
+import { actStyle } from "../../styles/globalStyles";
+
 
 
 function Inbox(props) {
     return (
-        <ActionScreen {...props} state={TaskStates.INBOX} emptyIcon={<FontAwesome5 style={styles.emptyIcon} name="inbox" color={Colors.grey}/>}>
-            <View style={styles.action}>
-                <FontAwesome5 name="inbox" style={styles.iconAction} color={'#f39f18'} />
-                <Text style={styles.actionTitle}>Inbox</Text>
+        <ActionScreen {...props} state={TaskStates.INBOX} emptyIcon={<FontAwesome5 style={actStyle.emptyIcon} name="inbox" color={Colors.grey}/>}>
+            <View style={actStyle.action}>
+                <FontAwesome5 name="inbox" style={actStyle.iconAction} color={Colors.orange} />
+                <Text style={actStyle.actionTitle}>Inbox</Text>
             </View>
         </ActionScreen>
     )

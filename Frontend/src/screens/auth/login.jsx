@@ -54,7 +54,7 @@ function SignInScreen({navigation}) {
                     
                     {authState.isLoading && <LoadingIndicator />}
                     {error && <Text style={textStyle.textError}>Correo o contraseña no válidos</Text>}
-                    <View>
+                    <View style={{justifyContent: 'center'}}>
                         <TextInput 
                             placeholder="Email"
                             value={email}

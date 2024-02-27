@@ -4,6 +4,8 @@ const taskService = require('../services/taskService')
 const taskValidator = require('./validators/taskValidator')
 const checkValidations = require('./validators/validationUtils');
 const userService = require('../services/userService');
+const projectService = require('../services/projectService');
+const contextService = require('../services/contextService');
 
 
 
@@ -97,6 +99,23 @@ router.post('/:id', taskValidator.validateModify(), checkValidations, async (req
   }
 })
 
+
+router.get('/newinfo', async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const filters = req.query;
+
+  try {
+
+    const userInfo = await userService.findUserById(user_id)
+    const taskInfo = await taskService.newgetInfo(user_id);
+    const projects = await projectService.showProjectsByUser(user_id)
+    const contexts = await contextService.showContextsByUser(user_id);
+    res.send({ userName: userInfo.name, tasksInfo: taskInfo, projects: projects, contexts: contexts})
+  } catch (error) {
+    console.log('[Exception]:', error.message)
+    res.sendStatus(404);
+  }
+})
 
 router.get('/info', async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;

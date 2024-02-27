@@ -20,7 +20,7 @@ function TaskList(props) {
 
         props.setSelectedTasks(seletedAux)
 
-    }, []);
+    }, [ props.tasks, props.setSelectedTasks]);
 
     const toggleSelectTask = (taskId) => {
         let aux = props.selectedTasks
