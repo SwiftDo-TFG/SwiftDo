@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Profile from './Profile';
 import { sideBar } from '../../styles/globalStyles';
@@ -8,6 +8,8 @@ import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
 import AuthContext from '../../services/auth/context/authContext';
 import ConfirmButton from '../common/ConfirmButton';
+import { MaterialIcons } from '@expo/vector-icons';
+
 const Separator = () => {
     return (
         <View style={sideBar.separator} />
@@ -70,7 +72,13 @@ export default ({ navigation, projectAttributes }) => {
     return (
         <View style={sideBar.container}>
 
+
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Intro')}>
+                        <MaterialIcons name="settings" size={24} color="#272c34" />
+                    </TouchableOpacity>
+                </View>
                 <Profile name={username} formattedDate={formattedDate} />
                 <Separator />
                 <View style={sideBar.actionContainer}>

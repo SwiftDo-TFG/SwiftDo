@@ -13,7 +13,8 @@ const Colors = {
     redFlag: "B30000",
     softGrey: "#e3e4e5",
     darkRed: "B30000",
-    paper: "#F2F2F2"
+    paper: "#F2F2F2",
+    darkBlue: "#094293",
 }
 
 export default Colors;

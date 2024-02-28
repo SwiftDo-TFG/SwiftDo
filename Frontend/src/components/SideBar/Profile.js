@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator  } from "react-native";
+import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator } from "react-native";
 import { sideBar, textStyle } from "../../styles/globalStyles";
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 
@@ -13,8 +13,6 @@ const Profile = ({ name, formattedDate }) => {
     const [userContext, setUserContext] = useState([]);
     const [newContextName, setNewContextName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-
-
 
     useEffect(() => {
         async function getAreas() {
