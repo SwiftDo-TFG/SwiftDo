@@ -10,7 +10,7 @@ if(Platform.OS !== 'web'){
 const instance = axios.create({
     // baseURL: 'http://localhost:3000',
     // baseURL: 'http://192.168.0.137:3000',
-    baseURL: 'http://ec2-16-171-198-23.eu-north-1.compute.amazonaws.com:3000',
+    baseURL: 'http://ec2-51-20-55-15.eu-north-1.compute.amazonaws.com:3000',
     timeout: 1000,
     //headers: { 'X-Custom-Header': 'foobar' }
 });
