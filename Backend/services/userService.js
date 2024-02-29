@@ -15,6 +15,7 @@ userService.findUserById = async (id)=>{
 }
 
 userService.register = async (userData) => {
+    userData.email = userData.email.toLowerCase()
     console.log("User Data", userData);
 
     if(!await checkEmailExist(userData.email)){
@@ -30,7 +31,7 @@ userService.register = async (userData) => {
 }
 
 userService.login = async (userData) => {
-    const userEmail = userData.email;
+    const userEmail = userData.email.toLowerCase();
     const userPass = userData.password;
     
     const res = await db.query('SELECT user_id, password FROM users WHERE email = $1', [userEmail]);
