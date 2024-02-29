@@ -6,6 +6,16 @@ import { textStyle, formStyle } from '../../styles/globalStyles';
 import LoginImg from '../../components/common/ImageComponent';
 import ConfirmButton from '../../components/common/ConfirmButton';
 
+//Provisional
+function parseErrorsToString(errors){
+    let error = 'Errors: '
+
+    errors.forEach(e => {
+        error = error.concat(e.msg + " on " + e.path)
+    })
+
+    return error.toString()
+}
 
 function SingUpScren({navigation}){
     const [username, setUsername] = useState('');
@@ -30,8 +40,15 @@ function SingUpScren({navigation}){
                     setTimeout(()=>{
                         setError({isError: false, msg:''})
                     }, 1500)
+                }else if(res.errors){
+                    const msg = parseErrorsToString(res.errors)
+                    setError({isError: true, msg: msg});
+                    setTimeout(()=>{
+                        setError({isError: false, msg:''})
+                    }, 1500)
+                }else{
+                    navigation.navigate('SignIn')
                 }
-                navigation.navigate('SignIn')
 
             }else{
                 setError({isError: true, msg:'Las contraseñas no coinciden'});
