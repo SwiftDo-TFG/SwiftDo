@@ -6,7 +6,7 @@ const checkValidations = require('./validators/validationUtils')
 const util = require('util');
 
 
-router.post('/register', async (req, res) =>{
+router.post('/register', userValidator.validateRegister(), checkValidations, async (req, res) =>{
   const userData = req.body;
 
   try{
