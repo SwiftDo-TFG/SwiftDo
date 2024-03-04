@@ -2,7 +2,7 @@ import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
@@ -160,7 +160,7 @@ function CreateTaskModal(props) {
         return (
             <>
                 {/* Title */}
-                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8 }}>
+                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
                     <TextInput
                         style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
@@ -172,20 +172,112 @@ function CreateTaskModal(props) {
                     />
                 </View>
                 {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-end' }}>
+                <View style={{ height: '80%', justifyContent: 'flex-end' }}>
                     <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
                         <View style={styles.editStyle}>
-                            <View style={{ height: '50%' }}>
+                            <View style={{ height: '60%', width: '100%', flexDirection: 'column' }}>
                                 <TextInput
-                                    style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
+                                    style={styles.textInput}
                                     value={description}
                                     placeholder="Descripcion..."
                                     onChangeText={onDescriptionChange}
                                     multiline={true}
                                     maxLength={200}
                                 />
+                                <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
+                                    <View style={[styles.tags, { backgroundColor: '#c93c20', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#6455d2', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#337474', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#5b6597', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#926442', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#490085', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#2c73c5', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#184bc0', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#b5541b', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#d32778', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#6e1249', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#20825b', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#ae2a32', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#11680c', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.tags, { backgroundColor: '#3b7a5c', }]}>
+                                        <Text style={{ color: 'white' }}>Hola</Text>
+                                        <TouchableOpacity>
+                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
-                            <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                            <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
@@ -291,7 +383,7 @@ function CreateTaskModal(props) {
 
     return (
         <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <KeyboardAvoidingView style={{ flex: 1, height: '100%' }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
                 <DatePickerModal state={state} setState={setState} />
             </KeyboardAvoidingView>

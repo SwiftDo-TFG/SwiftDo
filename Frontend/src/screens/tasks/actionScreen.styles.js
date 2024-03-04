@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
     },
-    moveStyle:{
+    moveStyle: {
         backgroundColor: 'white',
         marginHorizontal: 20,
         paddingHorizontal: 12,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 10,
-        width: '100%'   
+        width: '100%'
     },
     modalDatePickerContainer: {
         flex: 1,
@@ -231,30 +231,50 @@ const styles = StyleSheet.create({
         zIndex: 2,
     },
     emptyListPanel: {
-        flex: 1, 
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    emptyListPanelText:{
+    emptyListPanelText: {
         fontSize: 12,
         color: Colors.grey
-    },  
-    roundedPanel:{
+    },
+    roundedPanel: {
         borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
         width: Dimensions.get('window').width * 0.5,
         height: Dimensions.get('window').width * 0.5,
         backgroundColor: Colors.softGrey,
         justifyContent: 'center',
         alignItems: 'center'
-    }, 
-    area:{
+    },
+    area: {
         borderRadius: 40,
         backgroundColor: 'lightgrey',
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
         paddingHorizontal: 15,
-    }
+    },
+    textInput: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: '#182E44',
+        height: '60%',
+        width: '100%',
+        marginBottom: 2
+    },
+    // TAGS
+    tags: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        alignItems: 'center',
+        marginRight: 2,
+        marginBottom: 2,
+        height: '33%'
+    },
 });
 
 export default styles;
