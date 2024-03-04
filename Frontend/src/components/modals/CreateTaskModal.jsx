@@ -7,7 +7,7 @@ import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
-
+import AddTagModal from "./AddTagModal";
 
 function CreateTaskModal(props) {
     const [state, setState] = useState({
@@ -24,6 +24,7 @@ function CreateTaskModal(props) {
     const [showStatusSelector, setShowStatusSelector] = useState(false);
     const [showContextSelector, setShowContextSelector] = useState(false)
     const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
+    const [showTagSelector, setShowTagSelector] = useState(false)
 
 
     function setValuesToEdit() {
@@ -44,6 +45,7 @@ function CreateTaskModal(props) {
                 project: props.editingTask.project_id ? { project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color } : null,
                 context_id: props.editingTask.context_id ? props.editingTask.context_id : null,
                 context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
+                tag_name: props.editingTask.tag_name,
             })
         }
     }
@@ -90,6 +92,11 @@ function CreateTaskModal(props) {
         const handleContextAction = (context_id, context_name) => {
             setState({ ...state, context_id: context_id, context_name: context_name });
             setShowContextSelector(false);
+        }
+
+        const handleSelectTag = (tag) => {
+           // setState({ ...state, tag: tag });
+            setShowTagSelector(false);
         }
 
         const toggleImportant = () => {
@@ -220,7 +227,9 @@ function CreateTaskModal(props) {
                                                 )}
                                             </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={()=>{
+                                            setShowTagSelector(true);
+                                        }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="tag-outline" size={23} color="#a0a0a0" />
                                             </Text>
@@ -270,6 +279,7 @@ function CreateTaskModal(props) {
                                     <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
                                     <SelectContextModal modalVisible={showContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
                                     <AssignToProjectModal modalVisible={showAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
+                                    <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} onCloseModal={() => setShowTagSelector(false)} />
 
                                     <TouchableOpacity
                                         style={styles.acceptButton}
