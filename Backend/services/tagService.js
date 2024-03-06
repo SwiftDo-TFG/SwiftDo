@@ -10,7 +10,7 @@ tagService.createTag = async (tag) => {
     if (tag !== null && tag.length !== 0) {
 
         let res = await db.query("INSERT INTO tags(name, colour) VALUES ($1, $2) RETURNING name", [tag, addColor()]);
-        return true;
+        return res;
     } else {
         throw new Error("Tienen que estar rellenos los campos indicados");
     }
