@@ -10,7 +10,7 @@ tagService.createTag = async (tag) => {
     if (tag !== null && tag.length !== 0) {
 
         let res = await db.query("INSERT INTO tags(name, colour) VALUES ($1, $2) RETURNING name", [tag, addColor()]);
-        return true;
+        return res;
     } else {
         throw new Error("Tienen que estar rellenos los campos indicados");
     }
@@ -20,7 +20,7 @@ tagService.findTag = async (tag) => {
     const res = await db.query('SELECT * FROM tags WHERE name = $1', [tag])
 
     if(res.rows.length !== 1){
-        throw new Error('The tag does not exist');
+        return false;
     }
 
     return res.rows[0];
