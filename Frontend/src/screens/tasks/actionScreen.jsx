@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import projectService from "../../services/project/projectService"
+import projectService from "../../services/project/projectService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
@@ -45,7 +45,7 @@ function ActionScreen(props) {
   }, [authState, props.navigation]);
 
   async function fetchData() {
-    
+
     let filter = { state: props.state, completed: false }
     if (props.state === 5) {
       filter = { project_id: props.project_id, completed: false }
@@ -78,10 +78,13 @@ function ActionScreen(props) {
     console.log("Nueva task", task)
     if (task.title.trim() !== "") {
       const newTask = await taskService.createTask(task);
-
       if (newTask.task_id !== -1) {
         task.task_id = newTask.task_id;
-
+        if (task.tags) {
+          for (let tag of task.tags) {
+            await taskService.addTag(task.task_id, tag)
+          }
+        }
         // setTasks([...tasks, task]);
         setIsCreateModalOpen(false);
         reloadData();
@@ -129,7 +132,12 @@ function ActionScreen(props) {
   }
 
   const updateTask = async (updatedTask) => {
-    console.log("UPDATING TASK",updatedTask)
+    console.log("UPDATING TASK", updatedTask)
+    if (updatedTask.tags) {
+      for (let tag of updatedTask.tags) {
+        await taskService.addTag(updatedTask.task_id, tag)
+      }
+    }
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
     console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
@@ -241,11 +249,11 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' :  'flex-end', alignItems: 'flex-end', marginTop: 25}}>
-          { Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+        <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+          {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
             <Feather name="sidebar" size={28} color="black" />
           </TouchableOpacity>)}
-          <View style={{minWidth: 50, justifyContent: 'flex-end'}}>
+          <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area}>
               <Text>Area</Text>
             </TouchableOpacity>
@@ -253,7 +261,7 @@ function ActionScreen(props) {
         </View>
 
         {props.children}
-        
+
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :

@@ -118,4 +118,21 @@ const getInfo = async () => {
     }
 }
 
-export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList}
+const addTag = async (taskId, tag) => {
+    try {
+        const dir = '/task/addTag'
+        const data = {
+            task_id: taskId,
+            name: tag
+        }
+        const response = await instance.post(dir, data);
+        const taskid = response.data;
+
+        return taskid;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag}

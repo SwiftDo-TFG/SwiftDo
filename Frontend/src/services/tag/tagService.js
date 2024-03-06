@@ -40,9 +40,10 @@ const getTags = async (filters) => {
     }
 }
 
-const createTag = async (tagData) => {
+const createTag = async (name) => {
     try {
-        const response = await instance.post('/tag/', tagData);
+        const data = {name: name}
+        const response = await instance.post('/tag/', data);
         const tag = response.data;
 
         return tag;

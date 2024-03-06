@@ -26,6 +26,7 @@ const AddTagModal = (props) => {
             </TouchableWithoutFeedback>
         );
     }
+
     return (
         <Modal
             animationType="slide"
@@ -39,13 +40,14 @@ const AddTagModal = (props) => {
                     <TextInput
                         style={{ color: '#182E44', fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 5 }}
                         placeholder="Nueva etiqueta"
-                        onEndEditing={() => { console.log("THIS END") }}
+                        value={tag}
+                        onChangeText={onNameChange}
                         maxLength={50}
                         multiline={true}
                     />
                     <TouchableOpacity
                         style={styles.acceptButton}
-                        onPress={() => onAcceptFunction()}>
+                        onPress={() => props.handleSelectTag(tag)}>
                         <Text style={styles.acceptButtonText}>Aceptar</Text>
                     </TouchableOpacity>
                 </View>

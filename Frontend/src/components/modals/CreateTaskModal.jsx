@@ -17,7 +17,8 @@ function CreateTaskModal(props) {
         isImportant: false,
         date_name: 'Fecha',
         showDatePicker: false,
-        state: "1"
+        state: "1",
+        tags: []
     });
 
     //Modals state
@@ -70,6 +71,7 @@ function CreateTaskModal(props) {
             if (description !== '') updatedTask.description = description;
             if (state.context_id) updatedTask.context_id = state.context_id;
             updatedTask.title = title;
+            if(state.tags.length !== 0) updatedTask.tags = state.tags;
             updatedTask.important_fixed = state.isImportant;
             updatedTask.state = stateAux;
             if (state.project_id) {
@@ -95,7 +97,9 @@ function CreateTaskModal(props) {
         }
 
         const handleSelectTag = (tag) => {
-           // setState({ ...state, tag: tag });
+            let newArray = state.tags
+            newArray.push(tag)
+            setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }
 
@@ -320,6 +324,7 @@ function CreateTaskModal(props) {
                                             </Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={()=>{
+                                            setState({ ...state, editedTitle: title, editedDescription: description });
                                             setShowTagSelector(true);
                                         }}>
                                             <Text>
