@@ -20,12 +20,15 @@ function CreateTaskModal(props) {
         state: "1",
         tags: []
     });
+    const colours = ['#c93c20', '#6455d2', '#337474', '#5b6597', '#926442', '#490085', '#2c73c5', '#184bc0', '#b5541b', '#d32778', '#6e1249', '#20825b', '#ae2a32', '#11680c', '#3b7a5c']
 
     //Modals state
     const [showStatusSelector, setShowStatusSelector] = useState(false);
     const [showContextSelector, setShowContextSelector] = useState(false)
     const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
     const [showTagSelector, setShowTagSelector] = useState(false)
+    const [colorIndex, setcolorIndex] = useState(0)
+
 
 
     function setValuesToEdit() {
@@ -50,7 +53,11 @@ function CreateTaskModal(props) {
             })
         }
     }
-
+    function addColor() {
+        const color = colours[colorIndex];
+        setcolorIndex((colorIndex + 1) === colours.length ? 0 : colorIndex + 1);
+        return color;
+    }
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
         const [description, setDescription] = useState(state.editedDescription);
@@ -71,7 +78,7 @@ function CreateTaskModal(props) {
             if (description !== '') updatedTask.description = description;
             if (state.context_id) updatedTask.context_id = state.context_id;
             updatedTask.title = title;
-            if(state.tags.length !== 0) updatedTask.tags = state.tags;
+            if (state.tags.length !== 0) updatedTask.tags = state.tags;
             updatedTask.important_fixed = state.isImportant;
             updatedTask.state = stateAux;
             if (state.project_id) {
@@ -98,7 +105,7 @@ function CreateTaskModal(props) {
 
         const handleSelectTag = (tag) => {
             let newArray = state.tags
-            newArray.push(tag)
+            newArray.push({ name: tag, color: addColor() })
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }
@@ -123,6 +130,7 @@ function CreateTaskModal(props) {
         const openDatePickerModal = () => {
             setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
         }
+
 
         const ProjectBadgeSelectable = ({ project }) => {
             return (
@@ -196,96 +204,15 @@ function CreateTaskModal(props) {
                                     maxLength={200}
                                 />
                                 <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
-                                    <View style={[styles.tags, { backgroundColor: '#c93c20', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#6455d2', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#337474', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#5b6597', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#926442', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#490085', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#2c73c5', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#184bc0', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#b5541b', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#d32778', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#6e1249', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#20825b', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#ae2a32', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#11680c', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={[styles.tags, { backgroundColor: '#3b7a5c', }]}>
-                                        <Text style={{ color: 'white' }}>Hola</Text>
-                                        <TouchableOpacity>
-                                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                                        </TouchableOpacity>
-                                    </View>
+                                    {Object.keys(state.tags).map((key, index) => (
+                                        <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
+                                            <Text style={{ color: 'white' }}>{state.tags[key].name}</Text>
+                                            <TouchableOpacity>
+                                                <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
+
                                 </View>
                             </View>
                             <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
@@ -323,7 +250,7 @@ function CreateTaskModal(props) {
                                                 )}
                                             </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={()=>{
+                                        <TouchableOpacity onPress={() => {
                                             setState({ ...state, editedTitle: title, editedDescription: description });
                                             setShowTagSelector(true);
                                         }}>
