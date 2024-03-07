@@ -58,7 +58,7 @@ router.post('/movelist', taskValidator.validateMoveList(), checkValidations, asy
   }
 })
 
-router.post('/completelist', taskValidator.validateCompleteList(), checkValidations,async (req, res) => {
+router.post('/completelist', taskValidator.validateCompleteList(), checkValidations, async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;
   const list_ids = req.body.list_ids;
   const completed = req.body.completed;
@@ -73,9 +73,8 @@ router.post('/completelist', taskValidator.validateCompleteList(), checkValidati
 })
 
 router.post('/addTag', async (req, res) => {
-  const tag = req.body.name;
+  const tag = req.body.tag;
   const id = req.body.task_id;
-
   try {
     const t = await taskService.addTag(id, tag);
     res.send(t);
@@ -110,7 +109,7 @@ router.get('/newinfo', async (req, res) => {
     const taskInfo = await taskService.newgetInfo(user_id);
     const projects = await projectService.showProjectsByUser(user_id)
     const contexts = await contextService.showContextsByUser(user_id);
-    res.send({ userName: userInfo.name, tasksInfo: taskInfo, projects: projects, contexts: contexts})
+    res.send({ userName: userInfo.name, tasksInfo: taskInfo, projects: projects, contexts: contexts })
   } catch (error) {
     console.log('[Exception]:', error.message)
     res.sendStatus(404);
