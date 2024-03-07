@@ -100,7 +100,7 @@ taskService.addTag = async (id, tag)=>{
 
 taskService.findTags = async (id)=>{
     console.log(id)
-    const tags = await db.query('SELECT * FROM TagsToTask WHERE task_id = $1', [id])
+    const tags = await db.query('SELECT tt.nametag, t.colour FROM TagsToTask as tt JOIN Tags as t on tt.nametag = t.name WHERE tt.task_id = $1', [id])
     console.log("ROWS: ", tags.rows)
 
     if(tags.rows.length < 1){
