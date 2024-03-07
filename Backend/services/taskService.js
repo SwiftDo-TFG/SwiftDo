@@ -98,6 +98,20 @@ taskService.addTag = async (id, tag)=>{
     
 }
 
+taskService.findTags = async (id)=>{
+    console.log(id)
+    const tags = await db.query('SELECT nametag FROM TagsToTask WHERE task_id = $1', [id])
+    console.log("ROWS: ", tags.rows)
+
+    if(tags.rows.length < 1){
+        return false;
+    }
+    else{
+        console.log("ROWS: ", tags.rows)
+        return tags.rows;
+    }
+}
+
 taskService.moveList = async (user_id, list_ids, state) => {
     const conn = await db.getClient();
     let res = await conn.query(querySearchByListIDS, [list_ids, user_id]);

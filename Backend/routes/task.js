@@ -84,6 +84,17 @@ router.post('/addTag', async (req, res) => {
   }
 })
 
+router.get('/tags', async (req, res) => {
+  const id = req.body.task_id;
+  try {
+    const t = await taskService.findTags(id);
+    res.send(t);
+  } catch (err) {
+    console.log('[Exception]:', err.message)
+    res.sendStatus(409)
+  }
+})
+
 router.post('/:id', taskValidator.validateModify(), checkValidations, async (req, res) => {
   try {
     const task_id = req.params.id;
