@@ -12,6 +12,7 @@ import { CommonActions } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import TaskStates from '../../utils/enums/taskStates';
 import { useDrawerStatus } from '@react-navigation/drawer'
+import { useWindowDimensions } from 'react-native';
 
 
 const Separator = () => {
@@ -39,9 +40,14 @@ export default ({ navigation }) => {
     const authstate = React.useContext(AuthContext);
 
     const isDrawerOpen = useDrawerStatus() === "open";
+    const dimensions = useWindowDimensions();
+
+    if(dimensions.width >= 768 && !isDrawerOpen){
+        navigation.openDrawer();
+    }
+    console.log("DRAWER STATUS", useDrawerStatus())
 
     React.useEffect(() => {
-
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
 

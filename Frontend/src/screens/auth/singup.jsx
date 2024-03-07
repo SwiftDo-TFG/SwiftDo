@@ -1,111 +1,155 @@
 import { useState } from 'react';
-import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity, SafeAreaView} from 'react-native';
+import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
 import AuthContext from '../../services/auth/context/authContext';
 import authService from "../../services/auth/auth"
 import { textStyle, formStyle } from '../../styles/globalStyles';
 import LoginImg from '../../components/common/ImageComponent';
 import ConfirmButton from '../../components/common/ConfirmButton';
+import AuthTextInput from '../../components/auth/AuthTextInput';
+import ErrorBadge from '../../components/auth/ErrorBadge';
 
-//Provisional
-function parseErrorsToString(errors){
-    let error = 'Errors: '
+function parseErrors(errors) {
+    let error = {}
 
     errors.forEach(e => {
-        error = error.concat(e.msg + " on " + e.path)
+        error[e.path] = e.msg;
     })
 
-    return error.toString()
+    return error
 }
 
-function SingUpScren({navigation}){
+function SingUpScren({ navigation }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
-    const [error, setError] = useState({isError: false, msg:''})
+    const [error, setError] = useState({ isError: false, msg: '' })
+
+
+    function emptyValuesError(){
+        let error = {}
+
+        if(username.length === 0){
+            error.user = "Campo obligatorio"
+        }
+        if(email.length === 0){
+            error.email = "Campo obligatorio"
+        }
+        if(password.length === 0){
+            error.password = "Campo obligatorio"
+        }
+
+        if(password2.length === 0){
+            error.password2 = "Campo obligatorio"
+        }
+
+        return error;
+    }
+
     const handlePress = async () => {
-        setError({isError: false, msg:''})
-        
+        setError({ isError: false, msg: '' })
+
         try {
-            if(username.length === 0 || email.length === 0 || password.length === 0){
-                setError({isError: true, msg:'Rellene todos los campos'});
-                setTimeout(()=>{
-                    setError({isError: false, msg:''})
-                }, 1500)
-            }else if(password === password2){
+            if (username.length === 0 || email.length === 0 || password.length === 0) {
+                const errs = emptyValuesError();
+                setError({ isError: true, msg: '', errors: errs });
+            } else if (password === password2) {
                 const res = await authService.signup({ name: username, email: email, password: password });
 
-                if(!res){
-                    setError({isError: true, msg:'Algo fue mal...'});
-                    setTimeout(()=>{
-                        setError({isError: false, msg:''})
-                    }, 1500)
-                }else if(res.errors){
-                    const msg = parseErrorsToString(res.errors)
-                    setError({isError: true, msg: msg});
-                    setTimeout(()=>{
-                        setError({isError: false, msg:''})
-                    }, 1500)
-                }else{
+                if (!res) {
+                    setError({ isError: true, msg: 'Algo fue mal...', errors: {} });
+                } else if (res.errors) {
+                    const errs = parseErrors(res.errors)
+                    setError({ isError: true, msg: '', errors: errs });
+                } else {
                     navigation.navigate('SignIn')
                 }
 
-            }else{
-                setError({isError: true, msg:'Las contraseñas no coinciden'});
-                setTimeout(()=>{
-                    setError({isError: false, msg:''})
-                }, 1500)
+            } else {
+                setError({ isError: true, msg: '', errors: { password: 'Las contraseñas no coinciden', password2: 'Las contraseñas no coinciden' } });
             }
         } catch (error) {
-          console.error('Error al iniciar sesión:', error);
+            console.error('Error al iniciar sesión:', error);
         }
     };
-    return(
+
+
+    const onChangePassword = (inputKey, value) => {
+        let auxPass = password
+        let auxPass2 = password2;
+
+        if (inputKey === "password") {
+            setPassword(value);
+            auxPass = value
+        } else if (inputKey === "password2") {
+            setPassword2(value);
+            auxPass2 = value
+        }
+
+        if (auxPass === auxPass2 && error.isError && (error.errors.password || error.errors.password2)) {
+            const newErrors = error.errors;
+            delete newErrors.password;
+            delete newErrors.password2;
+            setError({ ...error, errors: newErrors })
+        }
+    }
+
+
+    return (
         <View style={formStyle.container}>
             <SafeAreaView>
-                <LoginImg/>
+                <LoginImg />
                 <View style={formStyle.textWrapper}>
-                    <Text style={[textStyle.largeText, {fontWeight: 'bold', textAlign: 'center'}]}>Domina el caos, conquista tu día.</Text>
+                    <Text style={[textStyle.largeText, { fontWeight: 'bold', textAlign: 'center' }]}>Domina el caos, conquista tu día.</Text>
                 </View>
-                
-                {error.isError && <Text style={textStyle.textError}>{error.msg}</Text>}
+
+                {error.isError && error.msg.length > 0 && <ErrorBadge msg={error.msg} />}
                 <View>
-                    <TextInput 
+                    <AuthTextInput
                         placeholder="Usuario"
                         value={username}
+                        inputKey="user"
                         onChangeText={setUsername}
-                        style={formStyle.textInput}
+                        // style={formStyle.textInput}
+                        error={error}
+                        setError={setError}
                     />
-                    <TextInput 
+                    <AuthTextInput
                         placeholder="Email"
                         value={email}
                         onChangeText={setEmail}
-                        style={formStyle.textInput}
+                        inputKey="email"
+                        setError={setError}
+                        error={error}
                     />
-                    <TextInput
+                    <AuthTextInput
                         placeholder="Password"
                         value={password}
-                        onChangeText={setPassword}
-                        style={formStyle.textInput}
-                        secureTextEntry 
+                        onChangeText={(value)=>{onChangePassword("password", value)}}
+                        secureTextEntry
+                        inputKey="password"
+                        error={error}
+                        setError={setError}
                     />
-                    <TextInput
+                    <AuthTextInput
                         placeholder="Repeat Password"
                         value={password2}
-                        onChangeText={setPassword2}
-                        style={formStyle.textInput}
+                        onChangeText={(value)=>{onChangePassword("password2", value)}}
+                        inputKey="password2"
                         secureTextEntry
+                        error={error}
+                        setError={setError}
                     />
                 </View>
-                    
+
                 <View style={formStyle.linkContainer} >
                     <Text style={textStyle.smallText}>¿Ya tienes cuenta?</Text>
-                    <TouchableOpacity style={formStyle.linkContainer} onPress={()=>{navigation.navigate('SignIn')}}>
+                    <TouchableOpacity style={formStyle.linkContainer} onPress={() => { navigation.navigate('SignIn') }}>
                         <Text style={[textStyle.smallText, textStyle.linkText]}>Inicia sesión</Text>
                     </TouchableOpacity>
                 </View>
 
-                <ConfirmButton onPress={handlePress} text="Registrar"/>
+                <ConfirmButton onPress={handlePress} text="Registrar" />
             </SafeAreaView>
         </View>
     )
