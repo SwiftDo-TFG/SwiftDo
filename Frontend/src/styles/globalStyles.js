@@ -157,14 +157,17 @@ const textStyle = StyleSheet.create({
         fontWeight: 'bold'
     },
     textError: {
-        fontSize: 10,
+        fontSize: 12,
         marginVertical: 5,
         color: 'white',
         textAlign: 'center',
         padding: 5,
         borderWidth: 1,
-        borderRadius: 5,
-        backgroundColor: '#FB6868'
+        borderRadius: 10,
+        backgroundColor: '#FB6868',
+        borderColor: 'white',
+        maxWidth: '70%',
+        alignSelf: 'center'
     },
     linkText: {
         color: Colors.noir,
@@ -193,6 +196,23 @@ const formStyle = StyleSheet.create({
         fontSize: 16,
         marginBottom: 14,
 
+    },
+    textInputError: {
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: Colors.softGrey,
+        borderRadius: 10,
+        fontSize: 16,
+        // marginBottom: 8,
+        borderColor: 'red'
+
+    },
+    textInputErrorText: {
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 6,
+        paddingLeft: 8
     },
     loadingIndicator: {
         padding: 10
