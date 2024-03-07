@@ -208,10 +208,12 @@ function ActionScreen(props) {
     }
   }
 
-  const showEditPopUp = (id) => {
+  const showEditPopUp = async (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
 
     if (taskToEdit) {
+      taskToEdit.tags = await taskService.findTags(taskToEdit.task_id)
+      console.log("TAGS: ", taskToEdit.tags)
       setEditingTask(taskToEdit);
       setIsEditModalOpen(true);
     } else {

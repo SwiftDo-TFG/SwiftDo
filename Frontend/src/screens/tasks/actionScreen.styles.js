@@ -267,10 +267,10 @@ const styles = StyleSheet.create({
     tags: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 10,
         paddingHorizontal: 10,
         paddingVertical: 3,
-        alignItems: 'center',
         marginRight: 2,
         marginBottom: 2,
         height: '33%'

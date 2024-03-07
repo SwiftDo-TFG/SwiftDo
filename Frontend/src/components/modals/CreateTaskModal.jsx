@@ -49,15 +49,23 @@ function CreateTaskModal(props) {
                 project: props.editingTask.project_id ? { project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color } : null,
                 context_id: props.editingTask.context_id ? props.editingTask.context_id : null,
                 context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
-                tag_name: props.editingTask.tag_name,
+                tags: props.editingTask.tags
             })
         }
     }
+
     function addColor() {
         const color = colours[colorIndex];
         setcolorIndex((colorIndex + 1) === colours.length ? 0 : colorIndex + 1);
         return color;
     }
+
+    const handleRemoveTag = (index) => {
+        const updatedTags = [...state.tags];
+        updatedTags.splice(index, 1);
+        setState({ ...state, tags: updatedTags });
+      };
+
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
         const [description, setDescription] = useState(state.editedDescription);
@@ -206,8 +214,8 @@ function CreateTaskModal(props) {
                                 <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
                                     {Object.keys(state.tags).map((key, index) => (
                                         <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
-                                            <Text style={{ color: 'white' }}>{state.tags[key].name}</Text>
-                                            <TouchableOpacity>
+                                            <Text style={{ color: 'white', paddingBottom: 3}}>{state.tags[key].name}</Text>
+                                            <TouchableOpacity onPress={() => handleRemoveTag(index)}>
                                                 <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
                                             </TouchableOpacity>
                                         </View>
