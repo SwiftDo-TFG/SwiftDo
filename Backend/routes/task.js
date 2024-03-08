@@ -84,8 +84,8 @@ router.post('/addTag', async (req, res) => {
   }
 })
 
-router.get('/tags', async (req, res) => {
-  const id = req.body.task_id;
+router.get('/:id/tags', async (req, res) => {
+  const id = req.params.id;
   try {
     const t = await taskService.findTags(id);
     res.send(t);
