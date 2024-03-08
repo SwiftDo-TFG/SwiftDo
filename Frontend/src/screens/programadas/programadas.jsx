@@ -6,7 +6,8 @@ import stylesAction from '../tasks/actionScreen.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
-import { Ionicons, Feather } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
@@ -171,7 +172,7 @@ const ProgramadasScreen = (props) => {
     function TasksCalendar() {
         return (
             <>
-                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} /> : <ExpandableCalendar
+                {(Platform.OS === 'web' || Platform.OS === 'windows' || Platform.OS === 'macos') ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} /> : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}

@@ -1,15 +1,21 @@
 import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useState, useEffect } from "react"
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign } from '@expo/vector-icons';
-import DatePickerModal from "./DatePickerModal";
+import { useState, useEffect, useRef } from "react"
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+
+// import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
 
 
 function CreateTaskModal(props) {
+    const badgeRef = useRef()
+
     const [state, setState] = useState({
         show: false,
         editedTitle: '',
@@ -23,7 +29,7 @@ function CreateTaskModal(props) {
     //Modals state
     const [showStatusSelector, setShowStatusSelector] = useState(false);
     const [showContextSelector, setShowContextSelector] = useState(false)
-    const [showAssProjectSelector, setShowAssProjectSelector] = useState(false)
+    const [showAssProjectSelector, setShowAssProjectSelector] = useState(false);
 
 
     function setValuesToEdit() {
@@ -128,9 +134,9 @@ function CreateTaskModal(props) {
             )
         }
 
-        const SelectProjectPanel = () => {
+        const SelectProjectPanel = (props) => {
             return (
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity ref={badgeRef} onPress={() => {
                     setState({ ...state, editedTitle: title, editedDescription: description })
                     setShowAssProjectSelector(true)
                 }}>
@@ -171,11 +177,13 @@ function CreateTaskModal(props) {
                         multiline={true}
                     />
                 </View>
-                {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-end' }}>
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
+                {/* Description height: '100%' */}
+
+                <View style={{ justifyContent: 'flex-end' }}>
+                    {/* height: '100%' */}
+                    <View style={{ marginLeft: 20, marginRight: 8 }}>
                         <View style={styles.editStyle}>
-                            <View style={{ height: '50%' }}>
+                            <View style={{}}>
                                 <TextInput
                                     style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                                     value={description}
@@ -185,7 +193,7 @@ function CreateTaskModal(props) {
                                     maxLength={200}
                                 />
                             </View>
-                            <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                            <View style={{ width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
@@ -227,7 +235,7 @@ function CreateTaskModal(props) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'ceneter', marginTop: 13 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 13 }}>
                                     <TouchableOpacity onPress={() => {
                                         setState({ ...state, editedTitle: title, editedDescription: description })
                                         setShowStatusSelector(true)
@@ -267,10 +275,10 @@ function CreateTaskModal(props) {
                                         {state.project ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
                                     </View>
 
-                                    <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
-                                    <SelectContextModal modalVisible={showContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
-                                    <AssignToProjectModal modalVisible={showAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
-
+                                    <SelectStateModal modalVisible={showStatusSelector} setIsModalVisible={setShowStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
+                                    <SelectContextModal modalVisible={showContextSelector} setIsModalVisible={setShowContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
+                                    <AssignToProjectModal target={badgeRef.current} modalVisible={showAssProjectSelector} setIsModalVisible={setShowAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
+                                    
                                     <TouchableOpacity
                                         style={styles.acceptButton}
                                         onPress={() => onAcceptFunction(state.state)}>
@@ -290,10 +298,11 @@ function CreateTaskModal(props) {
     }
 
     return (
-        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit} setIsModalVisible={props.setIsModalOpen}>
+            {/* Temporal styles */}
+            <KeyboardAvoidingView style={{ flex: 1, width: 700 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
-                <DatePickerModal state={state} setState={setState} />
+                {/* <DatePickerModal state={state} setState={setState} /> */}
             </KeyboardAvoidingView>
         </PopUpModal>
     )

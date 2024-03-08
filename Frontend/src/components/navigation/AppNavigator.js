@@ -4,7 +4,7 @@ import Inbox from '../../screens/actions/inbox';
 import CuantoAntes from '../../screens/actions/cuantoAntes';
 import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Project from '../../screens/actions/project';
 import SideBar from '../SideBar/SideBar';
 import { sideBar } from '../../styles/globalStyles';

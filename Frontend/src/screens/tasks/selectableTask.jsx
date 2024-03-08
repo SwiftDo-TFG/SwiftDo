@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import styles from './actionScreen.styles'
@@ -104,38 +107,39 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
   }, [translateX]);
 
 
-  return (<Swipeable
-    renderLeftActions={leftActions}
-    renderRightActions={rightActions}
-    onSwipeableClose={selectedTasks.total > 0 ? () => null : () => {
-      Animated.timing(translateX, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }}
-    overshootLeft={false}
-    overshootRight={false}
-    onSwipeableLeftWillOpen={selectedTasks.total > 0 ? () => null : () => {
-      Animated.timing(translateX, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setTimeout(() => {
-          //ArchiveTask(id, title);
-        }, 200);
-      });
-    }}
-    onSwipeableLeftWillClose={selectedTasks.total > 0 ? () => null : () => {
-      Animated.timing(translateX, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }}
-    friction={2}
-  >
+  return (
+  //   <Swipeable
+  //   renderLeftActions={leftActions}
+  //   renderRightActions={rightActions}
+  //   onSwipeableClose={selectedTasks.total > 0 ? () => null : () => {
+  //     Animated.timing(translateX, {
+  //       toValue: 0,
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   }}
+  //   overshootLeft={false}
+  //   overshootRight={false}
+  //   onSwipeableLeftWillOpen={selectedTasks.total > 0 ? () => null : () => {
+  //     Animated.timing(translateX, {
+  //       toValue: 1,
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }).start(() => {
+  //       setTimeout(() => {
+  //         //ArchiveTask(id, title);
+  //       }, 200);
+  //     });
+  //   }}
+  //   onSwipeableLeftWillClose={selectedTasks.total > 0 ? () => null : () => {
+  //     Animated.timing(translateX, {
+  //       toValue: 0,
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   }}
+  //   friction={2}
+  // >
     <TouchableWithoutFeedback
       // onLongPress={() => onPress(id)}
       onPress={() => {
@@ -224,7 +228,8 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
         )}
       </Animated.View >
     </TouchableWithoutFeedback>
-  </Swipeable>)
+  // </Swipeable>
+  )
 };
 
 export default SelectableTask;

@@ -3,7 +3,10 @@ import { View, TextInput, TouchableOpacity, Modal, Text, ScrollView } from "reac
 import { useEffect, useState } from "react";
 import styles from '../../screens/tasks/actionScreen.styles'
 import { sideBar } from '../../styles/globalStyles'
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+
 
 function MoveTaskModal(props) {
 

@@ -256,7 +256,8 @@ const actStyle = StyleSheet.create({
     actionTitle: {
         fontSize: 28,
         marginLeft: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: 'black'
     },
     emptyIcon: {
         fontSize: 40

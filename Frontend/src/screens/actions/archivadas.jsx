@@ -2,7 +2,7 @@
 import ActionScreen from "../tasks/actionScreen";
 import TaskStates from '../../utils/enums/taskStates'
 import { View, Text } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Colors from "../../styles/colors";
 import { actStyle } from "../../styles/globalStyles";
 

@@ -2,11 +2,13 @@ import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 
 import styles from '../../screens/tasks/actionScreen.styles'
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState, useEffect } from "react"
 import * as React from 'react';
 import ColorPicker from 'react-native-wheel-color-picker'
 function CreateProjectModal(props) {
+    console.log('PROPIEDADESSSS PROJECT MODAL');
+
 
     const [state, setState] = useState({
         show: false,
@@ -64,7 +66,7 @@ function CreateProjectModal(props) {
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8, marginBottom: 10 }}>
                     <MaterialCommunityIcons name="circle-outline" size={26} color={color} />
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
+                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10}}
                         value={title}
                         placeholder="Nuevo Proyecto"
                         onChangeText={onTitleChange}
@@ -116,7 +118,7 @@ function CreateProjectModal(props) {
     }
 
     return (
-        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit}>
+        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit} setIsModalVisible={props.setIsModalOpen}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
             </KeyboardAvoidingView>

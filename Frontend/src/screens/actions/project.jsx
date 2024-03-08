@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import projectService from "../../services/project/projectService"
 import ActionScreen from "../tasks/actionScreen";
-import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from "react";
 import TaskStates from "../../utils/enums/taskStates";
 import { actStyle } from "../../styles/globalStyles";

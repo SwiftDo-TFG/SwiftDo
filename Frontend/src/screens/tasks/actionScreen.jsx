@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService"
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import Feather from 'react-native-vector-icons/Feather';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
@@ -290,14 +290,14 @@ function ActionScreen(props) {
           />
 
           {/* EDIT MODAL   */}
-          <CreateTaskModal
+          {/* <CreateTaskModal
             title="Editar"
             // touch={hideEditPopUp}
             editingTask={editingTask}
             onAccept={updateTask}
             isModalOpen={isEditModalOpen}
             setIsModalOpen={setIsEditModalOpen}
-          />
+          /> */}
 
           {/* ADD TASK MODAL   */}
           <CreateTaskModal
@@ -309,13 +309,13 @@ function ActionScreen(props) {
             setIsModalOpen={setIsCreateModalOpen}
           />
 
-          <CompleteTaskModal
+          {/* <CompleteTaskModal
             title="Completar tarea"
             texto={"¿Desea completar esta tarea?"}
             onAccept={handleCompleteTasks}
             isModalOpen={isCompleteModalOpen}
             setIsModalOpen={setIsCompleteModalOpen}
-          />
+          /> */}
           {/* ADD PROJECT MODAL   */}
           <CreateProjectModal
             title="Añadir"

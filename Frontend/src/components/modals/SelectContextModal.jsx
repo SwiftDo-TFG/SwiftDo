@@ -1,10 +1,11 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState } from "react";
 import { contextModal } from '../../styles/globalStyles'
 import contextService from "../../services/context/contextService";
 import Colors from "../../styles/colors";
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from "../windows/Modal";
 
 
 
@@ -38,9 +39,14 @@ const SelectContextModal = (props) => {
             transparent={true}
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showContextSelector: false })}
+            // WindowsProps
+            popup={true}
+            verticalOffset={250}
+            horizontalOffset={220}
+            {...props}
         >
             <View style={styles.stateModalContainer}>
-                <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
+                {/* <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} /> */}
                 <View style={styles.modalStyle}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (

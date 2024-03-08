@@ -1,9 +1,12 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import projectService from "../../services/project/projectService";
 import { useEffect, useState } from "react";
 import { sideBar } from '../../styles/globalStyles'
+import Modal from "../windows/Modal";
 
 
 const SelectStateModal = (props) => {
@@ -24,9 +27,14 @@ const SelectStateModal = (props) => {
             transparent={true}
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showStatusSelector: false })}
+            // WindowsProps
+            popup={true}
+            verticalOffset={220}
+            horizontalOffset={-250}
+            {...props}
         >
             <View style={styles.stateModalContainer}>
-                <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
+                {/* <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} /> */}
                 <View style={styles.modalStyle}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>

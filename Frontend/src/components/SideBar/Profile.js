@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator  } from "react-native";
 import { sideBar, textStyle } from "../../styles/globalStyles";
-import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 

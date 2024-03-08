@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { TouchableOpacity, View, Platform  } from "react-native"
 import { addButton } from "../../styles/globalStyles"
-import { FontAwesome5 } from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useDrawerStatus } from '@react-navigation/drawer';
 
 const AddButton = ({onPress, onLongPress}) => {

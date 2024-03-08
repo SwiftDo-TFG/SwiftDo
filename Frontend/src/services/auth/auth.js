@@ -1,11 +1,11 @@
 import axios from "axios";
 // import { URL } from 'react-native-url-polyfill';
-import { setupURLPolyfill } from 'react-native-url-polyfill';
+// import { setupURLPolyfill } from 'react-native-url-polyfill';
 import { Platform } from 'react-native';
 
-if(Platform.OS !== 'web'){
-    setupURLPolyfill();
-}
+// if(Platform.OS !== 'web'){
+//     setupURLPolyfill();
+// }
 
 const instance = axios.create({
     // baseURL: 'http://localhost:3000',
@@ -80,6 +80,7 @@ const login = async (email, password) => {
     console.log("LOGIN, data = ", email, password);
 
     const authcode = await getAuthCode(email, password);
+    // const authcode = '4980f2b00067cd0b98aff760b4e64c3eb2a03fae'
 
     if (authcode != null) {
         const token = await getAuthToken(authcode)

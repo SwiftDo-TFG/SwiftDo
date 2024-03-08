@@ -1,7 +1,7 @@
-import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../../screens/tasks/actionScreen.styles'
-
+import Modal from "../windows/Modal";
 
 
 const AddTypeModal = (props) =>{
@@ -10,6 +10,7 @@ const AddTypeModal = (props) =>{
             visible={props.isModalVisible}
             transparent={true}
             animationType={"fade"}
+            {...props}
           >
             <TouchableWithoutFeedback onPress={() => props.setIsModalVisible(false)}>
               <View style={styles.modalContainer}>

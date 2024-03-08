@@ -1,47 +1,4 @@
 {
-  "expo": {
-    "name": "GTD-App",
-    "slug": "GTD-App",
-    "version": "0.2.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/tfggtdicon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./src/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/tfggtdicon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.pabluskagamo.GTDApp"
-    },
-    "web": {
-      "": "./src/assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "cf21098b-449e-4027-bf41-aeecc3d45d06"
-      }
-    },
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "usesCleartextTraffic": true
-          }
-        }
-      ],
-      "expo-secure-store"
-    ]
-  }
+  "name": "gtdapp",
+  "displayName": "gtdapp"
 }
