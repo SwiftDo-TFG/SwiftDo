@@ -275,6 +275,16 @@ const styles = StyleSheet.create({
         marginBottom: 2,
         height: '33%'
     },
+    tagsOnTask:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 1.5,
+        marginRight: 2,
+        marginBottom: 3,
+    }
 });
 
 export default styles;

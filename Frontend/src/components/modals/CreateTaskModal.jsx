@@ -113,7 +113,8 @@ function CreateTaskModal(props) {
 
         const handleSelectTag = (tag) => {
             let newArray = state.tags
-            newArray.push({ name: tag, color: addColor() })
+            if(!state.tags) newArray = [{ name: tag, color: addColor() }];
+            else newArray.push({ name: tag, color: addColor() })
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }

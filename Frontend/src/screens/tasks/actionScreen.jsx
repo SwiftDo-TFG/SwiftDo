@@ -58,8 +58,9 @@ function ActionScreen(props) {
     console.log("Estas son las tareas que se devuelven", tasksDB)
 
     const seletedAux = {}
-    tasksDB.forEach(task => {
+    tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
+      task.tags = await taskService.findTags(task.task_id)
     })
 
     seletedAux.total = 0;
@@ -212,8 +213,6 @@ function ActionScreen(props) {
     const taskToEdit = tasks.find(task => task.task_id === id);
 
     if (taskToEdit) {
-      taskToEdit.tags = await taskService.findTags(taskToEdit.task_id)
-      console.log("TAGS: ", taskToEdit.tags)
       setEditingTask(taskToEdit);
       setIsEditModalOpen(true);
     } else {

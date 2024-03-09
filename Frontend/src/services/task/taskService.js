@@ -140,12 +140,8 @@ const addTag = async (taskId, tag) => {
 
 const findTags = async (taskId) => {
     try {
-        const dir = '/task/tags'
-        const data = {
-            task_id: taskId,
-        }
-        console.log(data)
-        const response = await instance.get(dir, data);
+        const dir = `/task/${taskId}/tags`
+        const response = await instance.get(dir);
         const tags = response.data;
 
         return tags;
