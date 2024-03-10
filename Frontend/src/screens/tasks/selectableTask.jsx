@@ -214,7 +214,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                           {task.project_id != null && <ProjectBadge project={{ title: task.project_title, color: task.project_color }} />}
                         </View>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                          {Object.keys(task.tags).map((key, index) => (
+                          {task.tags && Object.keys(task.tags).map((key, index) => (
                             <View key={index} style={[styles.tagsOnTask, { backgroundColor: task.tags[key].color }]}>
                               <FontAwesome name="tag" size={10} color="white" style={{ marginRight: 3 }} />
                               <Text style={{ color: 'white', paddingBottom: 3, fontSize: 12 }}>{task.tags[key].name}</Text>

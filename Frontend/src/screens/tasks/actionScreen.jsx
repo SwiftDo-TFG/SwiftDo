@@ -55,13 +55,13 @@ function ActionScreen(props) {
       return authState.signOut();
     }
 
-    console.log("Estas son las tareas que se devuelven", tasksDB)
-
+    
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
       task.tags = await taskService.findTags(task.task_id)
     })
+    console.log("Estas son las tareas que se devuelven", tasksDB)
 
     seletedAux.total = 0;
 
@@ -142,11 +142,11 @@ function ActionScreen(props) {
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
     console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
-      const updatedTasks = tasks.map((task) =>
-        task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
-      );
+      // const updatedTasks = tasks.map((task) =>
+      //   task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
+      // );
       isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
-      setTasks(updatedTasks);
+      // setTasks(updatedTasks);
       reloadData();
     } else {
       console.error("Error al actualizar la tarea en la base de datos");
