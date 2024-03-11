@@ -41,9 +41,9 @@ export default ({ navigation }) => {
     if(dimensions.width >= 768 && !isDrawerOpen){
         navigation.openDrawer();
     }
-    console.log("DRAWER STATUS", useDrawerStatus())
 
-    React.useEffect(() => {
+    React.useEffect(() => { 
+        
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
 
@@ -56,6 +56,7 @@ export default ({ navigation }) => {
             setSideContexts(userAndTasks.contexts);
 
         }
+
         // const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
         // return () => clearInterval(interval); // Reseteamos el contador del intervalo
         if (isDrawerOpen) {
@@ -118,7 +119,9 @@ export default ({ navigation }) => {
                 <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
-                    <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
+                    <View style={{marginVertical: 5}}>
+                        <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
+                    </View>
                     <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors[theme].yellow} text={"Cuanto Antes"} totalTasks={caData[0]} importantTasks={caData[1]} />
                     <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors[theme].green} text={"Programadas"} totalTasks={progData[0]} importantTasks={progData[1]} />
                     <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors[theme].brown} text={"Archivadas"} totalTasks={archData[0]} importantTasks={archData[1]} />

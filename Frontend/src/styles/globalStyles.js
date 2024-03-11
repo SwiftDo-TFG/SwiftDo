@@ -40,11 +40,9 @@ const sidebarStyles = (theme) => {
             flexDirection: "row",
             justifyContent: 'flex-start',
             alignItems: 'center',
-            // alignSelf: 'center',
-            paddingTop: 10
         },
         actionText: {
-            fontSize: 16.5,
+            fontSize: 16,
             fontWeight: 'bold',
             color: '#272c34'
         },
@@ -88,12 +86,10 @@ const sidebarStyles = (theme) => {
             flexDirection: 'row',
             alignItems: 'center',
             minWidth: '31%',
-            marginTop: 10,
         },
         count: {
             flexDirection: 'row',
-            // maxWidth: '50%',
-            minWidth: '15%',
+            minWidth: '10%',
             justifyContent: 'center',
             paddingHorizontal: 10,
             borderRadius: 10,

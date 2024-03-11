@@ -41,8 +41,8 @@ const AppNavigator = ({projects, state }) => {
             screenOptions={{
                 drawerType: (dimensions.width >= 768 && state.userToken != null) ? 'permanent' : 'front',
                 drawerStyle: {
-                    backgroundColor: theme === 'dark' ? 'black' : 'white',
-
+                    backgroundColor: theme === 'dark' ? 'black' : Colors[theme].themeColor,
+                    // width: '80%'
                 },
             }}
             defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 

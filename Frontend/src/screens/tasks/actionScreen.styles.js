@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 import Colors from "../../styles/colors";
-import colors from "../../styles/colors";
+
 
 const styles = StyleSheet.create({
     container: {
@@ -247,12 +247,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     area: {
-        borderRadius: 40,
-        backgroundColor: 'lightgrey',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 15,
     },
     textInput: {
         fontSize: 16,

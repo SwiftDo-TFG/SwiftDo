@@ -1,12 +1,5 @@
 
-const commonColor = {
-    commonWhite: '#FFFFFF',
-    commonBlack: '#000000',
-    activeColor: '#DE5E69',
-    deactiveColor: '#DE5E6950',
-    boxActiveColor: '#DE5E6940',
-    light: "#EEEDED",
-    dark: "#272C34",
+const commonColor = {    
     grey: "#A9A9A9",
     orange: "#FFA500",
     green: "#008080",
@@ -14,25 +7,25 @@ const commonColor = {
     yellow: "#FFD700",
     noir: "#1D2129",
     brown: "#D2B48C",
-    redFlag: "B30000",
     softGrey: "#e3e4e5",
     darkRed: "B30000",
-    paper: "#F2F2F2"
 };
   
 const light = {
-    themeColor: '#FFFFFF',
+    themeColor: '#F2F2F2',
     white: '#000000',
-    sky: '#DE5E69',
-    gray: 'gray',
+    red: '#DE5E69',
+    activeColor: '#FFFFFF',
+    selectColor: '#FCC89D',
     ...commonColor,
 };
 
 const dark = {
     themeColor: '#000000',
     white: '#FFFFFF',
-    sky: '#831a23',
-    gray: 'white',
+    red: '#831a23',
+    activeColor: '#1C1F21', /*Gris antracita*/
+    selectColor: '#FCC89D',
     ...commonColor,
 };
 

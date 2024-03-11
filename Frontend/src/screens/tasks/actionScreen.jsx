@@ -258,10 +258,12 @@ function ActionScreen(props) {
             <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
           
-          {/* Filter Context */}
+          {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area}>
-              <Text>Contexto</Text>
+            <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+
+              {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
             </TouchableOpacity>
           </View>
         </View>

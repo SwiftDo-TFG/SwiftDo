@@ -143,7 +143,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
         setIsMenuVisible(!isMenuVisible);
       }}
     >
-      <Animated.View style={[getTaskItemStyle(), { flexDirection: 'column', justifyContent: 'center', backgroundColor: selectedTasks[task.task_id] ? Colors[theme].black : (isMenuVisible ?  Colors[theme].black : Colors[theme].black), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
+      <Animated.View style={[getTaskItemStyle(), { flexDirection: 'column', justifyContent: 'center', backgroundColor: (isMenuVisible ?  Colors[theme].activeColor : Colors[theme].themeColor), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
         {isSwiped && (
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <View style={{ flexDirection: 'column', width: (isMenuVisible ? '100%' : '88%') }}>
