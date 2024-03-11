@@ -1,4 +1,4 @@
-import { View, Text, Animated, TouchableOpacity, Platform, Dimensions } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
@@ -13,7 +13,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import CreateTaskModal from "../../components/modals/CreateTaskModal"
 import MoveTaskModal from "../../components/modals/MoveTaskModal"
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
-import { actStyle } from "../../styles/globalStyles";
+import { actStyles } from "../../styles/globalStyles";
 import tagService from "../../services/tag/tagService";
 
 
@@ -30,8 +30,8 @@ const ProgramadasScreen = (props) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-
-
+    const theme = useColorScheme();
+    const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
 
     useEffect(() => {
@@ -295,7 +295,7 @@ const ProgramadasScreen = (props) => {
                         </TouchableOpacity>)}
                         <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                             <TouchableOpacity style={stylesAction.area}>
-                                <Text>Area</Text>
+                                <Text>Contexto</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

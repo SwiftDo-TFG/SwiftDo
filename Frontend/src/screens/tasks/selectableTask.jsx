@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, useColorScheme } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
@@ -91,7 +91,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
   //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
   //   extrapolate: 'clamp',
   // });
-
+  const theme = useColorScheme();
 
   useEffect(() => {
     const subscription = translateX.addListener(({ value }) => {
@@ -143,7 +143,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
         setIsMenuVisible(!isMenuVisible);
       }}
     >
-      <Animated.View style={[getTaskItemStyle(), { flexDirection: 'column', justifyContent: 'center', backgroundColor: selectedTasks[task.task_id] ? '#FFFCFC' : (isMenuVisible ? '#FFFCFC' : Colors.paper), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
+      <Animated.View style={[getTaskItemStyle(), { flexDirection: 'column', justifyContent: 'center', backgroundColor: selectedTasks[task.task_id] ? Colors[theme].black : (isMenuVisible ?  Colors[theme].black : Colors[theme].black), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>
         {isSwiped && (
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <View style={{ flexDirection: 'column', width: (isMenuVisible ? '100%' : '88%') }}>
@@ -164,7 +164,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                       // <FontAwesome name="check-circle" size={24} color="#f39f18" />
                     )}
                   </TouchableOpacity>
-                  <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
+                  <Text style={{ color:Colors[theme].white, textAlign: 'center', fontSize: 15, fontWeight: (isMenuVisible && !selectedTasks[task.task_id] ? 'bold' : 'normal'), marginRight: '5%' }}>
                     {(task.title.length > 37 && (!isMenuVisible || selectedTasks[task.task_id])) ? `${task.title.substring(0, 30)}...` : task.title}
                   </Text>
                 </View>
@@ -199,14 +199,14 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 // </Menu>
                 <View style={{ flexDirection: 'column' }}>
                   <View style={{ marginLeft: '11%' }}>
-                    <Text style={{ color: '#686868' }}>{task.description}</Text>
+                    <Text style={{ color:Colors[theme].white }}>{task.description}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 8, width: '100%', justifyContent: 'flex-end' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: task.date_limit ? '100%' : '100%' }}>
                       <View style={{ flexDirection: 'column', flexWrap: 'wrap', width: '80%', alignItems: 'flex-end', justifyContent: "flex-start", alignItems: 'flex-start' }}>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                           {task.date_limit && (
-                            <Text style={{ fontSize: 12, marginBottom: 5, color: '#828282', marginRight: 10, }}>
+                            <Text style={{ color:Colors[theme].white, fontSize: 12, marginBottom: 5, marginRight: 10, }}>
                               <Ionicons name="calendar-outline" size={16} color="#008080" />
                               &nbsp; {formattedDate(task.date_limit)}
                             </Text>
@@ -216,8 +216,8 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                           {task.tags && Object.keys(task.tags).map((key, index) => (
                             <View key={index} style={[styles.tagsOnTask, { backgroundColor: task.tags[key].color }]}>
-                              <FontAwesome name="tag" size={10} color="white" style={{ marginRight: 3 }} />
-                              <Text style={{ color: 'white', paddingBottom: 3, fontSize: 12 }}>{task.tags[key].name}</Text>
+                              <FontAwesome name="tag" size={10} color='white' style={{ marginRight: 3 }} />
+                              <Text style={{ color:'white', paddingBottom: 3, fontSize: 12 }}>{task.tags[key].name}</Text>
                             </View>
                           ))}
                         </View>
@@ -238,7 +238,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                   <Ionicons name="flag" size={15} color="#be201c" />
                 )}
                 {task.tags && (
-                  <FontAwesome name="tag" size={20} color="#cccccc" style={{ marginLeft: 7 }} />
+                  <FontAwesome name="tag" size={20} color={Colors[theme].white} style={{ marginLeft: 7 }} />
                 )}
               </View>
             )}

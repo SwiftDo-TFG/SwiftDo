@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
+import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native';
 import AuthContext from '../../services/auth/context/authContext';
 import authService from "../../services/auth/auth"
-import { textStyle, formStyle } from '../../styles/globalStyles';
+import { textStyles, formStyles } from '../../styles/globalStyles';
 import LoginImg from '../../components/common/ImageComponent';
 import ConfirmButton from '../../components/common/ConfirmButton';
 import AuthTextInput from '../../components/auth/AuthTextInput';
@@ -24,7 +24,9 @@ function SingUpScren({ navigation }) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
-
+    const theme = useColorScheme();
+    const textStyle = textStyles(theme);
+    const formStyle = formStyles(theme);
 
     function emptyValuesError(){
         let error = {}

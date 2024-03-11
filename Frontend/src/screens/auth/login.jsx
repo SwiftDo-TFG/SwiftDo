@@ -1,16 +1,16 @@
 import { useState, useContext } from 'react';
-import { TextInput, View, Text, ActivityIndicator, TouchableOpacity, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { TextInput, View, Text, ActivityIndicator, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, useColorScheme } from 'react-native';
 import AuthContext from '../../services/auth/context/authContext';
-import { formStyle, textStyle } from '../../styles/globalStyles';
+import { formStyles, textStyles } from '../../styles/globalStyles';
 import ConfirmButton from '../../components/common/ConfirmButton';
 import LoginImg from '../../components/common/ImageComponent';
 import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
 
 
-function LoadingIndicator() {
+function LoadingIndicator(style) {
     return (
-        <View style={formStyle.loadingIndicator}>
+        <View style={style.loadingIndicator}>
             <ActivityIndicator size="large" />
         </View>
     );
@@ -20,7 +20,9 @@ function SignInScreen({ navigation }) {
     const [email, setEmail] = useState('pepe@ucm.es');
     const [password, setPassword] = useState('Pepe@123');
     const [error, setError] = useState({ isError: false, msg: '' })
-
+    const theme = useColorScheme();
+    const textStyle = textStyles(theme);
+    const formStyle = formStyles(theme);
     const authState = useContext(AuthContext);
 
 
@@ -64,7 +66,7 @@ function SignInScreen({ navigation }) {
                     <Text style={[textStyle.largeText, { fontWeight: 'bold', textAlign: 'center' }]}>Domina el caos, conquista tu día.</Text>
                 </View>
 
-                {authState.isLoading && <LoadingIndicator />}
+                {authState.isLoading && <LoadingIndicator style={formStyle}/>}
                 {error.isError && error.msg.length > 0 && <ErrorBadge msg={error.msg} />}
                 <View style={{ justifyContent: 'center' }}>
                     <AuthTextInput

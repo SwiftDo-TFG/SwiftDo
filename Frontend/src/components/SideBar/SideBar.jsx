@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, useColorScheme } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Profile from './Profile';
-import { sideBar } from '../../styles/globalStyles';
+import { sidebarStyles } from '../../styles/globalStyles';
 import ActionScheme from './Actions';
 import Colors from '../../styles/colors';
 import taskService from '../../services/task/taskService';
@@ -15,11 +15,6 @@ import { useDrawerStatus } from '@react-navigation/drawer'
 import { useWindowDimensions } from 'react-native';
 
 
-const Separator = () => {
-    return (
-        <View style={sideBar.separator} />
-    )
-}
 
 const today = new Date();
 const formattedDate = `${today.getDate()} de ${getMonthName(today.getMonth())} del ${today.getFullYear()}`;
@@ -38,7 +33,8 @@ export default ({ navigation }) => {
     const [sideProjects, setSideProjects] = React.useState([]);
     const [sideContexts, setSideContexts] = React.useState([]);
     const authstate = React.useContext(AuthContext);
-
+    const theme = useColorScheme();
+    const sideBar = sidebarStyles(theme)
     const isDrawerOpen = useDrawerStatus() === "open";
     const dimensions = useWindowDimensions();
 
@@ -119,15 +115,15 @@ export default ({ navigation }) => {
 
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
                 <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} />
-                <Separator />
+                <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
-                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors.orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
                     <ActionScheme icon={"play"} iconColor={Colors.dark} text={"Hoy"} />
-                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors.yellow} text={"Cuanto Antes"} totalTasks={caData[0]} importantTasks={caData[1]} />
-                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors.green} text={"Programadas"} totalTasks={progData[0]} importantTasks={progData[1]} />
-                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors.brown} text={"Archivadas"} totalTasks={archData[0]} importantTasks={archData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors[theme].yellow} text={"Cuanto Antes"} totalTasks={caData[0]} importantTasks={caData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors[theme].green} text={"Programadas"} totalTasks={progData[0]} importantTasks={progData[1]} />
+                    <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors[theme].brown} text={"Archivadas"} totalTasks={archData[0]} importantTasks={archData[1]} />
                 </View>
-                <Separator />
+                <View style={sideBar.separator} />
 
                 {addProjects()}
             </DrawerContentScrollView>

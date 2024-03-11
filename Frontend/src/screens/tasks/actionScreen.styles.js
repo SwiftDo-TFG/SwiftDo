@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 import Colors from "../../styles/colors";
+import colors from "../../styles/colors";
 
 const styles = StyleSheet.create({
     container: {
@@ -8,7 +9,6 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 20,
-        backgroundColor: 'white'
     },
     checkgroup: {
         flex: 1,
@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalStyle: {
-        backgroundColor: 'white',
         margin: 20,
         borderRadius: 16,
         paddingHorizontal: 30,
