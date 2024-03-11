@@ -7,7 +7,6 @@ import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 
 
 export default function App() {
-  console.log(theme);
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ?  DarkTheme : DefaultTheme;
 
