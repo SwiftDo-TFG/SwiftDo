@@ -22,6 +22,16 @@ tagService.findTag = async (tag) => {
     return res.rows[0];
 }
 
+tagService.getAllTagsByUser = async (id) => {
+    const res = await db.query('select t.name, t.colour  from tags t join tagstotask tt on t.name = tt.nametag join tasks tk on tk.task_id = tt.task_id where tk.user_id = $1 order by t.name asc', [id])
+
+    if (res.rows.length !== 1) {
+        return false;
+    }
+
+    return res.rows[0];
+}
+
 
 
 module.exports = tagService;
