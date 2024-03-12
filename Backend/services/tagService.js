@@ -23,14 +23,13 @@ tagService.findTag = async (tag) => {
 }
 
 tagService.getAllTagsByUser = async (id, search) => {
-    const formattedSearch = '%' + search + '%';
-    const res = await db.query('select t.name, t.colour from tags t join tagstotask tt on t.name = tt.nametag join tasks tk on tk.task_id = tt.task_id where tk.user_id = $1 and lower(t.name) like lower($2) order by t.name asc limit 5', [id, formattedSearch])
+    const res = await db.query('select t.name, t.colour from tags t join tagstotask tt on t.name = tt.nametag join tasks tk on tk.task_id = tt.task_id where tk.user_id = $1 and lower(t.name) like lower($2) order by t.name asc limit 5', [id, search])
 
-    if (res.rows.length !== 1) {
+    if (res.rows.length < 1) {
         return false;
     }
 
-    return res.rows[0];
+    return res.rows;
 }
 
 
