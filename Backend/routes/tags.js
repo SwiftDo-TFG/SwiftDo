@@ -15,6 +15,19 @@ router.post('/', tagValidator.validateCreate(), checkValidations, async (req, re
     }
 })
 
+router.get('/gettags', async (req, res) => {
+  try {
+    const search = req.query.search;
+    const user_id = res.locals.oauth.token.user.id;
+
+    const tags = await tagService.getAllTagsByUser(user_id, search);
+    res.send(tags);
+  } catch (err) {
+    console.log('[Exception]:', err.message)
+    res.sendStatus(409);
+  }
+})
+
 router.get('/', async (req, res)=>{
   try {
     const tag = req.query.name;
@@ -26,17 +39,6 @@ router.get('/', async (req, res)=>{
   }
 })
 
-router.get('/getTags', async (req, res) => {
-  try {
-    const user_id = res.locals.oauth.token.user.id;
-
-    const tags = await tagService.getAllTagsByUser(user_id);
-    res.send(tags);
-  } catch (err) {
-    console.log('[Exception]:', err.message)
-    res.sendStatus(409);
-  }
-})
   
   module.exports = router;
   
