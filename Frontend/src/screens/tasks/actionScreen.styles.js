@@ -159,11 +159,12 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0)', //windows cambio'rgba(0, 0, 0, 0.5)'
     },
     stateModalContainer: {
         flex: 1,
         justifyContent: 'flex-end',
+        opacity: 1
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     assignProjectModalContainer: {

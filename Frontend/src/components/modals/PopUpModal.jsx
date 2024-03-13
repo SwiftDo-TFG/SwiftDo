@@ -19,6 +19,9 @@ function PopUpModal(props) {
 
     useEffect(() => {
         animateModal()
+        if(props.isModalOpen && props.onShow){
+            props.onShow();
+        }
     }, [props.isModalOpen]);
 
 

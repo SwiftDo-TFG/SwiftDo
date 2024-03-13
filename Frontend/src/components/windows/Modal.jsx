@@ -9,11 +9,11 @@ import styles from '../../screens/tasks/actionScreen.styles'
 
 
 const Modal = (props) => {
-    //isOverlayEnabled={true} Fondo oscuro
+    
     if (props.popup) {
         return (
             <Popup isOpen={props.visible} isLightDismissEnabled={true} onDismiss={() => { props.setIsModalVisible(false) }} verticalOffset={props.verticalOffset} horizontalOffset={props.horizontalOffset}>
-                <View style={{ flex: 1, borderWidth: 1, borderTopLeftRadius: 16, borderTopRightRadius: 16, borderColor: 'red', backgroundColor: 'black'}}>
+                <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0)',}}>
                     {props.children}
                 </View>
             </Popup>
@@ -22,7 +22,7 @@ const Modal = (props) => {
 
     return (
         <Flyout isOpen={props.visible} placement='bottom' isOverlayEnabled={true} onDismiss={() => { props.setIsModalVisible(false) }}>
-            <View style={{ flex: 1, borderWidth: 1, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+            <View style={{flex: 1, borderWidth: 1, borderTopLeftRadius: 16, borderTopRightRadius: 16, backgroundColor: 'rgba(0, 0, 0, 0)'}}>
                 {props.children}
             </View>
         </Flyout>

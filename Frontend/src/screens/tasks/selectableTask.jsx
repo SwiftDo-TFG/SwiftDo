@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -57,7 +57,7 @@ const RightSwipeActions = ({ showCompleteModal, id, translateX, isMenuVisible })
       onPress={() => showCompleteModal(id)}
     >
       <Text>
-        <FontAwesome5
+        <FontAwesome
           name="trash"
           size={20}
           color="white"

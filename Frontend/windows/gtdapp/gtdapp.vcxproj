@@ -60,7 +60,8 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -158,6 +159,25 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Font Include="Assets\AntDesign.ttf" />
+    <Font Include="Assets\Entypo.ttf" />
+    <Font Include="Assets\EvilIcons.ttf" />
+    <Font Include="Assets\Feather.ttf" />
+    <Font Include="Assets\FontAwesome.ttf" />
+    <Font Include="Assets\FontAwesome5_Brands.ttf" />
+    <Font Include="Assets\FontAwesome5_Regular.ttf" />
+    <Font Include="Assets\FontAwesome5_Solid.ttf" />
+    <Font Include="Assets\FontAwesome6_Brands.ttf" />
+    <Font Include="Assets\FontAwesome6_Regular.ttf" />
+    <Font Include="Assets\FontAwesome6_Solid.ttf" />
+    <Font Include="Assets\Fontisto.ttf" />
+    <Font Include="Assets\Foundation.ttf" />
+    <Font Include="Assets\Ionicons.ttf" />
+    <Font Include="Assets\MaterialCommunityIcons.ttf" />
+    <Font Include="Assets\MaterialIcons.ttf" />
+    <Font Include="Assets\Octicons.ttf" />
+    <Font Include="Assets\SimpleLineIcons.ttf" />
+    <Font Include="Assets\Zocial.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ReactNativeWindowsTargets">

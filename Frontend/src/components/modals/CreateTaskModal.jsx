@@ -2,7 +2,7 @@ import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect, useRef } from "react"
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -33,6 +33,7 @@ function CreateTaskModal(props) {
 
 
     function setValuesToEdit() {
+        console.log("SE ESSTA EJECUTANDO EL SHOW VALUES TO EDIT")
         if (props.editingTask) {
             let fecha = 'Fecha'
             if (props.editingTask.date_limit) {
@@ -209,7 +210,7 @@ function CreateTaskModal(props) {
                                             {state.context_name ? (
                                                 <ContextBadge context_name={state.context_name} />
                                             ) : (
-                                                <FontAwesome5 name="user" size={22} color="#a0a0a0" />
+                                                <FontAwesome name="user" size={22} color="#a0a0a0" />
                                             )}
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => {
@@ -244,7 +245,7 @@ function CreateTaskModal(props) {
                                             {
                                                 (state.state === "2") ? (
                                                     <>
-                                                        <FontAwesome5 name="bolt" size={20} color={'#ffd700'} />
+                                                        <FontAwesome name="bolt" size={20} color={'#ffd700'} />
                                                         &nbsp; Cuanto Antes
                                                     </>
                                                 ) : (state.state === "3") ? (
@@ -259,7 +260,7 @@ function CreateTaskModal(props) {
                                                     </>
                                                 ) : (state.state === "1") ? (
                                                     <>
-                                                        <FontAwesome5 name="inbox" size={20} color="#f39f18" />
+                                                        <FontAwesome name="inbox" size={20} color="#f39f18" />
                                                         &nbsp; Inbox
                                                     </>
                                                 ) : (

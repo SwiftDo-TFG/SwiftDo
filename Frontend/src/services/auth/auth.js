@@ -1,11 +1,11 @@
 import axios from "axios";
 // import { URL } from 'react-native-url-polyfill';
-// import { setupURLPolyfill } from 'react-native-url-polyfill';
+import { setupURLPolyfill } from 'react-native-url-polyfill';
 import { Platform } from 'react-native';
 
-// if(Platform.OS !== 'web'){
-//     setupURLPolyfill();
-// }
+if(Platform.OS !== 'web'){
+    setupURLPolyfill();
+}
 
 const instance = axios.create({
     // baseURL: 'http://localhost:3000',
@@ -13,6 +13,7 @@ const instance = axios.create({
     baseURL: 'http://ec2-16-16-226-94.eu-north-1.compute.amazonaws.com:3000',
     timeout: 1000,
     //headers: { 'X-Custom-Header': 'foobar' }
+    maxRedirects: 0
 });
 
 const getAuthCode = async (email, password) => {
@@ -25,7 +26,14 @@ const getAuthCode = async (email, password) => {
         return authcode;
     } catch (error) {
         console.log("AXIOS Error", error)
-        
+        if (error.response.status === 404 && error.request.responseURL.includes("?code=")) {
+            //Arreglo solo para windows
+            const url = new URL(error.request.responseURL);
+            const authcode = url.searchParams.get('code');
+            console.log("This is the auth code en catch:", authcode);
+            return authcode;
+        }
+
         return null;
     }
 
@@ -53,7 +61,7 @@ const getAuthToken = async (authcode) => {
     }
 }
 
-const restoreToken = async (token)=> {
+const restoreToken = async (token) => {
     const data = { client_id: 1234, client_secret: 1234, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: 'http://ec2-16-16-226-94.eu-north-1.compute.amazonaws.com:3000/' }
 
     console.log("[AXIOS] Refresh OAUTH Token", data)
@@ -80,7 +88,7 @@ const login = async (email, password) => {
     console.log("LOGIN, data = ", email, password);
 
     const authcode = await getAuthCode(email, password);
-    // const authcode = '4980f2b00067cd0b98aff760b4e64c3eb2a03fae'
+    // const authcode = '1b90346dbb77bc250fb1cc79a3c448dc003152dd'
 
     if (authcode != null) {
         const token = await getAuthToken(authcode)
@@ -90,18 +98,18 @@ const login = async (email, password) => {
     return null;
 }
 
-const signup = async (userData) =>{
+const signup = async (userData) => {
     console.log("SignUp, data = ", userData);
 
-    try{
+    try {
         const response = await instance.post('/user/register', userData);
         const data = response.data;
-        
+
         return data;
-    }catch(error){
+    } catch (error) {
         return null;
     }
 
 }
 
-export default {login, signup, restoreToken}
+export default { login, signup, restoreToken }

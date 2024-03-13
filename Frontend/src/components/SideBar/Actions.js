@@ -1,5 +1,5 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { sideBar } from "../../styles/globalStyles";
@@ -12,7 +12,7 @@ const ActionScheme = ({ onPress, icon, iconColor, text, totalTasks, importantTas
             <TouchableOpacity onPress={onPress}>
                 <View style={sideBar.actionWrapper}>
                     <View style={sideBar.iconWrapper}>
-                        {type === 'M' ? (<MaterialCommunityIcons name={icon} style={[sideBar.matIconStyle, { color: iconColor }]} />) : (<FontAwesome5 name={icon} style={[sideBar.iconStyle, { color: iconColor }]} />)}
+                        {type === 'M' ? (<MaterialCommunityIcons name={icon} style={[sideBar.matIconStyle, { color: iconColor }]} />) : (<FontAwesome name={icon} style={[sideBar.iconStyle, { color: iconColor }]} />)}
                     </View>
 
                     <Text style={[sideBar.actionText,]}>{text}</Text>

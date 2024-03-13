@@ -1,6 +1,6 @@
 import { View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import projectService from "../../services/project/projectService";
@@ -39,7 +39,7 @@ const SelectStateModal = (props) => {
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                             <View style={styles.textContainer}>
-                                <FontAwesome5 name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
+                                <FontAwesome name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
                                 <Text style={{ fontSize: 17 }}>Cuanto Antes</Text>
                             </View>
                         </TouchableOpacity>
@@ -57,7 +57,7 @@ const SelectStateModal = (props) => {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => props.handleSelectState("1")}>
                             <View style={styles.textContainer}>
-                                <FontAwesome5 name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
+                                <FontAwesome name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
                                 <Text style={{ fontSize: 17 }}>Inbox</Text>
                             </View>
                         </TouchableOpacity>

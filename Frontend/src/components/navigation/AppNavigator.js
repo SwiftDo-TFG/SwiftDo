@@ -4,7 +4,7 @@ import Inbox from '../../screens/actions/inbox';
 import CuantoAntes from '../../screens/actions/cuantoAntes';
 import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Project from '../../screens/actions/project';
 import SideBar from '../SideBar/SideBar';
 import { sideBar } from '../../styles/globalStyles';
@@ -56,7 +56,7 @@ const AppNavigator = ({ projects, state }) => {
                         options={{
                             title: 'Inbox',
                             drawerIcon: () => (
-                                <FontAwesome5 name="inbox" size={24} color={'orange'} />
+                                <FontAwesome name="inbox" size={24} color={'orange'} />
                             ),
                             headerShown: false
                         }}
@@ -84,7 +84,7 @@ const AppNavigator = ({ projects, state }) => {
                         options={{
                             title: 'Programadas',
                             drawerIcon: () => (
-                                <FontAwesome5 name="calendar" size={24} color={'cyan'} />
+                                <FontAwesome name="calendar" size={24} color={'cyan'} />
                             ),
                             headerShown: false
                         }}

@@ -59,4 +59,63 @@
   <ItemGroup>
     <Page Include="MainPage.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\AntDesign.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Entypo.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\EvilIcons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Feather.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome5_Brands.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome5_Regular.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome5_Solid.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome6_Brands.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome6_Regular.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\FontAwesome6_Solid.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Fontisto.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Foundation.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Ionicons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\MaterialCommunityIcons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\MaterialIcons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Octicons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\SimpleLineIcons.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+    <Font Include="Assets\Zocial.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+  </ItemGroup>
 </Project>

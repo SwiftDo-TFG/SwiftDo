@@ -290,14 +290,14 @@ function ActionScreen(props) {
           />
 
           {/* EDIT MODAL   */}
-          {/* <CreateTaskModal
+          <CreateTaskModal
             title="Editar"
             // touch={hideEditPopUp}
             editingTask={editingTask}
             onAccept={updateTask}
             isModalOpen={isEditModalOpen}
             setIsModalOpen={setIsEditModalOpen}
-          /> */}
+          />
 
           {/* ADD TASK MODAL   */}
           <CreateTaskModal

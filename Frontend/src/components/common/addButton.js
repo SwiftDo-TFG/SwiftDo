@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { TouchableOpacity, View, Platform  } from "react-native"
 import { addButton } from "../../styles/globalStyles"
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useDrawerStatus } from '@react-navigation/drawer';
 
 const AddButton = ({onPress, onLongPress}) => {
@@ -50,8 +50,8 @@ const AddButton = ({onPress, onLongPress}) => {
                   },
                 })}]}>
                 <View style={addButton.iconContainer}>
-                    <FontAwesome5 name={'plus'} size={20} color="white" />
-                    {drawerStatus === 'open' && <FontAwesome5 name="question" size={10} color="white" style={addButton.questionIcon} />}
+                    <FontAwesome name={'plus'} size={20} color="white" />
+                    {drawerStatus === 'open' && <FontAwesome name="question" size={10} color="white" style={addButton.questionIcon} />}
                 </View>
         </TouchableOpacity>
     )

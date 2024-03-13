@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -39,7 +39,7 @@ function SelectionPanel (props){
                         <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => deleteSelectedTask()}>
-                        <FontAwesome5 name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
+                        <FontAwesome name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
                     </TouchableOpacity>
                     {/* <Menu
                         trigger={(triggerProps) => (
