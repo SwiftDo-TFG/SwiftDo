@@ -82,13 +82,13 @@ taskService.addTag = async (id, tag)=>{
         throw new Error('The task does not exist')
     }
     else{
-        const t = await tagService.findTag(tag);
+        const t = await tagService.findTag(tag.name);
         if(!t){
-            await tagService.createTag(tag);
+            const c = await tagService.createTag(tag);
         }
-        const intermediate = await db.query('SELECT * FROM TagsToTask WHERE task_id = $1 AND nameTag = $2', [id, tag])
+        const intermediate = await db.query('SELECT * FROM TagsToTask WHERE task_id = $1 AND nameTag = $2', [id, tag.name])
         if(intermediate.rows.length !== 1){
-            const res = await db.query('INSERT INTO TagsToTask (task_id, nameTag) VALUES ($1,$2)', [id, tag])
+            const res = await db.query('INSERT INTO TagsToTask (task_id, nameTag) VALUES ($1,$2)', [id, tag.name])
             return true;
         }
         else{
@@ -96,6 +96,20 @@ taskService.addTag = async (id, tag)=>{
         }
     }
     
+}
+
+taskService.findTags = async (id)=>{
+    console.log(id)
+    const tags = await db.query('SELECT tt.nametag AS name, t.colour AS color FROM TagsToTask as tt JOIN Tags as t on tt.nametag = t.name WHERE tt.task_id = $1', [id])
+    console.log("ROWS: ", tags.rows)
+
+    if(tags.rows.length < 1){
+        return false;
+    }
+    else{
+        console.log("ROWS: ", tags.rows)
+        return tags.rows;
+    }
 }
 
 taskService.moveList = async (user_id, list_ids, state) => {

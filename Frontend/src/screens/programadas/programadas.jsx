@@ -15,6 +15,7 @@ import CreateTaskModal from "../../components/modals/CreateTaskModal"
 import MoveTaskModal from "../../components/modals/MoveTaskModal"
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
 import { actStyle } from "../../styles/globalStyles";
+import tagService from "../../services/tag/tagService";
 
 
 
@@ -118,14 +119,18 @@ const ProgramadasScreen = (props) => {
 
     const updateTask = async (updatedTask) => {
         console.log(updatedTask)
+        for(let tag of updatedTask.tags){
+            await tagService.createTag(tag);
+            await taskService.addTag(updatedTask.task_id, tag)
+        }
         const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
         console.log("ID: ", updatedTaskResult)
         if (updatedTaskResult !== -1) {
-            const updatedTasks = tasks.map((task) =>
-                task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
-            );
+            // const updatedTasks = tasks.map((task) =>
+            //     task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
+            // );
             isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
-            setTasks(updatedTasks);
+            // setTasks(updatedTasks);
             reloadData();
         } else {
             console.error("Error al actualizar la tarea en la base de datos");

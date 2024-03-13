@@ -61,7 +61,7 @@ const getAuthToken = async (authcode) => {
     }
 }
 
-const restoreToken = async (token) => {
+const restoreToken = async (token)=> {
     const data = { client_id: 1234, client_secret: 1234, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: 'http://ec2-16-16-226-94.eu-north-1.compute.amazonaws.com:3000/' }
 
     console.log("[AXIOS] Refresh OAUTH Token", data)

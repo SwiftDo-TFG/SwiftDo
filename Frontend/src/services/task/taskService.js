@@ -19,7 +19,7 @@ instance.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     console.log("EL ERROR", error)
-    if(error.response.status === 401){
+    if (error.response.status === 401) {
         authUtils.clearToken();
     }
     return Promise.reject(error);
@@ -30,7 +30,7 @@ const getTasks = async (filters) => {
     console.log("urlparams", urlparams.toString())
 
     try {
-        const response = await instance.get('/task/?'+ urlparams.toString());
+        const response = await instance.get('/task/?' + urlparams.toString());
         const tasks = response.data;
 
         return tasks;
@@ -41,7 +41,7 @@ const getTasks = async (filters) => {
 }
 
 const getTaskById = async (taskId) => {
-    
+
 }
 
 const createTask = async (taskData) => {
@@ -76,7 +76,7 @@ const moveTaskList = async (list_ids, state) => {
             list_ids: list_ids,
             state: state
         }
-        
+
         const response = await instance.post(dir, data);
         const taskid = response.data;
 
@@ -94,7 +94,7 @@ const completeTaskList = async (list_ids, completed) => {
             list_ids: list_ids,
             completed: completed
         }
-        
+
         const response = await instance.post(dir, data);
         const taskid = response.data;
 
@@ -112,10 +112,44 @@ const getInfo = async () => {
 
         return tasksAndUsername;
     }
-    catch(e){
+    catch (e) {
         console.log("ERROR:", e)
         return { e: 'Error', status: e.response.status }
     }
 }
 
-export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList}
+const addTag = async (taskId, tag) => {
+    try {
+        const dir = '/task/addTag'
+        const data = {
+            task_id: taskId,
+            tag: {
+                name: tag.name,
+                color: tag.color
+            }
+        }
+        const response = await instance.post(dir, data);
+        const taskid = response.data;
+
+        return taskid;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+const findTags = async (taskId) => {
+    try {
+        const dir = `/task/${taskId}/tags`
+        const response = await instance.get(dir);
+        const tags = response.data;
+
+        return tags;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+
+export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag, findTags }

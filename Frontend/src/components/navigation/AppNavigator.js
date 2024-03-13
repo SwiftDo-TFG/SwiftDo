@@ -38,6 +38,7 @@ const AppNavigator = ({ projects, state }) => {
             screenOptions={{
                 drawerType: (dimensions.width >= 768 && state.userToken != null) ? 'permanent' : 'front',
             }}
+            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
         >
             {state.userToken == null ? (
                 // No token found, user isn't signed in

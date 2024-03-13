@@ -8,10 +8,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Entypo from 'react-native-vector-icons/Entypo';
 
 // import DatePickerModal from "./DatePickerModal";
+// import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
-
+// import AddTagModal from "./AddTagModal";
 
 function CreateTaskModal(props) {
     const badgeRef = useRef()
@@ -23,13 +24,18 @@ function CreateTaskModal(props) {
         isImportant: false,
         date_name: 'Fecha',
         showDatePicker: false,
-        state: "1"
+        state: "1",
+        tags: []
     });
+    const colours = ['#c93c20', '#6455d2', '#337474', '#5b6597', '#926442', '#490085', '#2c73c5', '#184bc0', '#b5541b', '#d32778', '#6e1249', '#20825b', '#ae2a32', '#11680c', '#3b7a5c']
 
     //Modals state
     const [showStatusSelector, setShowStatusSelector] = useState(false);
     const [showContextSelector, setShowContextSelector] = useState(false)
     const [showAssProjectSelector, setShowAssProjectSelector] = useState(false);
+    const [showTagSelector, setShowTagSelector] = useState(false)
+    const [colorIndex, setcolorIndex] = useState(0)
+
 
 
     function setValuesToEdit() {
@@ -51,9 +57,22 @@ function CreateTaskModal(props) {
                 project: props.editingTask.project_id ? { project_id: props.editingTask.project_id, title: props.editingTask.project_title, color: props.editingTask.project_color } : null,
                 context_id: props.editingTask.context_id ? props.editingTask.context_id : null,
                 context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
+                tags: props.editingTask.tags ? props.editingTask.tags : []
             })
         }
     }
+
+    function addColor() {
+        const color = colours[colorIndex];
+        setcolorIndex((colorIndex + 1) === colours.length ? 0 : colorIndex + 1);
+        return color;
+    }
+
+    const handleRemoveTag = (index) => {
+        const updatedTags = [...state.tags];
+        updatedTags.splice(index, 1);
+        setState({ ...state, tags: updatedTags });
+      };
 
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
@@ -73,11 +92,12 @@ function CreateTaskModal(props) {
             if (state.date_name !== 'Fecha') updatedTask.date_limit = new Date(state.date_name.replace(/(\d{4})\/(\d{2})\/(\d{2}) (\d{2}:\d{2})/, '$1-$2-$3T$4:00'));
             else if (stateAux === "3") updatedTask.date_limit = today
             if (description !== '') updatedTask.description = description;
-            if (state.context_id) updatedTask.context_id = state.context_id;
+            if (state.context_name) updatedTask.context_id = state.context_id;
             updatedTask.title = title;
+            if (state.tags.length !== 0) updatedTask.tags = state.tags;
             updatedTask.important_fixed = state.isImportant;
             updatedTask.state = stateAux;
-            if (state.project_id) {
+            if (state.project) {
                 updatedTask.project_id = state.project_id;
             }
             console.log("UPDATED TASK", updatedTask)
@@ -97,6 +117,14 @@ function CreateTaskModal(props) {
         const handleContextAction = (context_id, context_name) => {
             setState({ ...state, context_id: context_id, context_name: context_name });
             setShowContextSelector(false);
+        }
+
+        const handleSelectTag = (tag) => {
+            let newArray = state.tags
+            if(!state.tags) newArray = [{ name: tag, color: addColor() }];
+            else newArray.push({ name: tag, color: addColor() })
+            setState({ ...state, tags: newArray });
+            setShowTagSelector(false);
         }
 
         const toggleImportant = () => {
@@ -120,10 +148,11 @@ function CreateTaskModal(props) {
             setState({ ...state, showDatePicker: true, editedTitle: title, editedDescription: description })
         }
 
+
         const ProjectBadgeSelectable = ({ project }) => {
             return (
                 <TouchableOpacity onPress={() => {
-                    const { project, project_id, ...newState } = state
+                    const newState = {...state, project_id: null}
                     setState(newState)
                 }}>
                     <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
@@ -151,7 +180,7 @@ function CreateTaskModal(props) {
         const ContextBadge = ({ context_name }) => {
             return (
                 <TouchableOpacity onPress={() => {
-                    handleContextAction(null, null);
+                    handleContextAction(null, context_name);
                 }}>
                     <View style={{ borderRadius: 5, borderWidth: 1, borderColor: 'grey', paddingLeft: 2, backgroundColor: 'white' }}>
                         <Text style={{ marginRight: 5 }}>
@@ -167,7 +196,7 @@ function CreateTaskModal(props) {
         return (
             <>
                 {/* Title */}
-                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8 }}>
+                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
                     <TextInput
                         style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
@@ -186,15 +215,26 @@ function CreateTaskModal(props) {
                         <View style={styles.editStyle}>
                             <View style={{}}>
                                 <TextInput
-                                    style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
+                                    style={styles.textInput}
                                     value={description}
                                     placeholder="Descripcion..."
                                     onChangeText={onDescriptionChange}
                                     multiline={true}
                                     maxLength={200}
                                 />
+                                <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
+                                    {state.tags && Object.keys(state.tags).map((key, index) => (
+                                        <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
+                                            <Text style={{ color: 'white', paddingBottom: 3}}>{state.tags[key].name}</Text>
+                                            <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+                                                <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
+
+                                </View>
                             </View>
-                            <View style={{ width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                            <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TouchableOpacity onPress={openDatePickerModal}>
                                         <Text style={{ color: '#a0a0a0' }}>
@@ -207,7 +247,7 @@ function CreateTaskModal(props) {
                                             setState({ ...state, editedTitle: title, editedDescription: description })
                                             setShowContextSelector(true)
                                         }}>
-                                            {state.context_name ? (
+                                            {state.context_id ? (
                                                 <ContextBadge context_name={state.context_name} />
                                             ) : (
                                                 <FontAwesome name="user" size={22} color="#a0a0a0" />
@@ -229,7 +269,10 @@ function CreateTaskModal(props) {
                                                 )}
                                             </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => {
+                                            setState({ ...state, editedTitle: title, editedDescription: description });
+                                            setShowTagSelector(true);
+                                        }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="tag-outline" size={23} color="#a0a0a0" />
                                             </Text>
@@ -273,13 +316,15 @@ function CreateTaskModal(props) {
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                        {state.project ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
+                                        {state.project_id ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
                                     </View>
 
                                     <SelectStateModal modalVisible={showStatusSelector} setIsModalVisible={setShowStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
                                     <SelectContextModal modalVisible={showContextSelector} setIsModalVisible={setShowContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
                                     <AssignToProjectModal target={badgeRef.current} modalVisible={showAssProjectSelector} setIsModalVisible={setShowAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
                                     
+                                    {/* <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} onCloseModal={() => setShowTagSelector(false)} /> */}
+
                                     <TouchableOpacity
                                         style={styles.acceptButton}
                                         onPress={() => onAcceptFunction(state.state)}>
