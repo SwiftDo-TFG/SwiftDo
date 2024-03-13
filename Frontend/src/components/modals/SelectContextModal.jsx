@@ -1,18 +1,18 @@
-import { View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState } from "react";
-import { contextModal } from '../../styles/globalStyles'
+import { contextModalStyles } from '../../styles/globalStyles'
 import contextService from "../../services/context/contextService";
 import Colors from "../../styles/colors";
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from "../windows/Modal";
 
 
-
 const SelectContextModal = (props) => {
 
     const [context, setContext] = useState([]);
-
+    const theme = useColorScheme();
+    const contextModal = contextModalStyles(theme);
     useEffect(() => {
         async function fetchProjects() {
             const data = await contextService.showContextsByUser();

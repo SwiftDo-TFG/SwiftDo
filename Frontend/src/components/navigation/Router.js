@@ -6,7 +6,7 @@ import AppNavigator from './AppNavigator';
 
 
 
-export default function Router() {
+export default function Router(theme) {
 
     const state = React.useContext(AuthContext);
     
@@ -50,5 +50,5 @@ export default function Router() {
     
     }, []);
 
-    return ( <AppNavigator projects={projects} state={state}/> );
+    return ( <AppNavigator theme={theme} projects={projects} state={state}/> );
 }

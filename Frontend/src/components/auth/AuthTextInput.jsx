@@ -1,10 +1,11 @@
-import { Text, TextInput } from "react-native";
-import { formStyle } from "../../styles/globalStyles";
+import { Text, TextInput, useColorScheme } from "react-native";
+import { formStyles } from "../../styles/globalStyles";
 
 const AuthTextInput = (props) => {
     const isError = props.error.isError && props.error.errors[props.inputKey];
     const errMsg = isError ? props.error.errors[props.inputKey] : '';
-
+    const theme = useColorScheme();
+    const formStyle = formStyles(theme);
     return (
         <>
             <TextInput

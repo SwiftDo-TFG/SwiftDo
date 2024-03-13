@@ -1,5 +1,5 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text, ScrollView } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, ScrollView, useColorScheme } from "react-native"
 import { useEffect, useState } from "react";
 import styles from '../../screens/tasks/actionScreen.styles'
 import { sideBar } from '../../styles/globalStyles'
@@ -9,6 +9,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 
 function MoveTaskModal(props) {
+    const theme = useColorScheme();
 
     const Title = () => {
         return (
@@ -19,13 +20,6 @@ function MoveTaskModal(props) {
             </View>
         )
     }
-
-    // const Separator = () => {
-    //     return (
-    //         <View style={sideBar.separator} />
-    //     )
-    // }
-
 
     const Body = () => {
         const onAcceptFunction = (stateAux, project) => {

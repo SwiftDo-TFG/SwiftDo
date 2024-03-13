@@ -2,36 +2,34 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, View, Text, SafeAreaView, Appearance } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 // import { registerRootComponent } from 'expo';
 // import { StatusBar } from 'expo-status-bar';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import AuthState from './services/auth/context/authState';
 import Router from './components/navigation/Router';
-
-
+import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 
 function App() {
-  const theme = Appearance.getColorScheme();
-  console.log("EL TEMA DE COLOR DEL SISTEMA ES:",theme);
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
 
   return (
     // <GestureHandlerRootView style={{ flex: 1 }}>
     // </GestureHandlerRootView>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        {/* <StatusBar style="auto" /> */}
-        <AuthState>
-          <NavigationContainer>
-            <Router />
-          </NavigationContainer>
-        </AuthState>
-      </KeyboardAvoidingView>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      {/* <StatusBar style="auto" /> */}
+      <AuthState>
+        <NavigationContainer theme={theme}>
+          <StatusBar backgroundColor={theme.colors.background} />
+          <Router />
+        </NavigationContainer>
+      </AuthState>
+    </KeyboardAvoidingView>
     // <View>
     //   <Text>Gola Buenas Tardes</Text>
     // </View>
-    
-  );
+  )
 }
-
 export default App;
 
 // registerRootComponent(App);

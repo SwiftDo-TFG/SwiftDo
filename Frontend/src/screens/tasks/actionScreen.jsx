@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme } from "react-native";
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
@@ -14,6 +14,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import styles from "./actionScreen.styles";
+import Colors from "../../styles/colors";
 
 
 function ActionScreen(props) {
@@ -32,7 +33,7 @@ function ActionScreen(props) {
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
-
+  const theme = useColorScheme();
   useEffect(() => {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -251,12 +252,18 @@ function ActionScreen(props) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+          
+          {/* Sidebar icon */}
           {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-            <Feather name="sidebar" size={28} color="black" />
+            <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
+          
+          {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area}>
-              <Text>Area</Text>
+            <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+
+              {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
             </TouchableOpacity>
           </View>
         </View>

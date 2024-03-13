@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, Animated, TouchableOpacity } from "react-native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { View, Text, Animated, TouchableOpacity, useColorScheme } from "react-native";
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import styles from './actionScreen.styles'
+import Colors from "../../styles/colors";
 
 
 function SelectionPanel (props){
     const [selectAll, setSelectAll] = useState(false);
-    
+    const theme = useColorScheme();
     const archiveSelectedTask = () => {
         props.setIsMoveModalOpen(true);
     }
@@ -33,7 +34,7 @@ function SelectionPanel (props){
     return (
         <VStack>
             <Box style={[styles.innerContainer, { marginBottom: 5 }]}>
-                <Text>({props.selectedTasks.total}) {props.selectedTasks.total > 1 ? 'tareas seleccionadas' : 'tarea seleccionada'} </Text>
+                <Text style={{color:Colors[theme].white}}>({props.selectedTasks.total}) {props.selectedTasks.total > 1 ? 'tareas seleccionadas' : 'tarea seleccionada'} </Text>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => archiveSelectedTask()}>
                         <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
@@ -55,7 +56,7 @@ function SelectionPanel (props){
                 </View>
             </Box>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                <Text>{selectAll ? 'Deseleccionar todo' : 'Seleccionar todo'}</Text>
+                <Text style={{color:Colors[theme].white}}>{selectAll ? 'Deseleccionar todo' : 'Seleccionar todo'}</Text>
                 {props.tasks.length > 0 && (
                     <Checkbox
                         value={selectAll}

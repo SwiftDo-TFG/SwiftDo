@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator  } from "react-native";
-import { sideBar, textStyle } from "../../styles/globalStyles";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator, useColorScheme  } from "react-native";
+import { sidebarStyles, textStyles } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 
@@ -15,7 +16,9 @@ const Profile = ({ name, formattedDate, contexts }) => {
     const [userContext, setUserContext] = useState([]);
     const [newContextName, setNewContextName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-
+    const theme = useColorScheme();
+    const sideBar = sidebarStyles(theme);
+    const textStyle = textStyles(theme)
     useEffect(() => {
         async function getAreas() {
             const userContext = await contextService.showContextsByUser();
@@ -79,18 +82,18 @@ const Profile = ({ name, formattedDate, contexts }) => {
                 />
                 <View style={{ marginLeft: 15 }}>
                     {name.length === 0 ? 
-                        <ActivityIndicator style={{margin: 5}} color="#272c34" size="small" />:
-                        <Text style={[textStyle.largeText, { fontWeight: '600', paddingBottom: 5 }]}>{name}</Text>
-                        }
-                    <Text style={[textStyle.smallText, { color: Colors.grey }]}>{formattedDate}</Text>
+                        <ActivityIndicator style={{margin: 5}} color="#272c34" size="small" /> :
+                        <Text style={[textStyle.largeText, { color: Colors[theme].white, fontWeight: '600', paddingBottom: 5 }]}>{name}</Text>
+                    }
+                    <Text style={[textStyle.smallText, { color: Colors[theme].white }]}>{formattedDate}</Text>
                 </View>
             </View>
             <View style={{ flexDirection: 'column' }}>
                 <TouchableOpacity onPress={toggleAreas}>
                     <View style={sideBar.areaContainer}>
-                        <Text style={sideBar.areaText}>Áreas</Text>
+                        <Text style={[sideBar.areaText, {color: Colors[theme].white}]}>Contextos</Text>
                         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-                            <AntDesign name="caretright" size={22} color="#272c34" />
+                            <AntDesign name="caretright" size={22} color={Colors[theme].white} />
                         </Animated.View>
                     </View>
                 </TouchableOpacity>
@@ -99,24 +102,26 @@ const Profile = ({ name, formattedDate, contexts }) => {
                         {Object.keys(userContext).map((key, index) => (
                             <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                                 {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}
-                                <MaterialCommunityIcons name="home-city-outline" size={16} color="#272c34" />
-                                <Text style={{ fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+                                <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                                <Text style={{color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
                             </View>
                         ))}
                         <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <FontAwesome name="plus-square" size={17} color="#272c34" />
+                            <FontAwesome name="plus-square" size={17} color={Colors[theme].white} />
                             <TextInput
-                                style={{ fontSize: 16, marginLeft: 15, width: '60%' }}
+                                style={{color:Colors[theme].white, fontSize: 16, marginLeft: 15, width: '60%' }}
                                 placeholder="Nueva área"
+                                placeholderTextColor={Colors[theme].white}
                                 value={newContextName}
-                                onChangeText={text => setNewContextName(text)}
+                                onChangeText={text => setNewContextName(text)
+                                }
                             />
                             {newContextName.length > 0 && (
                                 <TouchableOpacity onPress={handleNewContextSubmit}>
                                     {isSaving ? (
                                         <ActivityIndicator color="#272c34" size="small" />
                                     ) : (
-                                        <FontAwesome name="cloud-upload" size={17} color="#272c34" />
+                                        <FontAwesome name="cloud-upload" size={17} color={Colors[theme].white} />
                                     )}
                                 </TouchableOpacity>
                             )}

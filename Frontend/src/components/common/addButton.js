@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
-import { TouchableOpacity, View, Platform  } from "react-native"
 import { addButton } from "../../styles/globalStyles"
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { TouchableOpacity, View, Platform, useColorScheme  } from "react-native"
+import { addButtonStyle } from "../../styles/globalStyles"
 import { useDrawerStatus } from '@react-navigation/drawer';
 
 const AddButton = ({onPress, onLongPress}) => {
@@ -9,6 +10,9 @@ const AddButton = ({onPress, onLongPress}) => {
     const drawerStatus = useDrawerStatus();
     const timerRef = useRef(null);
     
+    const theme = useColorScheme();
+    const addButton = addButtonStyle(theme);
+
     const activePress = () => {
         setIsPressed(true)
     }
