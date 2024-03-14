@@ -14,8 +14,14 @@ const AddTagModal = (props) => {
 
     const [tag, setTag] = useState([]);
 
-    const onNameChange = (text) => {
+    const onNameChange = async (text) => {
+        if (text != tag) {
+            let t = text + '%'
+            let res = await tagService.searchTags({search: t});
+            console.log("RESPUESTA: ", res);
+        }
         setTag(text)
+
     };
     const OutSide = ({ onCloseModal, isModalOpen }) => {
         const view = <View style={{ flex: 1, width: '100%' }} />;
