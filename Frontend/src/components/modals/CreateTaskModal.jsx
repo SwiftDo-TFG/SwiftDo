@@ -51,6 +51,7 @@ function CreateTaskModal(props) {
                 context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
                 tags: props.editingTask.tags ? props.editingTask.tags : []
             })
+            setcolorIndex(props.editingTask.tags ? props.editingTask.tags.length : 0)
         }
     }
 
@@ -64,7 +65,7 @@ function CreateTaskModal(props) {
         const updatedTags = [...state.tags];
         updatedTags.splice(index, 1);
         setState({ ...state, tags: updatedTags });
-      };
+    };
 
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
@@ -113,8 +114,10 @@ function CreateTaskModal(props) {
 
         const handleSelectTag = (tag) => {
             let newArray = state.tags
-            if(!state.tags) newArray = [{ name: tag, color: addColor() }];
-            else newArray.push({ name: tag, color: addColor() })
+            if (!state.tags) newArray = [{ name: tag, color: addColor() }];
+            else if (!state.tags.some(item => item.name === tag)) {
+                newArray.push({ name: tag, color: addColor() })
+            }
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }
@@ -144,7 +147,7 @@ function CreateTaskModal(props) {
         const ProjectBadgeSelectable = ({ project }) => {
             return (
                 <TouchableOpacity onPress={() => {
-                    const newState = {...state, project_id: null}
+                    const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
                     <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
@@ -215,7 +218,7 @@ function CreateTaskModal(props) {
                                 <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
                                     {state.tags && Object.keys(state.tags).map((key, index) => (
                                         <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
-                                            <Text style={{ color: 'white', paddingBottom: 3}}>{state.tags[key].name}</Text>
+                                            <Text style={{ color: 'white', paddingBottom: 3 }}>{state.tags[key].name}</Text>
                                             <TouchableOpacity onPress={() => handleRemoveTag(index)}>
                                                 <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
                                             </TouchableOpacity>
@@ -330,6 +333,18 @@ function CreateTaskModal(props) {
 
     function onCloseModal() {
         props.setIsModalOpen(false);
+        setState(
+            {
+                show: false,
+                editedTitle: '',
+                editedDescription: '',
+                isImportant: false,
+                date_name: 'Fecha',
+                showDatePicker: false,
+                state: "1",
+                tags: []
+            }
+        )
     }
 
     return (
