@@ -57,20 +57,37 @@ taskService.findTaskById = async (id)=>{
 }
 
 taskService.findTasksByFilters = async (user_id, filters)=>{
-    const filterdQuery = addFiltersToQuery('SELECT t.*, p.color as project_color, p.title as project_title, c.name as context_name '+ 
+    const filterdQuery = addFiltersToQuery('SELECT t.*, p.color as project_color, p.title as project_title, c.name as context_name, t2.tags '+ 
                     'FROM tasks t LEFT JOIN Projects p on t.project_id = p.project_id ' +
+                    'left join (SELECT task_id, string_agg(nametag::text, \'\,\'\) as tags FROM tagstotask '+
+                    'group by task_id ) t2 on t.task_id = t2.task_id ' +
                     'LEFT JOIN areas_contexts c on t.context_id = c.context_id WHERE t.user_id = $1', filters);
+
     filterdQuery.values.unshift(user_id);
 
     const res = await db.query(filterdQuery.query, filterdQuery.values)
+
+    //Parse tags to list of tags
+    res.rows.map(row => {
+        row.tags = row.tags === null ? [] : row.tags.split(",")
+        return row;
+    })
 
     return res.rows;
 }
 
 taskService.findTaskByUserId = async (id)=>{
-    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title, c.name as context_name '+
+    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title, c.name as context_name, t2.tags '+
                     'FROM tasks t LEFT JOIN projects p on t.project_id = p.project_id '+
+                    'left join (SELECT task_id, string_agg(nametag::text, \'\,\'\) as tags FROM tagstotask '+
+                    'group by task_id ) t2 on t.task_id = t2.task_id ' +
                     'LEFT JOIN areas_contexts c on t.context_id = c.context_id WHERE t.user_id = $1 AND t.completed is not true', [id])
+
+    //Parse tags to list of tags
+    res.rows.map(row => {
+        row.tags = row.tags === null ? [] : row.tags.split(",")
+        return row;
+    })
 
     return res.rows;
 }
