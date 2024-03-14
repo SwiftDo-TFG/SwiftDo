@@ -114,7 +114,7 @@ function CreateTaskModal(props) {
         const handleSearchedTag = (name, color) => {
             let newArray = state.tags
             if (!state.tags) newArray = [{ name: name, color: color }];
-            else newArray.push({ name: name, color: color })
+            else if (!state.tags.some(item => item.name === name)) { newArray.push({ name: name, color: color }) }
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }
