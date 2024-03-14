@@ -19,7 +19,7 @@ instance.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     console.log("EL ERROR", error)
-    if(error.response.status === 401){
+    if (error.response.status === 401) {
         authUtils.clearToken();
     }
     return Promise.reject(error);
@@ -30,7 +30,7 @@ const getTags = async (filters) => {
     console.log("urlparams", urlparams.toString())
 
     try {
-        const response = await instance.get('/tag/?'+ urlparams.toString());
+        const response = await instance.get('/tag/?' + urlparams.toString());
         const tags = response.data;
 
         return tags;
@@ -42,7 +42,7 @@ const getTags = async (filters) => {
 
 const createTag = async (name) => {
     try {
-        const data = {name: name}
+        const data = { name: name }
         const response = await instance.post('/tag/', data);
         const tag = response.data;
 
@@ -53,6 +53,19 @@ const createTag = async (name) => {
     }
 }
 
+const searchTags = async (name) => {
+    const urlparams = new URLSearchParams(name)
+    console.log("urlparams", urlparams.toString())
 
+    try {
+        const response = await instance.get('/tag/gettags?' + urlparams.toString());
+        const tags = response.data;
 
-export default { getTags, createTag}
+        return tags;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+export default { getTags, createTag, searchTags }
