@@ -51,7 +51,7 @@ const AddTagModal = (props) => {
                         placeholder="Nueva etiqueta"
                         value={tag}
                         onChangeText={onNameChange}
-                        maxLength={50}
+                        maxLength={15}
                         multiline={true}
                     />
 
