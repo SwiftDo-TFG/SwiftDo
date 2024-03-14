@@ -211,14 +211,18 @@ const styles = StyleSheet.create({
     },
     modalDatePickerContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        //Windows Styles
+        width: 400, 
+        height: 400
     },
     modalDatePickerBackground: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalDatePickerContent: {
+        // flex: 1,
         backgroundColor: '#FFFFFF',
         width: '90%',
         borderRadius: 10,

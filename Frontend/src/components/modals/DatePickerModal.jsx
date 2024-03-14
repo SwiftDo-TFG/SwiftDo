@@ -1,7 +1,8 @@
 
-import { View, TouchableWithoutFeedback, Modal } from "react-native";
+import { View, TouchableWithoutFeedback, Text } from "react-native";
 import styles from '../../screens/tasks/actionScreen.styles'
 import DatePicker from "../DatePicker";
+import Modal from "../windows/Modal";
 
 
 const DatePickerModal = (props) => {
@@ -11,13 +12,16 @@ const DatePickerModal = (props) => {
             animationType={'fade'}
             visible={props.state.showDatePicker}
             onRequestClose={() => props.setState({ ...props.state, showDatePicker: false })}
-            // {...props}
+            // WindowsProps
+            popup={true}
+            onDismiss={() => props.setState({ ...props.state, showDatePicker: false })}
+            {...props}
         >
             <View style={styles.modalDatePickerContainer}>
 
-                <TouchableWithoutFeedback onPress={() => props.setState({ ...props.state, showDatePicker: false })}>
+                {/* <TouchableWithoutFeedback onPress={() => props.setState({ ...props.state, showDatePicker: false })}>
                     <View style={styles.modalDatePickerBackground} />
-                </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback> */}
 
                 <View style={[styles.modalDatePickerContent, { zIndex: 2 }]}>
                     <DatePicker

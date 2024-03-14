@@ -12,7 +12,7 @@ const Modal = (props) => {
     
     if (props.popup) {
         return (
-            <Popup isOpen={props.visible} isLightDismissEnabled={true} onDismiss={() => { props.setIsModalVisible(false) }} verticalOffset={props.verticalOffset} horizontalOffset={props.horizontalOffset}>
+            <Popup isOpen={props.visible} isLightDismissEnabled={true} onDismiss={props.onDismiss ? props.onDismiss: () => { props.setIsModalVisible(false) }} verticalOffset={props.verticalOffset} horizontalOffset={props.horizontalOffset}>
                 <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0)',}}>
                     {props.children}
                 </View>

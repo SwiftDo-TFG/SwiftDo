@@ -13,6 +13,8 @@ export default function DatePickerFunction({ today, state, setState }) {
             selected={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
             current={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
             minimumDate={today.toISOString().split('T')[0]}
+            //Windows 
+            mode='calendar'
             options={{
                 backgroundColor: '#ffffff',
                 textHeaderColor: '#666666',

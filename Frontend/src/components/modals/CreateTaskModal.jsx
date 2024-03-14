@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-// import DatePickerModal from "./DatePickerModal";
+import DatePickerModal from "./DatePickerModal";
 // import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
@@ -351,7 +351,7 @@ function CreateTaskModal(props) {
             {/* Temporal styles */}
             <KeyboardAvoidingView style={{ flex: 1, width: 700, height: 250 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
-                {/* <DatePickerModal state={state} setState={setState} /> */}
+                <DatePickerModal state={state} setState={setState} />
             </KeyboardAvoidingView>
         </PopUpModal>
     )

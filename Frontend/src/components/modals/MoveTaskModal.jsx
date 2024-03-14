@@ -115,7 +115,7 @@ function MoveTaskModal(props) {
     }
 
     return (
-        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal}>
+        <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} setIsModalVisible={props.setIsModalOpen}>
             <Title />
             <Body />
         </PopUpModal>
