@@ -1,7 +1,7 @@
 // import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as React from 'react';
-import { KeyboardAvoidingView, Platform, View, Text, SafeAreaView, Appearance } from 'react-native';
+import { KeyboardAvoidingView, Platform, View, Text, Appearance } from 'react-native';
 // import { registerRootComponent } from 'expo';
 // import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';

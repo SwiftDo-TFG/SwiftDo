@@ -1,9 +1,9 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text } from "react-native"
+import { View, TextInput, TouchableOpacity, Text } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 // import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from 'react-native-vector-icons';
 import CustomButton from "../buttons/Button";
-
+import Modal from "../windows/Modal";
 
 
 function CompleteTaskModal({texto, ...props}) {
@@ -13,7 +13,7 @@ function CompleteTaskModal({texto, ...props}) {
     }
 
     return (
-        <Modal visible={props.isModalOpen} animationType="slide" transparent={true}>
+        <Modal visible={props.isModalOpen} animationType="slide" transparent={true} {...props} >
             <View style={styles.confirmModalContainer}>
                 {/* <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal}/> */}
                 <View style={styles.modalStyle}>

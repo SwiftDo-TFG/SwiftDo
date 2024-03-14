@@ -66,7 +66,7 @@ function CreateProjectModal(props) {
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8, marginBottom: 10 }}>
                     <MaterialCommunityIcons name="circle-outline" size={26} color={color} />
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10}}
+                        style={styles.textInputTitleProject}
                         value={title}
                         placeholder="Nuevo Proyecto"
                         onChangeText={onTitleChange}
@@ -79,7 +79,7 @@ function CreateProjectModal(props) {
                 <View style={{ flex: 1, justifyContent: 'space-between', marginHorizontal: 15}}>
                     <View>
                         <TextInput
-                            style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
+                            style={styles.textInput}
                             value={description}
                             placeholder="Descripcion..."
                             onChangeText={onDescriptionChange}
@@ -119,7 +119,7 @@ function CreateProjectModal(props) {
 
     return (
         <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit} setIsModalVisible={props.setIsModalOpen}>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <KeyboardAvoidingView style={{ flex: 1, width: 700, height: 300 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
             </KeyboardAvoidingView>
         </PopUpModal >

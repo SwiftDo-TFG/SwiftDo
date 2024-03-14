@@ -72,7 +72,7 @@ function CreateTaskModal(props) {
         const updatedTags = [...state.tags];
         updatedTags.splice(index, 1);
         setState({ ...state, tags: updatedTags });
-      };
+    };
 
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
@@ -121,7 +121,7 @@ function CreateTaskModal(props) {
 
         const handleSelectTag = (tag) => {
             let newArray = state.tags
-            if(!state.tags) newArray = [{ name: tag, color: addColor() }];
+            if (!state.tags) newArray = [{ name: tag, color: addColor() }];
             else newArray.push({ name: tag, color: addColor() })
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
@@ -152,7 +152,7 @@ function CreateTaskModal(props) {
         const ProjectBadgeSelectable = ({ project }) => {
             return (
                 <TouchableOpacity onPress={() => {
-                    const newState = {...state, project_id: null}
+                    const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
                     <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
@@ -194,11 +194,11 @@ function CreateTaskModal(props) {
         }
 
         return (
-            <>
+            <View style={{ flex: 1 }}>
                 {/* Title */}
-                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
+                <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8}}>
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
+                        style={styles.textInputTitle}
                         value={title}
                         placeholder="Nueva Tarea"
                         onChangeText={onTitleChange}
@@ -208,134 +208,137 @@ function CreateTaskModal(props) {
                     />
                 </View>
                 {/* Description height: '100%' */}
+                <View style={{}}>
+                    <View style={{ justifyContent: 'flex-end' }}>
+                        {/* height: '100%' */}
+                        <View style={{ marginLeft: 20, marginRight: 8 }}>
+                            <View style={styles.editStyle}>
+                                <View style={{ width: '100%' }}>
+                                    <TextInput
+                                        style={styles.textInput}
+                                        value={description}
+                                        placeholder="Descripcion..."
+                                        onChangeText={onDescriptionChange}
+                                        multiline={true}
+                                        maxLength={200}
+                                    />
+                                    {/* Windows quitado--> height: '40%' */}
+                                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
+                                        {state.tags && Object.keys(state.tags).map((key, index) => (
+                                            <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
+                                                <Text style={{ color: 'white', paddingBottom: 3 }}>{state.tags[key].name}</Text>
+                                                <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+                                                    <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                                </TouchableOpacity>
+                                            </View>
+                                        ))}
 
-                <View style={{ justifyContent: 'flex-end' }}>
-                    {/* height: '100%' */}
-                    <View style={{ marginLeft: 20, marginRight: 8 }}>
-                        <View style={styles.editStyle}>
-                            <View style={{}}>
-                                <TextInput
-                                    style={styles.textInput}
-                                    value={description}
-                                    placeholder="Descripcion..."
-                                    onChangeText={onDescriptionChange}
-                                    multiline={true}
-                                    maxLength={200}
-                                />
-                                <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
-                                    {state.tags && Object.keys(state.tags).map((key, index) => (
-                                        <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
-                                            <Text style={{ color: 'white', paddingBottom: 3}}>{state.tags[key].name}</Text>
-                                            <TouchableOpacity onPress={() => handleRemoveTag(index)}>
-                                                <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                                    </View>
+                                </View>
+                                {/* Windows quitado--> height: '40%' */}
+                                <View style={{ width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <TouchableOpacity onPress={openDatePickerModal}>
+                                            <Text style={{ color: '#a0a0a0' }}>
+                                                <Ionicons name="calendar-outline" size={22} color="#a0a0a0" />
+                                                &nbsp; {state.date_name}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: state.context_name ? '50%' : '30%' }}>
+                                            <TouchableOpacity onPress={() => {
+                                                setState({ ...state, editedTitle: title, editedDescription: description })
+                                                setShowContextSelector(true)
+                                            }}>
+                                                {state.context_id ? (
+                                                    <ContextBadge context_name={state.context_name} />
+                                                ) : (
+                                                    <FontAwesome name="user" size={22} color="#a0a0a0" />
+                                                )}
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => {
+
+                                            }}>
+                                                <Text>
+                                                    <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={toggleImportant}>
+                                                <Text>
+                                                    {state.isImportant ? (
+                                                        <Ionicons name="flag" size={22} color="#be201c" />
+                                                    ) : (
+                                                        <Ionicons name="flag-outline" size={22} color="#a0a0a0" />
+                                                    )}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => {
+                                                setState({ ...state, editedTitle: title, editedDescription: description });
+                                                setShowTagSelector(true);
+                                            }}>
+                                                <Text>
+                                                    <MaterialCommunityIcons name="tag-outline" size={23} color="#a0a0a0" />
+                                                </Text>
                                             </TouchableOpacity>
                                         </View>
-                                    ))}
-
-                                </View>
-                            </View>
-                            <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <TouchableOpacity onPress={openDatePickerModal}>
-                                        <Text style={{ color: '#a0a0a0' }}>
-                                            <Ionicons name="calendar-outline" size={22} color="#a0a0a0" />
-                                            &nbsp; {state.date_name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: state.context_name ? '50%' : '30%' }}>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 13 }}>
                                         <TouchableOpacity onPress={() => {
                                             setState({ ...state, editedTitle: title, editedDescription: description })
-                                            setShowContextSelector(true)
+                                            setShowStatusSelector(true)
                                         }}>
-                                            {state.context_id ? (
-                                                <ContextBadge context_name={state.context_name} />
-                                            ) : (
-                                                <FontAwesome name="user" size={22} color="#a0a0a0" />
-                                            )}
+                                            <Text style={{ fontSize: 18 }}>
+                                                {
+                                                    (state.state === "2") ? (
+                                                        <>
+                                                            <FontAwesome name="bolt" size={20} color={'#ffd700'} />
+                                                            &nbsp; Cuanto Antes
+                                                        </>
+                                                    ) : (state.state === "3") ? (
+                                                        <>
+                                                            <Ionicons name="calendar-outline" size={20} color={'#008080'} />
+                                                            &nbsp; Programada
+                                                        </>
+                                                    ) : (state.state === "4") ? (
+                                                        <>
+                                                            <Entypo name="archive" size={20} color="#d2b48c" />
+                                                            &nbsp; Archivadas
+                                                        </>
+                                                    ) : (state.state === "1") ? (
+                                                        <>
+                                                            <FontAwesome name="inbox" size={20} color="#f39f18" />
+                                                            &nbsp; Inbox
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={20} color={state.project.color} />
+                                                            &nbsp; {state.project.title}
+                                                        </>
+                                                    )
+                                                }
+                                            </Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
+                                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                            {state.project_id ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
+                                        </View>
 
-                                        }}>
-                                            <Text>
-                                                <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={toggleImportant}>
-                                            <Text>
-                                                {state.isImportant ? (
-                                                    <Ionicons name="flag" size={22} color="#be201c" />
-                                                ) : (
-                                                    <Ionicons name="flag-outline" size={22} color="#a0a0a0" />
-                                                )}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
-                                            setState({ ...state, editedTitle: title, editedDescription: description });
-                                            setShowTagSelector(true);
-                                        }}>
-                                            <Text>
-                                                <MaterialCommunityIcons name="tag-outline" size={23} color="#a0a0a0" />
-                                            </Text>
+                                        <SelectStateModal modalVisible={showStatusSelector} setIsModalVisible={setShowStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
+                                        <SelectContextModal modalVisible={showContextSelector} setIsModalVisible={setShowContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
+                                        <AssignToProjectModal target={badgeRef.current} modalVisible={showAssProjectSelector} setIsModalVisible={setShowAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
+
+                                        {/* <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} onCloseModal={() => setShowTagSelector(false)} /> */}
+
+                                        <TouchableOpacity
+                                            style={styles.acceptButton}
+                                            onPress={() => onAcceptFunction(state.state)}>
+                                            <Text style={styles.acceptButtonText}>Aceptar</Text>
                                         </TouchableOpacity>
                                     </View>
-                                </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 13 }}>
-                                    <TouchableOpacity onPress={() => {
-                                        setState({ ...state, editedTitle: title, editedDescription: description })
-                                        setShowStatusSelector(true)
-                                    }}>
-                                        <Text style={{ fontSize: 18 }}>
-                                            {
-                                                (state.state === "2") ? (
-                                                    <>
-                                                        <FontAwesome name="bolt" size={20} color={'#ffd700'} />
-                                                        &nbsp; Cuanto Antes
-                                                    </>
-                                                ) : (state.state === "3") ? (
-                                                    <>
-                                                        <Ionicons name="calendar-outline" size={20} color={'#008080'} />
-                                                        &nbsp; Programada
-                                                    </>
-                                                ) : (state.state === "4") ? (
-                                                    <>
-                                                        <Entypo name="archive" size={20} color="#d2b48c" />
-                                                        &nbsp; Archivadas
-                                                    </>
-                                                ) : (state.state === "1") ? (
-                                                    <>
-                                                        <FontAwesome name="inbox" size={20} color="#f39f18" />
-                                                        &nbsp; Inbox
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <MaterialCommunityIcons style={{ width: '15%' }} name="hexagon-slice-6" size={20} color={state.project.color} />
-                                                        &nbsp; {state.project.title}
-                                                    </>
-                                                )
-                                            }
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                        {state.project_id ? <ProjectBadgeSelectable project={state.project} /> : <SelectProjectPanel />}
-                                    </View>
-
-                                    <SelectStateModal modalVisible={showStatusSelector} setIsModalVisible={setShowStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
-                                    <SelectContextModal modalVisible={showContextSelector} setIsModalVisible={setShowContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
-                                    <AssignToProjectModal target={badgeRef.current} modalVisible={showAssProjectSelector} setIsModalVisible={setShowAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
-                                    
-                                    {/* <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} onCloseModal={() => setShowTagSelector(false)} /> */}
-
-                                    <TouchableOpacity
-                                        style={styles.acceptButton}
-                                        onPress={() => onAcceptFunction(state.state)}>
-                                        <Text style={styles.acceptButtonText}>Aceptar</Text>
-                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </View>
-            </>
+            </View>
         );
     }
 
@@ -346,7 +349,7 @@ function CreateTaskModal(props) {
     return (
         <PopUpModal isModalOpen={props.isModalOpen} onCloseModal={onCloseModal} onShow={setValuesToEdit} setIsModalVisible={props.setIsModalOpen}>
             {/* Temporal styles */}
-            <KeyboardAvoidingView style={{ flex: 1, width: 700 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <KeyboardAvoidingView style={{ flex: 1, width: 700, height: 250 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Body />
                 {/* <DatePickerModal state={state} setState={setState} /> */}
             </KeyboardAvoidingView>

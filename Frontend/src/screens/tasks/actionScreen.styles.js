@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     editStyle: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'space-between',
     },
@@ -256,9 +256,29 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'normal',
         color: '#182E44',
-        height: '60%',
+        // height: '60%',
+        height: 100,
         width: '100%',
-        marginBottom: 2
+        marginBottom: 2,
+        backgroundColor: Colors.light.softGrey
+    },
+
+    textInputTitle: {
+        color: '#182E44',
+        fontSize: 18,
+        fontWeight: '500',
+        marginTop: 15,
+        marginBottom: 10,
+        width: '100%',
+        backgroundColor: Colors.light.softGrey
+    },
+    textInputTitleProject: {
+        color: '#182E44',
+        fontSize: 18,
+        fontWeight: '500',
+        marginLeft: 10,
+        width: '100%',
+        backgroundColor: Colors.light.softGrey
     },
     // TAGS
     tags: {

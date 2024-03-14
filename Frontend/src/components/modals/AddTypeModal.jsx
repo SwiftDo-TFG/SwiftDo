@@ -20,7 +20,9 @@ const AddTypeModal = (props) =>{
                 <View style={[styles.modalStyle, {backgroundColor: Colors[theme].paper}]}>
                   <TouchableOpacity onPress={() => {
                     props.setIsModalVisible(false)
-                    props.showAddTaskPopUp()
+                    setTimeout(() => {
+                      props.showAddTaskPopUp()
+                    }, 300);
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -35,7 +37,9 @@ const AddTypeModal = (props) =>{
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     props.setIsModalVisible(false)
-                    props.setIsCreateProjectOpen(true);
+                    setTimeout(() => {
+                      props.setIsCreateProjectOpen(true);
+                    }, 300);
                   }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>

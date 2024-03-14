@@ -21,7 +21,7 @@ const Modal = (props) => {
     }
 
     return (
-        <Flyout isOpen={props.visible} placement='bottom' isOverlayEnabled={true} onDismiss={() => { props.setIsModalVisible(false) }}>
+        <Flyout isOpen={props.visible} placement={props.placement ? props.placement :'bottom'} isOverlayEnabled={true} onDismiss={() => { props.setIsModalVisible(false) }}>
             <View style={{flex: 1, borderWidth: 1, borderTopLeftRadius: 16, borderTopRightRadius: 16, backgroundColor: 'rgba(0, 0, 0, 0)'}}>
                 {props.children}
             </View>
