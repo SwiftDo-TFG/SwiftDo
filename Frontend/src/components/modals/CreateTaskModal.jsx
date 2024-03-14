@@ -51,6 +51,7 @@ function CreateTaskModal(props) {
                 context_name: props.editingTask.context_id ? props.editingTask.context_name : null,
                 tags: props.editingTask.tags ? props.editingTask.tags : []
             })
+            setcolorIndex(props.editingTask.tags ? props.editingTask.tags.length : 0)
         }
     }
 
@@ -120,7 +121,9 @@ function CreateTaskModal(props) {
         const handleSelectTag = (tag) => {
             let newArray = state.tags
             if (!state.tags) newArray = [{ name: tag, color: addColor() }];
-            else newArray.push({ name: tag, color: addColor() })
+            else if (!state.tags.some(item => item.name === tag)) {
+                newArray.push({ name: tag, color: addColor() })
+            }
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
         }
@@ -218,7 +221,7 @@ function CreateTaskModal(props) {
                                     multiline={true}
                                     maxLength={200}
                                 />
-                                <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
+                                <ScrollView style={{ flexDirection: 'row', width: '100%' }} horizontal={true} showsHorizontalScrollIndicator={false}>
                                     {state.tags && Object.keys(state.tags).map((key, index) => (
                                         <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
                                             <Text style={{ color: 'white', paddingBottom: 3 }}>{state.tags[key].name}</Text>
@@ -228,7 +231,7 @@ function CreateTaskModal(props) {
                                         </View>
                                     ))}
 
-                                </View>
+                                </ScrollView>
                             </View>
                             <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -336,6 +339,18 @@ function CreateTaskModal(props) {
 
     function onCloseModal() {
         props.setIsModalOpen(false);
+        setState(
+            {
+                show: false,
+                editedTitle: '',
+                editedDescription: '',
+                isImportant: false,
+                date_name: 'Fecha',
+                showDatePicker: false,
+                state: "1",
+                tags: []
+            }
+        )
     }
 
     return (

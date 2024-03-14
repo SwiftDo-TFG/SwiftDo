@@ -60,7 +60,6 @@ function ActionScreen(props) {
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
-      task.tags = await taskService.findTags(task.task_id)
     })
     console.log("Estas son las tareas que se devuelven", tasksDB)
 
