@@ -215,7 +215,7 @@ function CreateTaskModal(props) {
                                     multiline={true}
                                     maxLength={200}
                                 />
-                                <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
+                                <ScrollView style={{ flexDirection: 'row', width: '100%' }} horizontal={true} showsHorizontalScrollIndicator={false}>
                                     {state.tags && Object.keys(state.tags).map((key, index) => (
                                         <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
                                             <Text style={{ color: 'white', paddingBottom: 3 }}>{state.tags[key].name}</Text>
@@ -225,7 +225,7 @@ function CreateTaskModal(props) {
                                         </View>
                                     ))}
 
-                                </View>
+                                </ScrollView>
                             </View>
                             <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -272,7 +272,7 @@ function CreateTaskModal(props) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'ceneter', marginTop: 13 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 13 }}>
                                     <TouchableOpacity onPress={() => {
                                         setState({ ...state, editedTitle: title, editedDescription: description })
                                         setShowStatusSelector(true)

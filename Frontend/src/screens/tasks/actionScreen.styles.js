@@ -255,9 +255,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'normal',
         color: '#182E44',
-        height: '60%',
+        height: '80%',
         width: '100%',
-        marginBottom: 2
+        marginBottom: 2,
+        textAlignVertical: 'top'
     },
     // TAGS
     tags: {
@@ -266,10 +267,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 10,
         paddingHorizontal: 10,
-        paddingVertical: 3,
+        // paddingVertical: 3,
         marginRight: 2,
         marginBottom: 2,
-        height: '33%'
     },
     tagsOnTask:{
         flexDirection: 'row',
