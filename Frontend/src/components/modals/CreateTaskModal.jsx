@@ -64,7 +64,7 @@ function CreateTaskModal(props) {
         const updatedTags = [...state.tags];
         updatedTags.splice(index, 1);
         setState({ ...state, tags: updatedTags });
-      };
+    };
 
     const Body = () => {
         const [title, setTitle] = useState(state.editedTitle);
@@ -110,10 +110,16 @@ function CreateTaskModal(props) {
             setState({ ...state, context_id: context_id, context_name: context_name });
             setShowContextSelector(false);
         }
-
+        const handleSearchedTag = (name, color) => {
+            let newArray = state.tags
+            if (!state.tags) newArray = [{ name: name, color: color }];
+            else newArray.push({ name: name, color: color })
+            setState({ ...state, tags: newArray });
+            setShowTagSelector(false);
+        }
         const handleSelectTag = (tag) => {
             let newArray = state.tags
-            if(!state.tags) newArray = [{ name: tag, color: addColor() }];
+            if (!state.tags) newArray = [{ name: tag, color: addColor() }];
             else newArray.push({ name: tag, color: addColor() })
             setState({ ...state, tags: newArray });
             setShowTagSelector(false);
@@ -144,7 +150,7 @@ function CreateTaskModal(props) {
         const ProjectBadgeSelectable = ({ project }) => {
             return (
                 <TouchableOpacity onPress={() => {
-                    const newState = {...state, project_id: null}
+                    const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
                     <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
@@ -215,7 +221,7 @@ function CreateTaskModal(props) {
                                 <View style={{ height: '40%', flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end' }}>
                                     {state.tags && Object.keys(state.tags).map((key, index) => (
                                         <View key={index} style={[styles.tags, { backgroundColor: state.tags[key].color }]}>
-                                            <Text style={{ color: 'white', paddingBottom: 3}}>{state.tags[key].name}</Text>
+                                            <Text style={{ color: 'white', paddingBottom: 3 }}>{state.tags[key].name}</Text>
                                             <TouchableOpacity onPress={() => handleRemoveTag(index)}>
                                                 <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
                                             </TouchableOpacity>
@@ -269,7 +275,7 @@ function CreateTaskModal(props) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'ceneter', marginTop: 13 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 13 }}>
                                     <TouchableOpacity onPress={() => {
                                         setState({ ...state, editedTitle: title, editedDescription: description })
                                         setShowStatusSelector(true)
@@ -312,7 +318,7 @@ function CreateTaskModal(props) {
                                     <SelectStateModal modalVisible={showStatusSelector} handleSelectState={handleSelectState} onCloseModal={() => setShowStatusSelector(false)} />
                                     <SelectContextModal modalVisible={showContextSelector} handleContextAction={handleContextAction} onCloseModal={() => setShowContextSelector(false)} />
                                     <AssignToProjectModal modalVisible={showAssProjectSelector} handleSelectProject={handleSelectProject} onCloseModal={() => setShowAssProjectSelector(false)} />
-                                    <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} onCloseModal={() => setShowTagSelector(false)} />
+                                    <AddTagModal modalVisible={showTagSelector} handleSelectTag={handleSelectTag} handleSearchedTag={handleSearchedTag} onCloseModal={() => setShowTagSelector(false)} />
 
                                     <TouchableOpacity
                                         style={styles.acceptButton}

@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         marginRight: 2,
         marginBottom: 2,
-        height: '33%'
     },
     tagsOnTask:{
         flexDirection: 'row',
