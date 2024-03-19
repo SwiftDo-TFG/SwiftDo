@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b1e4b0e7-ef22-470d-9070-128834efb9e5"
+    Name="9290d300-25ca-45d7-bbc1-270d4c680702"
     Publisher="CN=pablu"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b1e4b0e7-ef22-470d-9070-128834efb9e5" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="9290d300-25ca-45d7-bbc1-270d4c680702" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>gtdapp</DisplayName>

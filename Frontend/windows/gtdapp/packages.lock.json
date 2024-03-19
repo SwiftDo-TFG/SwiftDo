@@ -39,6 +39,13 @@
           "boost": "[1.76.0, )"
         }
       },
+      "datetimepickerwindows": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.ReactNative": "[1.0.0, )",
+          "Microsoft.UI.Xaml": "[2.8.0, )"
+        }
+      },
       "fmt": {
         "type": "Project"
       },

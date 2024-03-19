@@ -8,13 +8,14 @@ export default function DatePickerFunction({ today, state, setState }) {
                 if (date !== state.date_name) {
                     if (state.date_name !== 'Fecha') setState({ ...state, showDatePicker: false })
                     setState({ ...state, date_name: date, state: "3" });
+                    console.log("DATE ANTIGUO", date)
                 }
             }}
             selected={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
             current={state.date_name === 'Fecha' ? today.toISOString().split('T')[0] : state.date_name}
             minimumDate={today.toISOString().split('T')[0]}
             //Windows 
-            mode='calendar'
+            // mode='time'
             options={{
                 backgroundColor: '#ffffff',
                 textHeaderColor: '#666666',
