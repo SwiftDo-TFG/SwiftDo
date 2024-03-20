@@ -48,7 +48,7 @@ const AuthState = props => {
             signIn: async (data) => {
                 dispatch({ type: 'LOADING'});
                 const token = await authService.login(data.email, data.password);
-                
+
                 if(token != null){
                     token.expires_at = new Date(Date.now() + token.expires_in*1000);
                     tokenStorage.storeToken(token);
@@ -68,12 +68,23 @@ const AuthState = props => {
             },
             checkSession: async () => {
                 const token = await tokenStorage.getToken();
-                console.log("checkSession", token)
+                const expired = Date.now() > (Date.parse(token.expires_at) ?? Date.now())
+                console.log("checkSession", token, token.expires_at, token.expires_in)
 
-                if(token){
+                if(token && !expired){
                     dispatch({ type: 'SIGN_IN', token: token.access_token });
                 }else{
-                    dispatch({ type: 'SIGN_OUT' })
+                    //restore token
+                    const newToken = await authService.restoreToken(token)
+                    console.log("checkSession newToken", newToken)
+
+                    if(newToken){
+                        newToken.expires_at = new Date(Date.now() + token.expires_in*1000);
+                        await tokenStorage.storeToken(newToken);
+                        dispatch({ type: 'SIGN_IN', token: newToken.access_token });
+                    }else{
+                        dispatch({ type: 'SIGN_OUT' })
+                    }
                 }
             }
         }),
