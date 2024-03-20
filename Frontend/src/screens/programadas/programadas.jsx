@@ -6,7 +6,7 @@ import stylesAction from '../tasks/actionScreen.styles'
 import utils from "./calendar/utils"
 import React, { useState, useEffect, useRef } from "react";
 import { NativeBaseProvider } from "native-base"
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import SelectionPanel from "../tasks/SelectionPanel";
 import LoadingIndicator from "../../components/LoadingIndicator";
@@ -15,6 +15,7 @@ import MoveTaskModal from "../../components/modals/MoveTaskModal"
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
 import { actStyles } from "../../styles/globalStyles";
 import tagService from "../../services/tag/tagService";
+import Colors from "../../styles/colors";
 
 
 
@@ -22,6 +23,7 @@ const ProgramadasScreen = (props) => {
     const [calendarHeight, setCalendarHeight] = useState(0);
     const [tasks, setTasks] = useState([]);
     const [calendarTasks, setCalendarTasks] = useState([]);
+    const [numTaskPerDay, setNumTaskPerDay] = useState({});
     const [editingTask, setEditingTask] = useState({});
     const [isDataLoaded, setDataLoaded] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState({});
@@ -61,16 +63,29 @@ const ProgramadasScreen = (props) => {
         setTasks(tasksDB);
 
         tasksDB = tasksDB.reduce((acumulador, task) => {
+            const auxDateLimit = new Date(task.date_limit); auxDateLimit.setHours(0); auxDateLimit.setMinutes(0);
 
-            if (!acumulador[task.date_limit]) {
-                acumulador[task.date_limit] = { title: task.date_limit, data: [] };
+            if (!acumulador[auxDateLimit]) {
+                acumulador[auxDateLimit] = { title: auxDateLimit, data: [] };
             }
-            acumulador[task.date_limit].data.push(task);
+            acumulador[auxDateLimit].data.push(task);
             return acumulador;
         }, {});
 
         setCalendarTasks(Object.values(tasksDB))
+
+        let auxNumTaskPerDay = {}
+
+        Object.values(tasksDB).forEach(day => {
+            console.log(day.title)
+            const auxDate = new Date(day.title);
+            const keyDate = `${auxDate.getFullYear()}-${(auxDate.getMonth() + 1).toString().padStart(2, '0')}-${auxDate.getDate().toString().padStart(2, '0')}`;
+            auxNumTaskPerDay[keyDate] = day.data.length
+        })
+
+        setNumTaskPerDay(auxNumTaskPerDay);
         setDataLoaded(true)
+        console.log("CALENDAR TASKS", auxNumTaskPerDay)
     }
 
     const reloadData = () => {
@@ -118,7 +133,7 @@ const ProgramadasScreen = (props) => {
 
     const updateTask = async (updatedTask) => {
         console.log(updatedTask)
-        for(let tag of updatedTask.tags){
+        for (let tag of updatedTask.tags) {
             await tagService.createTag(tag);
             await taskService.addTag(updatedTask.task_id, tag)
         }
@@ -173,6 +188,14 @@ const ProgramadasScreen = (props) => {
         }
     }
 
+    const NumTasksBadge = ({ num }) => {
+        return (
+            <View style={styles.numTasksBadge}>
+                <Text style={{ color: 'white', fontSize: 8 }}>{num}</Text>
+            </View>
+        )
+    }
+
     function TasksCalendar() {
         return (
             <>
@@ -181,6 +204,45 @@ const ProgramadasScreen = (props) => {
                     firstDay={1}
                     markedDates={marked.current}
                     initialPosition={ExpandableCalendar.positions.CLOSED}
+                    dayComponent={({ date, marking, state, onPress, theme2 }) => {
+                        // const textColor =
+                        //   marking?.today === true
+                        //     ? colors.actionPrimary
+                        //     : marking?.selected === true
+                        //     ? colors.backgroundPrimary
+                        //     : marking?.marked === true
+                        //     ? colors.actionSecondary
+                        //     : colors.textPrimary;
+                        const numTasksDay = numTaskPerDay[date.dateString] ? numTaskPerDay[date.dateString] : 0;
+                        let dayTextcolor = 'black';
+
+                        if (state === 'disabled') {
+                            dayTextcolor = 'lightgrey'
+                        } else if (state === 'selected') {
+                            dayTextcolor = 'white'
+                        }
+
+                        return (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // selectDay(state, date, onPress);
+                                    onPress(date)
+                                    console.log(onPress)
+                                }}
+                            // style={[marking?.customContainerStyle, theme?.textDayStyle]}
+                            >
+                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : 'white'}}>
+                                    {numTasksDay !== 0 && isDataLoaded && <NumTasksBadge num={numTasksDay} />}
+                                    <Text style={{ fontSize: 16, color: dayTextcolor }}>
+                                        {date?.day}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
+                    theme={{
+                        calendarBackground: theme === 'dark' ? Colors[theme].themeColor: 'white',
+                    }}
                 />}
 
                 {selectedTasks.total > 0 &&
@@ -239,6 +301,16 @@ const ProgramadasScreen = (props) => {
 
                         // scrollToNextEvent
                         sectionStyle={styles.section}
+                        // theme={{
+                        //     textDayStyle: {color: 'red'},
+                        //     selectedDayTextColor: 'red',
+                        //     agendaDayTextColor: 'red',
+                        //     agendaTodayColor: 'red',
+                        //     agendaDayNumColor: 'red',
+                        //     textSectionTitleColor: 'red',
+                        //     textSectionTitleColor: 'red'
+                        //     // textDay                    
+                        // }}
                     // dayFormat={'yyyy-MM-d'}
                     />
                 }
@@ -291,17 +363,18 @@ const ProgramadasScreen = (props) => {
                 <View style={styles.container}>
                     <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
                         {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Feather name="sidebar" size={28} color="black" />
+                            <Feather name="sidebar" size={28} color={Colors[theme].white} />
                         </TouchableOpacity>)}
                         <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                             <TouchableOpacity style={stylesAction.area}>
-                                <Text>Contexto</Text>
+                                {/* <Text style={{ color: Colors[theme].white }}>Contexto</Text> */}
+                                <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={actStyle.action}>
                         <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
-                        <Text style={actStyle.actionTitle}>Programadas</Text>
+                        <Text style={{ ...actStyle.actionTitle, color: Colors[theme].white }}>Programadas</Text>
                     </View>
                 </View>
                 <TasksCalendar />
