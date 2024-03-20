@@ -289,7 +289,8 @@ const actStyles = (theme) => {
             fontSize: 28,
             marginLeft: 18,
             fontWeight: 'bold',
-            
+            //windows
+            color: 'black'
         },
         emptyIcon: {
             fontSize: 40

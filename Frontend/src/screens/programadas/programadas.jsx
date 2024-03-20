@@ -186,7 +186,7 @@ const ProgramadasScreen = (props) => {
 
                 {selectedTasks.total > 0 &&
                     <View style={styles.selectionPanel}>
-                        <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} setIsMoveModalOpen={setIsMoveModalOpen} />
+                        <SelectionPanel selectedTasks={selectedTasks} tasks={tasks} setSelectedTasks={setSelectedTasks} setIsMoveModalOpen={setIsMoveModalOpen} setIsCompleteModalOpen={setIsCompleteModalOpen}/>
                     </View>
                 }
 
@@ -278,6 +278,7 @@ const ProgramadasScreen = (props) => {
                     onAccept={completeTask}
                     isModalOpen={isCompleteModalOpen}
                     setIsModalOpen={setIsCompleteModalOpen}
+                    setIsModalVisible={setIsCompleteModalOpen}
                 />
 
                 {/* ADD MODAL   */}

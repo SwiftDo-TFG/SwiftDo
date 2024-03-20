@@ -158,7 +158,8 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                   { alignItems: 'center' },
                   (!selectedTasks[task.task_id] && isMenuVisible) ? null : { marginRight: 20 }
                 ]}>
-                  <TouchableOpacity onPress={() => { onPress(task.task_id) }} style={{ marginRight: '5%' }}>
+                  {/* Windows change: onPress(task.task_id) --> showCompleteModal(task.task_id)*/}
+                  <TouchableOpacity onPress={() => { showCompleteModal(task.task_id) }} style={{ marginRight: '5%' }}>
                     {!selectedTasks[task.task_id] && (
                       <Checkbox selected={false} />
                       // <FontAwesome name="circle-o" size={24} color="#a0a0a0" /> 
@@ -229,6 +230,10 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <TouchableOpacity onPress={() => showEditPopUp(task.task_id)}>
                           <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
+                        </TouchableOpacity>
+                        {/* Windows change */}
+                        <TouchableOpacity onPress={() => showMovePopUp(task.task_id)} style={{marginLeft: 5}}>
+                          <MaterialCommunityIcons name="cursor-move" size={22} color="#15ba53" />
                         </TouchableOpacity>
                       </View>
                     </View>
