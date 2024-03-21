@@ -77,7 +77,6 @@ const ProgramadasScreen = (props) => {
         let auxNumTaskPerDay = {}
 
         Object.values(tasksDB).forEach(day => {
-            console.log(day.title)
             const auxDate = new Date(day.title);
             const keyDate = `${auxDate.getFullYear()}-${(auxDate.getMonth() + 1).toString().padStart(2, '0')}-${auxDate.getDate().toString().padStart(2, '0')}`;
             auxNumTaskPerDay[keyDate] = day.data.length
@@ -199,7 +198,7 @@ const ProgramadasScreen = (props) => {
     function TasksCalendar() {
         return (
             <>
-                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} /> : <ExpandableCalendar
+                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{calendarBackground: theme === 'dark' ? Colors[theme].themeColor: 'white'}} /> : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}

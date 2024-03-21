@@ -322,6 +322,8 @@ function ActionScreen(props) {
             onAccept={addTask}
             isModalOpen={isCreateModalOpen}
             setIsModalOpen={setIsCreateModalOpen}
+            currentState={props.state}
+            project_id={props.project_id ? props.project_id : null}
           />
 
           <CompleteTaskModal

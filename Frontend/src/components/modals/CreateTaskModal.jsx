@@ -8,6 +8,8 @@ import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
 import AddTagModal from "./AddTagModal";
+import TaskStates from "../../utils/enums/taskStates"
+import projectService from "../../services/project/projectService";
 
 function CreateTaskModal(props) {
     const [state, setState] = useState({
@@ -30,13 +32,30 @@ function CreateTaskModal(props) {
     const [colorIndex, setcolorIndex] = useState(0)
 
 
+    async function openModalInProject() {
+        if(!state.project){
+            const projectData = await projectService.showContent(props.project_id);
+            setState({...state, project_id: props.project_id, project: projectData.project})
+        }
+    }
+
+    useEffect(()=>{
+        if(props.currentState){
+            if(props.currentState !== TaskStates.PROJECT){
+                setState({...state, state: props.currentState.toString()})
+            }else{
+                openModalInProject();
+            }
+        }
+    }, [props])
+
 
     function setValuesToEdit() {
         if (props.editingTask) {
             let fecha = 'Fecha'
             if (props.editingTask.date_limit) {
                 fecha = new Date(props.editingTask.date_limit);
-                fecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')} 00:00`
+                fecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')} ${fecha.getHours().toString().padStart(2, '0')}:${fecha.getMinutes().toString().padStart(2, '0')}`
             }
             setState({
                 ...state,
