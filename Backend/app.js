@@ -33,7 +33,7 @@ app.use('/oauth', authRouter)
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/task', oauthServer.authenticate(), taskRouter);
-app.use('/tag', tagsRouter);
+app.use('/tag', oauthServer.authenticate(), tagsRouter);
 app.use('/project',oauthServer.authenticate(), projectRouter);
 app.use('/context',oauthServer.authenticate(), contextRouter);
 // Get secret.

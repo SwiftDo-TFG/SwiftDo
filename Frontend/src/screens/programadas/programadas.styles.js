@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme, Appearance } from "react-native";
+import Colors from "../../styles/colors";
+
+const theme = Appearance.getColorScheme()
 
 const styles = StyleSheet.create({
     container:{
@@ -6,7 +9,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 20,
-        backgroundColor: 'white'
+        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white'
     },
     taskContainer: {
         flex: 1,
@@ -35,9 +38,9 @@ const styles = StyleSheet.create({
         // fontSize: '120%'
     },
     section: {
-        // backgroundColor: lightThemeColor,
+        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white',
         fontSize: 16,
-        color: 'grey',
+        color: theme ==='light' ? 'grey': Colors[theme].white,
         textTransform: 'capitalize',
         // textDecorationLine: 'underline'
     },
@@ -65,6 +68,29 @@ const styles = StyleSheet.create({
     actionTitle: {
         fontSize: 24,
         fontWeight: 'bold'
+    },
+    expandableCalendar: {
+        borderRadius: 50,
+        borderWidth: 1,
+        borderColor: 'white',
+        padding: 3,
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+    },
+    numTasksBadge: {
+        borderRadius: 50,
+        borderWidth: 1,
+        borderColor: 'white',
+        padding: 3,
+        width: 20,
+        height: 20,
+        position: 'absolute',
+        alignItems: 'center',
+        right: -10,
+        top: -6,
+        backgroundColor: 'red',
+        marginLeft: 10
     }
 });
 

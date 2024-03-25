@@ -7,14 +7,17 @@ import Archivadas from '../../screens/actions/archivadas';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Project from '../../screens/actions/project';
 import SideBar from '../SideBar/SideBar';
-import { sideBar } from '../../styles/globalStyles';
-import { useWindowDimensions } from 'react-native';
+import { sidebarStyles } from '../../styles/globalStyles';
+import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
+import Colors from '../../styles/colors';
 
 const Drawer = createDrawerNavigator();
 
-const AppNavigator = ({ projects, state }) => {
+const AppNavigator = ({projects, state }) => {
     const dimensions = useWindowDimensions();
+    const theme = useColorScheme();
+    const sideBar = sidebarStyles(theme)
 
     const addProjects = useMemo(() => {
         return projects.map((project, i) => (
@@ -37,7 +40,12 @@ const AppNavigator = ({ projects, state }) => {
             gestureEnabled={state.userToken != null}
             screenOptions={{
                 drawerType: (dimensions.width >= 768 && state.userToken != null) ? 'permanent' : 'front',
+                drawerStyle: {
+                    backgroundColor: theme === 'dark' ? 'black' : Colors[theme].themeColor,
+                    // width: '80%'
+                },
             }}
+            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
         >
             {state.userToken == null ? (
                 // No token found, user isn't signed in
@@ -54,10 +62,6 @@ const AppNavigator = ({ projects, state }) => {
                         name="Inbox"
                         component={Inbox}
                         options={{
-                            title: 'Inbox',
-                            drawerIcon: () => (
-                                <FontAwesome5 name="inbox" size={24} color={'orange'} />
-                            ),
                             headerShown: false
                         }}
                     />
@@ -65,7 +69,6 @@ const AppNavigator = ({ projects, state }) => {
                         name="CuantoAntes"
                         component={CuantoAntes}
                         options={{
-                            title: 'Cuanto antes',
                             headerShown: false
                         }}
                     />
@@ -73,7 +76,6 @@ const AppNavigator = ({ projects, state }) => {
                         name="Archivadas"
                         component={Archivadas}
                         options={{
-                            title: 'Archivadas',
                             headerShown: false
                         }}
                     />
@@ -82,21 +84,14 @@ const AppNavigator = ({ projects, state }) => {
                         name="Programadas"
                         component={Programadas}
                         options={{
-                            title: 'Programadas',
-                            drawerIcon: () => (
-                                <FontAwesome5 name="calendar" size={24} color={'cyan'} />
-                            ),
                             headerShown: false
                         }}
                     />
                     {/* {addProjects} */}
                     <Drawer.Screen
-                        // key={i}
                         name={"project"}
-                        // initialParams={{id:project.project_id, color: project.color, description: project.description, percentage: project.completionPercentage}}
                         component={Project}
                         options={{
-                            title: "Project",
                             headerShown: false
                         }}
                     />

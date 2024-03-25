@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
-import projectService from "../../services/project/projectService"
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions } from "react-native";
+import projectService from "../../services/project/projectService";
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
@@ -14,6 +14,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import styles from "./actionScreen.styles";
+import Colors from "../../styles/colors";
 
 
 function ActionScreen(props) {
@@ -32,7 +33,7 @@ function ActionScreen(props) {
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
-
+  const theme = useColorScheme();
   useEffect(() => {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -45,7 +46,7 @@ function ActionScreen(props) {
   }, [authState, props.navigation]);
 
   async function fetchData() {
-    
+
     let filter = { state: props.state, completed: false }
     if (props.state === 5) {
       filter = { project_id: props.project_id, completed: false }
@@ -55,12 +56,12 @@ function ActionScreen(props) {
       return authState.signOut();
     }
 
-    console.log("Estas son las tareas que se devuelven", tasksDB)
-
+    
     const seletedAux = {}
-    tasksDB.forEach(task => {
+    tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
     })
+    console.log("Estas son las tareas que se devuelven", tasksDB)
 
     seletedAux.total = 0;
 
@@ -78,10 +79,13 @@ function ActionScreen(props) {
     console.log("Nueva task", task)
     if (task.title.trim() !== "") {
       const newTask = await taskService.createTask(task);
-
       if (newTask.task_id !== -1) {
         task.task_id = newTask.task_id;
-
+        if (task.tags) {
+          for (let tag of task.tags) {
+            await taskService.addTag(task.task_id, tag)
+          }
+        }
         // setTasks([...tasks, task]);
         setIsCreateModalOpen(false);
         reloadData();
@@ -129,15 +133,20 @@ function ActionScreen(props) {
   }
 
   const updateTask = async (updatedTask) => {
-    console.log("UPDATING TASK",updatedTask)
+    console.log("UPDATING TASK", updatedTask)
+    if (updatedTask.tags) {
+      for (let tag of updatedTask.tags) {
+        await taskService.addTag(updatedTask.task_id, tag)
+      }
+    }
     const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
     console.log("ID: ", updatedTaskResult)
     if (updatedTaskResult !== -1) {
-      const updatedTasks = tasks.map((task) =>
-        task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
-      );
+      // const updatedTasks = tasks.map((task) =>
+      //   task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
+      // );
       isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
-      setTasks(updatedTasks);
+      // setTasks(updatedTasks);
       reloadData();
     } else {
       console.error("Error al actualizar la tarea en la base de datos");
@@ -200,7 +209,7 @@ function ActionScreen(props) {
     }
   }
 
-  const showEditPopUp = (id) => {
+  const showEditPopUp = async (id) => {
     const taskToEdit = tasks.find(task => task.task_id === id);
 
     if (taskToEdit) {
@@ -241,19 +250,25 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' :  'flex-end', alignItems: 'flex-end', marginTop: 25}}>
-          { Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-            <Feather name="sidebar" size={28} color="black" />
+        <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+          
+          {/* Sidebar icon */}
+          {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+            <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
-          <View style={{minWidth: 50, justifyContent: 'flex-end'}}>
+          
+          {/* Filter Context / tag */}
+          <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area}>
-              <Text>Area</Text>
+            <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+
+              {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
             </TouchableOpacity>
           </View>
         </View>
 
         {props.children}
-        
+
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
@@ -307,6 +322,8 @@ function ActionScreen(props) {
             onAccept={addTask}
             isModalOpen={isCreateModalOpen}
             setIsModalOpen={setIsCreateModalOpen}
+            currentState={props.state}
+            project_id={props.project_id ? props.project_id : null}
           />
 
           <CompleteTaskModal

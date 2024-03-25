@@ -1,13 +1,11 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
-import projectService from "../../services/project/projectService";
-import { useEffect, useState } from "react";
-import { sideBar } from '../../styles/globalStyles'
+import { FontAwesome5, Ionicons, Entypo } from '@expo/vector-icons';
+import Colors from "../../styles/colors";
 
 
 const SelectStateModal = (props) => {
-
+    const theme = useColorScheme();
     const OutSide = ({ onCloseModal, isModalOpen }) => {
         const view = <View style={{ flex: 1, width: '100%' }} />;
         if (!isModalOpen) return view;
@@ -27,7 +25,7 @@ const SelectStateModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle]}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                             <View style={styles.textContainer}>
