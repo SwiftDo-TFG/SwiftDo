@@ -115,7 +115,7 @@ export default ({ navigation }) => {
         <View style={sideBar.container}>
 
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
-                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} />
+                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} navigation={navigation}/>
                 <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
