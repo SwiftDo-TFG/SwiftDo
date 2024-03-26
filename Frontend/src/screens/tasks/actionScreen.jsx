@@ -13,6 +13,7 @@ import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import FilterModal from "../../components/modals/FilterModal";
 import styles from "./actionScreen.styles";
 import Colors from "../../styles/colors";
 
@@ -30,6 +31,7 @@ function ActionScreen(props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
@@ -56,7 +58,7 @@ function ActionScreen(props) {
       return authState.signOut();
     }
 
-    
+
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
@@ -163,6 +165,10 @@ function ActionScreen(props) {
     reloadData();
   };
 
+  const addFilter = async (filters) => {
+    console.log("Añado los filtros")
+  };
+
   const handleCompleteTasks = async () => {
 
     if (selectedTasks.total > 0) {
@@ -251,16 +257,16 @@ function ActionScreen(props) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-          
+
           {/* Sidebar icon */}
           {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
             <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
-          
+
           {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
-            <TouchableOpacity style={styles.area}>
-            <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+            <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
+              <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
 
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
             </TouchableOpacity>
@@ -341,6 +347,13 @@ function ActionScreen(props) {
             onAccept={addProject}
             isModalOpen={isCreateProjectOpen}
             setIsModalOpen={setIsCreateProjectOpen}
+          />
+
+          {/* ADD FILTER MODAL */}
+          <FilterModal 
+            onAccept={addFilter}
+            isModalOpen={isFilterModalOpen}
+            setIsModalOpen={setIsFilterModalOpen}
           />
         </NativeBaseProvider>
 

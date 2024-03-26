@@ -108,6 +108,7 @@ const Profile = ({ name, formattedDate, contexts }) => {
                             <TextInput
                                 style={{color:Colors[theme].white, fontSize: 16, marginLeft: 15, width: '60%' }}
                                 placeholder="Nueva área"
+                                maxLength={20}
                                 placeholderTextColor={Colors[theme].white}
                                 value={newContextName}
                                 onChangeText={text => setNewContextName(text)

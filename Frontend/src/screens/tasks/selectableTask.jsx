@@ -75,11 +75,6 @@ function formattedDate(date) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-function recortarTitle(title) {
-  let t = title;
-  return `${t.substring(0, 20)}...`;
-}
-
 const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
