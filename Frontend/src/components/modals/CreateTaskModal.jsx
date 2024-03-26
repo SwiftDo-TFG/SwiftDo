@@ -7,6 +7,8 @@ import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
 import SelectContextModal from "./SelectContextModal";
 import AssignToProjectModal from "./AsingToProjectModal";
+import { MarkdownTextInput, MarkdownStyle} from '@expensify/react-native-live-markdown';
+
 
 
 
@@ -21,6 +23,47 @@ function CreateTaskModal(props) {
         showDatePicker: false,
         state: "1"
     });
+
+    const markdownStyle = {
+        syntax: {
+          color: 'gray',
+        },
+        link: {
+          color: 'blue',
+        },
+        h1: {
+          fontSize: 25,
+          color: 'red'
+        },
+        h2: {
+            fontSize: 18,
+            color: 'green'
+          },
+        blockquote: {
+          borderColor: 'gray',
+          borderWidth: 6,
+          marginLeft: 6,
+          paddingLeft: 6,
+        },
+        code: {
+          fontFamily: 'monospace',
+          color: 'black',
+          backgroundColor: 'lightgray',
+        },
+        pre: {
+          fontFamily: 'monospace',
+          color: 'black',
+          backgroundColor: 'lightgray',
+        },
+        mentionHere: {
+          color: 'green',
+          backgroundColor: 'lime',
+        },
+        mentionUser: {
+          color: 'blue',
+          backgroundColor: 'cyan',
+        },
+      };
 
     //Modals state
     const [showStatusSelector, setShowStatusSelector] = useState(false);
@@ -94,7 +137,7 @@ function CreateTaskModal(props) {
             setState((prevState) => ({
                 ...prevState,
                 isImportant: !prevState.isImportant,
-                editedTitle: title, 
+                editedTitle: title,
                 editedDescription: description
             }));
         };
@@ -139,20 +182,29 @@ function CreateTaskModal(props) {
                     />
                 </View>
                 {/* Description */}
-                <View style={{ height: '100%', justifyContent: 'flex-end' }}>
+                <View style={{ height: '80%', justifyContent: 'flex-end' }}>
                     <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
                         <View style={styles.editStyle}>
-                            <View style={{ height: '50%' }}>
-                                <TextInput
+                            <View style={{ height: '60%', width: '100%', flexDirection: 'column' }}>
+                                {/* <TextInput
                                     style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
                                     value={description}
                                     placeholder="Descripcion..."
                                     onChangeText={onDescriptionChange}
                                     multiline={true}
                                     maxLength={200}
-                                />
+                                /> */}
+                                {/* <MarkdownTextInput
+                                    style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', height: '100%' }}
+                                    value={description}
+                                    placeholder="Descripcion..."
+                                    onChangeText={onDescriptionChange}
+                                    multiline={true}
+                                    maxLength={200}
+                                    markdownStyle={markdownStyle}
+                                /> */}
                             </View>
-                            <View style={{ height: '50%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
+                            <View style={{ height: '40%', width: '100%', flexDirection: 'column', marginTop: 10, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
                                     {state.project && <ProjectBadge project={state.project} />}
                                 </View>
