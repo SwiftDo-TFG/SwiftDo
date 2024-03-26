@@ -324,9 +324,19 @@ function addFiltersToQuery(query, filters){
         finalFilters.important_fixed = filters.important_fixed;
     }
 
+
+    if(filters.tags){
+        finalQuery = finalQuery.concat(" AND t.task_id IN (select tg.task_id from tagstotask tg where tg.nametag = ANY(");
+        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+        finalQuery = finalQuery.concat("))");
+        finalFilters.tags = filters.tags.split(",");
+    }
+
+
     if(filters.date_limit){
         finalQuery = finalQuery.concat(" order by t.date_limit");
     }
+
 
     return {query: finalQuery, values: Object.values(finalFilters)};
 }
