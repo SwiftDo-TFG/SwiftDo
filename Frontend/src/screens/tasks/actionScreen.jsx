@@ -292,12 +292,12 @@ function ActionScreen(props) {
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
 
-              {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
+              {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO
               {filterContext.isFiltered ? <ContextBadge context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();
-              }} /> : <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />}
+              }} /> : <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />} */}
             </TouchableOpacity>
           </View>
         </View>
