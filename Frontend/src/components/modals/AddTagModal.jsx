@@ -1,4 +1,4 @@
-import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from "react-native"
+import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
@@ -14,11 +14,17 @@ const AddTagModal = (props) => {
 
     const [tag, setTag] = useState([]);
     const [search, setSearch] = useState([]);
+    const [isSearching, setIsSearching] = useState(false)
     const onNameChange = async (text) => {
+        console.log("TESTING", tag, search, isSearching)
         if (text != tag && text.length > 0) {
             let t = text + '%'
-            let res = await tagService.searchTags({ search: t });
-            setSearch(res);
+            setIsSearching(true)
+            let res = tagService.searchTags({ search: t });
+            res.then(result => {
+                setIsSearching(false)
+                setSearch(result);
+            })
         } else if (text.length === 0) {
             setSearch([]);
         }
@@ -48,7 +54,7 @@ const AddTagModal = (props) => {
 
                     <TextInput
                         style={{ color: '#182E44', fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
-                        placeholder="Nueva etiqueta"
+                        placeholder="Busca una etiqueta..."
                         value={tag}
                         onChangeText={onNameChange}
                         maxLength={15}
@@ -56,22 +62,29 @@ const AddTagModal = (props) => {
                     />
 
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', alignItems: 'flex-end', marginBottom: 10 }}>
-                        {search && Object.keys(search).map((key, index) => (
+                        {search ? Object.keys(search).map((key, index) => (
                             <View key={index} style={[styles.tags, { backgroundColor: search[key].colour }]}>
                                 <TouchableOpacity onPress={() => props.handleSearchedTag(search[key].name, search[key].colour)}>
                                     <Text style={{ color: 'white', paddingBottom: 3 }}>{search[key].name}</Text>
                                 </TouchableOpacity>
                             </View>
-
-                        ))}
+                            // Modo oscuro adaptar
+                        )) : <Text>No hay resultados para {tag}</Text>} 
+                        {isSearching &&
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                                <ActivityIndicator size={"small"} />
+                            </View>
+                        }
 
                     </View>
 
-                    <TouchableOpacity
-                        style={styles.acceptButton}
-                        onPress={() => props.handleSelectTag(tag)}>
-                        <Text style={styles.acceptButtonText}>Aceptar</Text>
-                    </TouchableOpacity>
+                    {!isSearching && !search && tag.length > 0 && <View style={{alignItems: 'flex-end'}}>
+                        <TouchableOpacity
+                            style={styles.acceptButton}
+                            onPress={() => props.handleSelectTag(tag)}>
+                            <Text style={styles.acceptButtonText}>Crear Etiqueta</Text>
+                        </TouchableOpacity>
+                    </View>}
                 </View>
             </View>
         </Modal >
