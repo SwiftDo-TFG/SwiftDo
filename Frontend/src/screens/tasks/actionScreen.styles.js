@@ -1,6 +1,7 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Appearance } from "react-native";
 import Colors from "../../styles/colors";
 
+const theme = Appearance.getColorScheme();
 
 const styles = StyleSheet.create({
     container: {
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     stateModalContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     assignProjectModalContainer: {
         flex: 1,
@@ -190,7 +191,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        maxHeight: '25%'
+        maxHeight: '25%',
+        backgroundColor: theme === 'light' ? 'white' : 'black'
     },
     moveContainer: {
         flex: 1,
@@ -206,7 +208,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 10,
-        width: '100%'
+        width: '100%',
+    },
+    defaultTextModal: {
+        fontSize: 17,
+        color: Colors[theme].white
+    },
+    contextTextModal:{
+        fontSize: 16,
+        marginLeft: 15,
+        color: Colors[theme].white
     },
     modalDatePickerContainer: {
         flex: 1,
@@ -271,7 +282,7 @@ const styles = StyleSheet.create({
         marginRight: 2,
         marginBottom: 2,
     },
-    tagsOnTask:{
+    tagsOnTask: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

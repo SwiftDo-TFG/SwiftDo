@@ -30,25 +30,25 @@ const SelectStateModal = (props) => {
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                             <View style={styles.textContainer}>
                                 <FontAwesome5 name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
-                                <Text style={{ fontSize: 17 }}>Cuanto Antes</Text>
+                                <Text style={styles.defaultTextModal}>Cuanto Antes</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => props.handleSelectState("3")}>
                             <View style={styles.textContainer}>
                                 <Ionicons name="calendar-outline" size={20} color={'#008080'} style={{ width: '15%' }} />
-                                <Text style={{ fontSize: 17 }}>Programada</Text>
+                                <Text style={styles.defaultTextModal}>Programada</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => props.handleSelectState("4")}>
                             <View style={styles.textContainer}>
                                 <Entypo name="archive" size={20} color="#d2b48c" style={{ width: '15%' }} />
-                                <Text style={{ fontSize: 17 }}>Archivadas</Text>
+                                <Text style={styles.defaultTextModal}>Archivadas</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => props.handleSelectState("1")}>
                             <View style={styles.textContainer}>
                                 <FontAwesome5 name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
-                                <Text style={{ fontSize: 17 }}>Inbox</Text>
+                                <Text style={styles.defaultTextModal}>Inbox</Text>
                             </View>
                         </TouchableOpacity>
                     </ScrollView>
