@@ -47,7 +47,6 @@ function FilterModal(props) {
         async function getTags() {
             const dataTags = await tagService.getAllTags();
             setTags(dataTags);
-            console.log(dataTags)
         }
         animateModal()
         fetchProjects();
@@ -141,8 +140,10 @@ function FilterModal(props) {
 
     const handleContextSelection = (context) => {
         if (selectedContexts.includes(context)) {
+            filterContext.clearFilter(context)
             setSelectedContexts(selectedContexts.filter(item => item !== context));
         } else {
+            filterContext.applyFilter(context)
             setSelectedContexts([...selectedContexts, context]);
         }
     };
@@ -205,7 +206,7 @@ function FilterModal(props) {
                             <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{height: '87%'}}>
+                    <View style={{ height: '87%' }}>
                         <TouchableOpacity onPress={() => toggleArea()}>
                             <View style={filterStyle.filterContainer}>
                                 <Text style={[filterStyle.filterText, { color: (!mostrarAreas) ? Colors[theme].white : Colors[theme].orange }]}>Contextos</Text>
@@ -219,7 +220,6 @@ function FilterModal(props) {
                                 {Object.keys(contexts).map((key, index) => (
                                     <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%' }, selectedContexts.includes(contexts[key]) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => {
-                                            filterContext.applyFilter(contexts[key])
                                             handleContextSelection(contexts[key])
                                         }}>
                                             <Text style={{ paddingBottom: 3 }}>{contexts[key].name}</Text>
@@ -271,14 +271,18 @@ function FilterModal(props) {
                         <View style={filterStyle.separator} />
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            onCloseModal()
+                        }}>
                             <View style={filterStyle.button}>
-                                <Text style={{color: '#b4b6b9'}}>Limpiar filtros</Text>
+                                <Text style={{ color: '#b4b6b9' }}>Limpiar filtros</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                            <View style={[filterStyle.button, {backgroundColor: Colors[theme].orange }]}>
-                                <Text style={{color: 'white', fontWeight: 'bold'}}>Aplicar filtros</Text>
+                        <TouchableOpacity onPress={() => {
+                            onCloseModal()
+                        }}>
+                            <View style={[filterStyle.button, { backgroundColor: Colors[theme].orange }]}>
+                                <Text style={{ color: 'white', fontWeight: 'bold' }}>Aplicar filtros</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
