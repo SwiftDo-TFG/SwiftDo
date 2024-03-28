@@ -58,7 +58,7 @@ const searchTags = async (name) => {
     console.log("urlparams", urlparams.toString())
 
     try {
-        const response = await instance.get('/tag/gettags?' + urlparams.toString());
+        const response = await instance.get('/tag/gettagsLimit?' + urlparams.toString());
         const tags = response.data;
 
         return tags;
@@ -68,4 +68,17 @@ const searchTags = async (name) => {
     }
 }
 
-export default { getTags, createTag, searchTags }
+const getAllTags = async () => {
+
+    try {
+        const response = await instance.get('/tag/gettags');
+        const tags = response.data;
+
+        return tags;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+
+export default { getTags, createTag, searchTags, getAllTags }

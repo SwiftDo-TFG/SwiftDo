@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity } from "react-native"
 import { AntDesign } from '@expo/vector-icons';
 import { filterModal } from "../../styles/globalStyles";
@@ -6,6 +6,7 @@ import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 import projectService from '../../services/project/projectService';
 import tagService from "../../services/tag/tagService";
+import FilterContext from "../../services/filters/FilterContext";
 
 
 const dvHeight = Dimensions.get('window').height;
@@ -24,9 +25,14 @@ function FilterModal(props) {
     const [mostrarTags, setMostrarTags] = useState(false);
     const [iconRotationTags] = useState(new Animated.Value(0));
     const [animatedHeightTags] = useState(new Animated.Value(0));
+    const [selectedContexts, setSelectedContexts] = useState([]);
+    const [selectedProjects, setSelectedProjects] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
 
     const theme = useColorScheme();
     const filterStyle = filterModal(theme);
+    const filterContext = useContext(FilterContext);
+
 
     useEffect(() => {
         async function getAreas() {
@@ -39,7 +45,7 @@ function FilterModal(props) {
             setProjects(data);
         }
         async function getTags() {
-            const dataTags = await tagService.getTags();
+            const dataTags = await tagService.getAllTags();
             setTags(dataTags);
             console.log(dataTags)
         }
@@ -67,7 +73,7 @@ function FilterModal(props) {
         } else {
             setMostrarAreas(!mostrarAreas);
             Animated.timing(animatedHeightArea, {
-                toValue: Math.ceil(Object.keys(contexts).length/3) * 22,
+                toValue: Math.ceil(Object.keys(contexts).length / 3) * 22,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -94,7 +100,7 @@ function FilterModal(props) {
         } else {
             setMostrarProyectos(!mostrarProyectos);
             Animated.timing(animatedHeightProject, {
-                toValue: Math.ceil(Object.keys(projects).length/3) * 22,
+                toValue: Math.ceil(Object.keys(projects).length / 3) * 22,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -121,7 +127,7 @@ function FilterModal(props) {
         } else {
             setMostrarTags(!mostrarTags);
             Animated.timing(animatedHeightTags, {
-                toValue: Math.ceil(Object.keys(tags).length/4) * 22,
+                toValue: Math.ceil(Object.keys(tags).length / 4) * 22,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -132,6 +138,29 @@ function FilterModal(props) {
             }).start();
         }
     }
+
+    const handleContextSelection = (context) => {
+        if (selectedContexts.includes(context)) {
+            setSelectedContexts(selectedContexts.filter(item => item !== context));
+        } else {
+            setSelectedContexts([...selectedContexts, context]);
+        }
+    };
+    const handleProjectSelection = (project) => {
+        if (selectedProjects.includes(project)) {
+            setSelectedProjects(selectedProjects.filter(item => item !== project));
+        } else {
+            setSelectedProjects([...selectedProjects, project]);
+        }
+    };
+    const handleTagsSelection = (tags) => {
+        if (selectedTags.includes(tags)) {
+            setSelectedTags(selectedTags.filter(item => item !== tags));
+        } else {
+            setSelectedTags([...selectedTags, tags]);
+        }
+    };
+
 
     const rotateIcon = (iconRotation) => iconRotation.interpolate({
         inputRange: [0, 1],
@@ -149,9 +178,13 @@ function FilterModal(props) {
         }).start();
     }
 
+    function onCloseModal() {
+        props.setIsModalOpen(false);
+    }
+
     return (
-        <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={props.onCloseModal} >
-            <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+        <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={onCloseModal} >
+            <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%' }}>
                 <Animated.View
                     style={{
                         transform: [{ translateY }],
@@ -163,19 +196,20 @@ function FilterModal(props) {
                         paddingTop: 20,
                         maxHeight: dvHeight,
                         minHeight: dvHeight,
+                        height: '100%'
                     }}
                 >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 7, marginBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: 7, marginBottom: 10, height: '5%' }}>
                         <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Filtros</Text>
-                        <TouchableOpacity onPress={() => { props.onCloseModal }}>
+                        <TouchableOpacity onPress={onCloseModal}>
                             <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
                         </TouchableOpacity>
                     </View>
-                    <View>
+                    <View style={{height: '87%'}}>
                         <TouchableOpacity onPress={() => toggleArea()}>
                             <View style={filterStyle.filterContainer}>
                                 <Text style={[filterStyle.filterText, { color: (!mostrarAreas) ? Colors[theme].white : Colors[theme].orange }]}>Contextos</Text>
-                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationArea) }]}}>
+                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationArea) }] }}>
                                     <AntDesign name="caretright" size={22} color={(!mostrarAreas) ? Colors[theme].white : Colors[theme].orange} />
                                 </Animated.View>
                             </View>
@@ -183,9 +217,12 @@ function FilterModal(props) {
                         {mostrarAreas && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightArea }]}>
                                 {Object.keys(contexts).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags]}>
-                                        <TouchableOpacity>
-                                            <Text style={{paddingBottom: 3 }}>{contexts[key].name}</Text>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%' }, selectedContexts.includes(contexts[key]) && filterStyle.selectedTag]}>
+                                        <TouchableOpacity onPress={() => {
+                                            filterContext.applyFilter(contexts[key])
+                                            handleContextSelection(contexts[key])
+                                        }}>
+                                            <Text style={{ paddingBottom: 3 }}>{contexts[key].name}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
@@ -203,9 +240,9 @@ function FilterModal(props) {
                         {mostrarProyectos && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightProject }]}>
                                 {Object.keys(projects).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, {borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null}]}>
-                                        <TouchableOpacity>
-                                            <Text style={{paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13 ) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key]) && filterStyle.selectedTag]}>
+                                        <TouchableOpacity onPress={() => { handleProjectSelection(projects[key]) }}>
+                                            <Text style={{ paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
@@ -215,23 +252,35 @@ function FilterModal(props) {
                         <TouchableOpacity onPress={() => toggleTags()}>
                             <View style={filterStyle.filterContainer}>
                                 <Text style={[filterStyle.filterText, { color: (!mostrarTags) ? Colors[theme].white : Colors[theme].orange }]}>Etiquetas</Text>
-                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationTags) }]}}>
+                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationTags) }] }}>
                                     <AntDesign name="caretright" size={22} color={(!mostrarTags) ? Colors[theme].white : Colors[theme].orange} />
                                 </Animated.View>
                             </View>
                         </TouchableOpacity>
                         {mostrarTags && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightTags }]}>
-                                 {Object.keys(tags).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, {backgroundColor: tags[key].colour}]}>
-                                        <TouchableOpacity>
-                                            <Text style={{paddingBottom: 3, color:'white' }}>{tags[key].name}</Text>
+                                {Object.keys(tags).map((key, index) => (
+                                    <View key={index} style={[filterStyle.tags, { backgroundColor: tags[key].colour, flexBasis: '24%' }, selectedTags.includes(tags[key]) && filterStyle.selectedTag]}>
+                                        <TouchableOpacity onPress={() => { handleTagsSelection(tags[key]) }}>
+                                            <Text style={{ paddingBottom: 3, color: 'white' }}>{tags[key].name}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
                             </Animated.View>
                         )}
                         <View style={filterStyle.separator} />
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
+                        <TouchableOpacity>
+                            <View style={filterStyle.button}>
+                                <Text style={{color: '#b4b6b9'}}>Limpiar filtros</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <View style={[filterStyle.button, {backgroundColor: Colors[theme].orange }]}>
+                                <Text style={{color: 'white', fontWeight: 'bold'}}>Aplicar filtros</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </Animated.View>
             </View>

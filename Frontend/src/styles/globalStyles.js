@@ -346,7 +346,6 @@ const filterModal = (theme) => {
             flexDirection: 'row'
         },
         tags: {
-            flexBasis: '32.7%',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
@@ -358,6 +357,17 @@ const filterModal = (theme) => {
             marginRight: 2,
             marginBottom: 2,
         },
+        selectedTag: {
+            borderColor: 'rgba(255, 165, 0, .7)',
+            borderWidth: 3,
+        },
+        button:{
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderColor: '#e3e4e5',
+            borderWidth: 2,
+            borderRadius: 10,
+        }
     })
 }
 
