@@ -281,15 +281,41 @@ function addFiltersToQuery(query, filters){
     let finalFilters = {}
 
     if(filters.context_id){
-        finalQuery = finalQuery.concat(" AND t.context_id = ")
-        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
-        finalFilters.context_id = filters.context_id;
+        //Filter by list of context_id 
+        if(filters.context_id.includes(",") && filters.context_id.split(",").length > 1){
+            finalQuery = finalQuery.concat(" AND t.context_id IN (select con.context_id from areas_contexts con where con.context_id = ANY(")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+            finalQuery = finalQuery.concat("))");
+            finalFilters.context_id = filters.context_id.split(",");
+
+            finalFilters.context_id = finalFilters.context_id.map(e=>{
+                return parseInt(e);
+            })
+        }else{
+            //Filter by only one context_id
+            finalQuery = finalQuery.concat(" AND t.context_id = ")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+            finalFilters.context_id = filters.context_id;
+        }
     }
 
     if(filters.project_id){
-        finalQuery = finalQuery.concat(" AND t.project_id = ")
-        finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
-        finalFilters.project_id = filters.project_id;
+        //Filter by list of project_id 
+        if(filters.project_id.includes(",") && filters.project_id.split(",").length > 1){
+            finalQuery = finalQuery.concat(" AND t.project_id IN (select pro.project_id from projects pro where pro.project_id = ANY(")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+            finalQuery = finalQuery.concat("))");
+            finalFilters.project_id = filters.project_id.split(",");
+
+            finalFilters.project_id = finalFilters.project_id.map(e=>{
+                return parseInt(e);
+            })
+        }else{
+            //Filter by only one project_id
+            finalQuery = finalQuery.concat(" AND t.project_id = ")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
+            finalFilters.project_id = filters.project_id;
+        }
     }
 
     if(filters.state){
