@@ -285,11 +285,11 @@ function FilterModal(props) {
                             const newFilter = {...props.filerState};
 
                             if(selectedProjects.length !== 0){
-                                newFilter.project_id = selectedProjects[0]
+                                newFilter.project_id = selectedProjects
                             }
 
                             if(selectedContexts.length !== 0){
-                                newFilter.context_id = selectedContexts[0]
+                                newFilter.context_id = selectedContexts
                             }
 
                             if(selectedTags.length !== 0){

@@ -79,8 +79,11 @@ function ActionScreen(props) {
 
     if(fetchFilters){
       //provisional
-      if(fetchFilters && fetchFilters.project_id){
+      if(fetchFilters.project_id){
         filter.project_id = fetchFilters.project_id;
+      }
+      if(fetchFilters.context_id){
+        filter.context_id = fetchFilters.context_id;
       }
       if(fetchFilters.tags){
         filter.tags = fetchFilters.tags
@@ -206,7 +209,11 @@ function ActionScreen(props) {
 
   const addFilter = async (filters) => {
     console.log("Añado los filtros", filters)
-    setFilters(filters);
+    if(filters){
+      setFilters(filters);
+    }else{
+      setFilters({})
+    }
     applyFilters(filters);
   };
 
