@@ -66,7 +66,7 @@ function ActionScreen(props) {
     return unsubscribe;
   }, [authState, filterContext, props.navigation]);
 
-  async function fetchData() {
+  async function fetchData(fetchFilters) {
 
     let filter = { state: props.state, completed: false }
     if (props.state === 5) {
@@ -75,6 +75,16 @@ function ActionScreen(props) {
 
     if (filterContext.isFiltered) {
       filter.context_id = filterContext.context_id;
+    }
+
+    if(fetchFilters){
+      //provisional
+      if(fetchFilters && fetchFilters.project_id){
+        filter.project_id = fetchFilters.project_id;
+      }
+      if(fetchFilters.tags){
+        filter.tags = fetchFilters.tags
+      }
     }
 
     const tasksDB = await taskService.getTasks(filter);
@@ -99,6 +109,11 @@ function ActionScreen(props) {
   const reloadData = () => {
     setDataLoaded(false)
     fetchData()
+  }
+
+  const applyFilters = (filters) => {
+    setDataLoaded(false)
+    fetchData(filters)
   }
 
   const addTask = async (task) => {
@@ -190,7 +205,9 @@ function ActionScreen(props) {
   };
 
   const addFilter = async (filters) => {
-    console.log("Añado los filtros")
+    console.log("Añado los filtros", filters)
+    setFilters(filters);
+    applyFilters(filters);
   };
 
   const handleCompleteTasks = async () => {
@@ -291,11 +308,15 @@ function ActionScreen(props) {
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
-              {filterContext.isFiltered ? <ContextBadge context_name={filterContext.context_name} handlePress={() => {
+              {/* {filterContext.isFiltered ? <ContextBadge context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();
-              }} /> : <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />}
+              }} /> : <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />} */}
+              <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />:
+              {Object.keys(filters).length > 0 && 
+                <Text style={{color: Colors[theme].white}}>({Object.keys(filters).length})</Text>
+              }
             </TouchableOpacity>
           </View>
         </View>
@@ -381,6 +402,7 @@ function ActionScreen(props) {
             onAccept={addFilter}
             isModalOpen={isFilterModalOpen}
             setIsModalOpen={setIsFilterModalOpen}
+            fiterState={filters}
           />
         </NativeBaseProvider>
 

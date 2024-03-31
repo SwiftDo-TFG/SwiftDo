@@ -51,6 +51,7 @@ function FilterModal(props) {
         animateModal()
         fetchProjects();
         getTags()
+        console.log("ESTO ESTA CUANDO ABRRES FILTER MODAL", selectedProjects)
     }, [props.isModalOpen])
 
     useEffect(() => {
@@ -139,26 +140,26 @@ function FilterModal(props) {
     }
 
     const handleContextSelection = (context) => {
-        if (selectedContexts.includes(context)) {
-            filterContext.clearFilter(context)
-            setSelectedContexts(selectedContexts.filter(item => item !== context));
+        if (selectedContexts.includes(context.context_id)) {
+            // filterContext.clearFilter(context)
+            setSelectedContexts(selectedContexts.filter(item => item !== context.context_id));
         } else {
-            filterContext.applyFilter(context)
-            setSelectedContexts([...selectedContexts, context]);
+            // filterContext.applyFilter(context)
+            setSelectedContexts([...selectedContexts, context.context_id]);
         }
     };
     const handleProjectSelection = (project) => {
-        if (selectedProjects.includes(project)) {
-            setSelectedProjects(selectedProjects.filter(item => item !== project));
+        if (selectedProjects.includes(project.project_id)) {
+            setSelectedProjects(selectedProjects.filter(item => item !== project.project_id));
         } else {
-            setSelectedProjects([...selectedProjects, project]);
+            setSelectedProjects([...selectedProjects, project.project_id]);
         }
     };
     const handleTagsSelection = (tags) => {
-        if (selectedTags.includes(tags)) {
-            setSelectedTags(selectedTags.filter(item => item !== tags));
+        if (selectedTags.includes(tags.name)) {
+            setSelectedTags(selectedTags.filter(item => item !== tags.name));
         } else {
-            setSelectedTags([...selectedTags, tags]);
+            setSelectedTags([...selectedTags, tags.name]);
         }
     };
 
@@ -189,7 +190,7 @@ function FilterModal(props) {
                 <Animated.View
                     style={{
                         transform: [{ translateY }],
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: Colors[theme].themeColor,
                         width: '100%',
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
@@ -201,7 +202,7 @@ function FilterModal(props) {
                     }}
                 >
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: 7, marginBottom: 10, height: '5%' }}>
-                        <Text style={{ fontSize: 26, fontWeight: 'bold' }}>Filtros</Text>
+                        <Text style={{ fontSize: 26, fontWeight: 'bold', color: Colors[theme].white }}>Filtros</Text>
                         <TouchableOpacity onPress={onCloseModal}>
                             <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
                         </TouchableOpacity>
@@ -218,7 +219,7 @@ function FilterModal(props) {
                         {mostrarAreas && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightArea }]}>
                                 {Object.keys(contexts).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%' }, selectedContexts.includes(contexts[key]) && filterStyle.selectedTag]}>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%' }, selectedContexts.includes(contexts[key].context_id) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => {
                                             handleContextSelection(contexts[key])
                                         }}>
@@ -231,6 +232,7 @@ function FilterModal(props) {
                         <View style={filterStyle.separator} />
                         <TouchableOpacity onPress={() => toggleProject()}>
                             <View style={filterStyle.filterContainer}>
+                                {/* {selectedProjects.length > 0 ? '(' +selectedProjects.length + ')' : ''} */}
                                 <Text style={[filterStyle.filterText, { color: (!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange }]}>Proyectos</Text>
                                 <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationProject) }] }}>
                                     <AntDesign name="caretright" size={22} color={(!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange} />
@@ -240,7 +242,7 @@ function FilterModal(props) {
                         {mostrarProyectos && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightProject }]}>
                                 {Object.keys(projects).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key]) && filterStyle.selectedTag]}>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key].project_id) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => { handleProjectSelection(projects[key]) }}>
                                             <Text style={{ paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
                                         </TouchableOpacity>
@@ -260,7 +262,7 @@ function FilterModal(props) {
                         {mostrarTags && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightTags }]}>
                                 {Object.keys(tags).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { backgroundColor: tags[key].colour, flexBasis: '24%' }, selectedTags.includes(tags[key]) && filterStyle.selectedTag]}>
+                                    <View key={index} style={[filterStyle.tags, { backgroundColor: tags[key].colour, flexBasis: '24%' }, selectedTags.includes(tags[key].name) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => { handleTagsSelection(tags[key]) }}>
                                             <Text style={{ paddingBottom: 3, color: 'white' }}>{tags[key].name}</Text>
                                         </TouchableOpacity>
@@ -272,6 +274,7 @@ function FilterModal(props) {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
                         <TouchableOpacity onPress={() => {
+                            props.onAccept();
                             onCloseModal()
                         }}>
                             <View style={filterStyle.button}>
@@ -279,6 +282,21 @@ function FilterModal(props) {
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {
+                            const newFilter = {...props.filerState};
+
+                            if(selectedProjects.length !== 0){
+                                newFilter.project_id = selectedProjects[0]
+                            }
+
+                            if(selectedContexts.length !== 0){
+                                newFilter.context_id = selectedContexts[0]
+                            }
+
+                            if(selectedTags.length !== 0){
+                                newFilter.tags = selectedTags
+                            }
+
+                            props.onAccept(newFilter);
                             onCloseModal()
                         }}>
                             <View style={[filterStyle.button, { backgroundColor: Colors[theme].orange }]}>
