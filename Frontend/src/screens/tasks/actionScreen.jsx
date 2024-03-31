@@ -315,11 +315,11 @@ function ActionScreen(props) {
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
-              {/* {filterContext.isFiltered ? <ContextBadge context_name={filterContext.context_name} handlePress={() => {
+              {filterContext.isFiltered && <ContextBadge context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();
-              }} /> : <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />} */}
+              }} />}
               <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />:
               {Object.keys(filters).length > 0 && 
                 <Text style={{color: Colors[theme].white}}>({Object.keys(filters).length})</Text>

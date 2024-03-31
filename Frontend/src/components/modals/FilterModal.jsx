@@ -223,7 +223,7 @@ function FilterModal(props) {
                                         <TouchableOpacity onPress={() => {
                                             handleContextSelection(contexts[key])
                                         }}>
-                                            <Text style={{ paddingBottom: 3 }}>{contexts[key].name}</Text>
+                                            <Text style={{ paddingBottom: 3 , color: Colors[theme].white}}>{contexts[key].name}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
