@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'white',
         padding: 3,
-        width: 20,
-        height: 20,
+        width: 15,
+        height: 15,
         position: 'absolute',
         alignItems: 'center',
-        right: -10,
-        top: -6,
+        right: -6,
+        top: -5,
         backgroundColor: 'red',
         marginLeft: 10
     }
