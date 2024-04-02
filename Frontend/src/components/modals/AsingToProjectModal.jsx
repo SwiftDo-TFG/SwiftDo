@@ -37,7 +37,7 @@ const AssignToProjectModal = (props) => {
                         <TouchableOpacity key={pro.project_id} onPress={() => props.handleSelectProject(pro.project_id, pro)}>
                             <View style={styles.textContainer}>
                                 <MaterialCommunityIcons style={{ width: '15%' }} name="circle-slice-8" size={26} color={pro.color} />
-                                <Text style={{ fontSize: 17 }}>{pro.title}</Text>
+                                <Text style={styles.defaultTextModal}>{pro.title}</Text>
                             </View>
                         </TouchableOpacity>
                     )

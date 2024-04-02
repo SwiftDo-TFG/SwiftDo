@@ -23,7 +23,7 @@ const sidebarStyles = (theme) => {
             height: 65,
             borderRadius: 15
         },
-    
+
         separator: {
             width: '100%',
             alignItems: 'center',
@@ -63,7 +63,7 @@ const sidebarStyles = (theme) => {
             justifyContent: 'center',
             alignItems: 'flex-start'
         },
-    
+
         areaContainer: {
             marginVertical: 10,
             // backgroundColor: '#e3e4e5',
@@ -97,7 +97,7 @@ const sidebarStyles = (theme) => {
     })
 }
 
-const buttonStyles = (theme) =>{
+const buttonStyles = (theme) => {
 
     return StyleSheet.create({
         container: {
@@ -118,11 +118,11 @@ const buttonStyles = (theme) =>{
             color: Colors[theme].light,
             fontSize: 18
         },
-        
+
     })
 }
- 
-const addButtonStyle = (theme) =>{
+
+const addButtonStyle = (theme) => {
 
     return StyleSheet.create({
         container: {
@@ -150,7 +150,7 @@ const addButtonStyle = (theme) =>{
             marginTop: 20
         },
     })
-} 
+}
 
 const textStyles = (theme) => {
     return StyleSheet.create({
@@ -180,9 +180,9 @@ const textStyles = (theme) => {
             textDecorationLine: 'underline'
         },
     })
-} 
+}
 
-const formStyles = (theme) =>{
+const formStyles = (theme) => {
     return StyleSheet.create({
         container: {
             flex: 1,
@@ -203,7 +203,7 @@ const formStyles = (theme) =>{
             borderRadius: 10,
             fontSize: 16,
             marginBottom: 14,
-    
+
         },
         textInputError: {
             padding: 10,
@@ -214,7 +214,7 @@ const formStyles = (theme) =>{
             fontSize: 16,
             // marginBottom: 8,
             borderColor: 'red'
-    
+
         },
         textInputErrorText: {
             color: 'red',
@@ -231,7 +231,7 @@ const formStyles = (theme) =>{
     })
 }
 
-const taskStyles = (theme) =>{
+const taskStyles = (theme) => {
     return StyleSheet.create({
         completed: {
             width: 22,
@@ -271,7 +271,7 @@ const taskStyles = (theme) =>{
             alignItems: 'center'
         }
     })
-} 
+}
 
 const actStyles = (theme) => {
     return StyleSheet.create({
@@ -289,7 +289,7 @@ const actStyles = (theme) => {
             fontSize: 28,
             marginLeft: 18,
             fontWeight: 'bold',
-            
+
         },
         emptyIcon: {
             fontSize: 40
@@ -300,9 +300,9 @@ const actStyles = (theme) => {
             marginVertical: 15
         }
     })
-} 
+}
 
-const contextModalStyles = (theme) =>{
+const contextModalStyles = (theme) => {
     return StyleSheet.create({
         context: {
             paddingVertical: 8,
@@ -312,7 +312,64 @@ const contextModalStyles = (theme) =>{
             borderRadius: 10
         }
     })
-} 
+}
+
+const filterModal = (theme) => {
+    return StyleSheet.create({
+        filterText: {
+            fontSize: 22,
+            color: '#272c34'
+        },
+        iconStyle: {
+            fontSize: 22
+        },
+        filterContainer: {
+            marginVertical: 10,
+            paddingLeft: 7,
+            paddingRight: 22,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+        separator: {
+            width: '100%',
+            alignItems: 'center',
+            backgroundColor: '#e3e4e5',
+            height: 2,
+            marginVertical: 5,
+            borderRadius: 50
+        },
+        sectionContainer: {
+            overflow: 'hidden',
+            paddingHorizontal: 22,
+            flexWrap: 'wrap',
+            flexDirection: 'row'
+        },
+        tags: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderColor: '#e3e4e5',
+            borderWidth: 1,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+            height: 20,
+            marginRight: 2,
+            marginBottom: 2,
+        },
+        selectedTag: {
+            borderColor: 'rgba(255, 165, 0, .7)',
+            borderWidth: 3,
+        },
+        button:{
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderColor: '#e3e4e5',
+            borderWidth: 2,
+            borderRadius: 10,
+        }
+    })
+}
 
 export {
     actStyles,
@@ -322,5 +379,6 @@ export {
     buttonStyles,
     taskStyles,
     textStyles,
-    contextModalStyles
+    contextModalStyles,
+    filterModal
 }

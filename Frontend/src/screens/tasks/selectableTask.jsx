@@ -75,11 +75,6 @@ function formattedDate(date) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-function recortarTitle(title) {
-  let t = title;
-  return `${t.substring(0, 20)}...`;
-}
-
 const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
@@ -237,7 +232,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 {task.important_fixed && (
                   <Ionicons name="flag" size={15} color="#be201c" />
                 )}
-                {task.tags && (
+                {task.tags.length > 0 && (
                   <FontAwesome name="tag" size={20} color={Colors[theme].white} style={{ marginLeft: 7 }} />
                 )}
               </View>

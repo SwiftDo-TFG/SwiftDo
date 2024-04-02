@@ -13,8 +13,11 @@ import AuthContext from '../../services/auth/context/authContext';
 import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
+import FilterModal from "../../components/modals/FilterModal";
 import styles from "./actionScreen.styles";
 import Colors from "../../styles/colors";
+import FilterContext from "../../services/filters/FilterContext";
+import ContextBadge from "../../components/common/ContextBadge";
 
 
 function ActionScreen(props) {
@@ -30,10 +33,16 @@ function ActionScreen(props) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //Modal select create task/project
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
   const theme = useColorScheme();
+
+  //Filters
+  const filterContext = useContext(FilterContext)
+  const [filters, setFilters] = useState({})
+
   useEffect(() => {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -42,21 +51,51 @@ function ActionScreen(props) {
       }
     });
 
-    return unsubscribe;
-  }, [authState, props.navigation]);
+    if (isDataLoaded && filterContext.isFiltered) {
+      console.log("THIS IS THE FILTER CONTEXT", filterContext.context_id, filterContext.isFiltered, isDataLoaded)
+      setFilters({ context_id: filterContext.context_id })
+      setDataLoaded(false)
+      fetchData()
+    } else if (filters.context_id) {
+      const auxFilters = filters; delete auxFilters.context_id
+      setFilters(auxFilters)
+      setDataLoaded(false)
+      fetchData();
+    }
 
-  async function fetchData() {
+    return unsubscribe;
+  }, [authState, filterContext, props.navigation]);
+
+  async function fetchData(fetchFilters) {
 
     let filter = { state: props.state, completed: false }
     if (props.state === 5) {
       filter = { project_id: props.project_id, completed: false }
     }
+
+    if (filterContext.isFiltered) {
+      filter.context_id = filterContext.context_id;
+    }
+
+    if (fetchFilters) {
+      //provisional
+      if (fetchFilters.project_id) {
+        filter.project_id = fetchFilters.project_id;
+      }
+      if (fetchFilters.context_id) {
+        filter.context_id = fetchFilters.context_id;
+      }
+      if (fetchFilters.tags) {
+        filter.tags = fetchFilters.tags
+      }
+    }
+
     const tasksDB = await taskService.getTasks(filter);
+
     if (tasksDB.error) {
       return authState.signOut();
     }
 
-    
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
@@ -73,6 +112,11 @@ function ActionScreen(props) {
   const reloadData = () => {
     setDataLoaded(false)
     fetchData()
+  }
+
+  const applyFilters = (filters) => {
+    setDataLoaded(false)
+    fetchData(filters)
   }
 
   const addTask = async (task) => {
@@ -163,6 +207,16 @@ function ActionScreen(props) {
     reloadData();
   };
 
+  const addFilter = async (filters) => {
+    console.log("Añado los filtros", filters)
+    if (filters) {
+      setFilters(filters);
+    } else {
+      setFilters({})
+    }
+    applyFilters(filters);
+  };
+
   const handleCompleteTasks = async () => {
 
     if (selectedTasks.total > 0) {
@@ -251,18 +305,25 @@ function ActionScreen(props) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-          
+
           {/* Sidebar icon */}
           {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
             <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
-          
+
           {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
-            <TouchableOpacity style={styles.area}>
-            <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
-
+            <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
+              {filterContext.isFiltered && <ContextBadge style={{marginRight: 10}} context_name={filterContext.context_name} handlePress={() => {
+                // handleContextAction(null, context_name);
+                filterContext.clearFilter();
+                reloadData();
+              }} />}
+              <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+              {Object.keys(filters).length > 0 &&
+                <Text style={{ color: Colors[theme].white }}>({Object.keys(filters).length})</Text>
+              }
             </TouchableOpacity>
           </View>
         </View>
@@ -341,6 +402,14 @@ function ActionScreen(props) {
             onAccept={addProject}
             isModalOpen={isCreateProjectOpen}
             setIsModalOpen={setIsCreateProjectOpen}
+          />
+
+          {/* ADD FILTER MODAL */}
+          <FilterModal
+            onAccept={addFilter}
+            isModalOpen={isFilterModalOpen}
+            setIsModalOpen={setIsFilterModalOpen}
+            fiterState={filters}
           />
         </NativeBaseProvider>
 

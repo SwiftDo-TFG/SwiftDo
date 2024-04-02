@@ -10,6 +10,7 @@ import AssignToProjectModal from "./AsingToProjectModal";
 import AddTagModal from "./AddTagModal";
 import TaskStates from "../../utils/enums/taskStates"
 import projectService from "../../services/project/projectService";
+import ContextBadge from "../common/ContextBadge";
 
 function CreateTaskModal(props) {
     const [state, setState] = useState({
@@ -33,17 +34,17 @@ function CreateTaskModal(props) {
 
 
     async function openModalInProject() {
-        if(!state.project){
+        if (!state.project) {
             const projectData = await projectService.showContent(props.project_id);
-            setState({...state, project_id: props.project_id, project: projectData.project})
+            setState({ ...state, project_id: props.project_id, project: projectData.project })
         }
     }
 
-    useEffect(()=>{
-        if(props.currentState){
-            if(props.currentState !== TaskStates.PROJECT){
-                setState({...state, state: props.currentState.toString()})
-            }else{
+    useEffect(() => {
+        if (props.currentState) {
+            if (props.currentState !== TaskStates.PROJECT) {
+                setState({ ...state, state: props.currentState.toString() })
+            } else {
                 openModalInProject();
             }
         }
@@ -197,22 +198,6 @@ function CreateTaskModal(props) {
             )
         }
 
-        const ContextBadge = ({ context_name }) => {
-            return (
-                <TouchableOpacity onPress={() => {
-                    handleContextAction(null, context_name);
-                }}>
-                    <View style={{ borderRadius: 5, borderWidth: 1, borderColor: 'grey', paddingLeft: 2, backgroundColor: 'white' }}>
-                        <Text style={{ marginRight: 5 }}>
-                            <MaterialCommunityIcons name="home-city-outline" size={14} color="#272c34" /> {context_name} <MaterialCommunityIcons name="close" size={14} color="#272c34" />
-                            {/* <AntDesign name="caretdown" size={14} color="#272c34" /> */}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-
-            )
-        }
-
         return (
             <>
                 {/* Title */}
@@ -266,7 +251,9 @@ function CreateTaskModal(props) {
                                             setShowContextSelector(true)
                                         }}>
                                             {state.context_id ? (
-                                                <ContextBadge context_name={state.context_name} />
+                                                <ContextBadge context_name={state.context_name} handlePress={() => {
+                                                    handleContextAction(null, state.context_name);
+                                                }} />
                                             ) : (
                                                 <FontAwesome5 name="user" size={22} color="#a0a0a0" />
                                             )}

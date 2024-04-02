@@ -190,7 +190,7 @@ const ProgramadasScreen = (props) => {
     const NumTasksBadge = ({ num }) => {
         return (
             <View style={styles.numTasksBadge}>
-                <Text style={{ color: 'white', fontSize: 8 }}>{num}</Text>
+                {/* <Text style={{ color: 'white', fontSize: 8 }}>{num}</Text> */}
             </View>
         )
     }
