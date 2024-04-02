@@ -15,7 +15,7 @@ export default function App() {
     <AuthState>
       <FilterState>
         <NavigationContainer theme={theme}>
-          <StatusBar backgroundColor={theme.colors.background} />
+          <StatusBar backgroundColor={theme.colors.background} barStyle={theme === 'dark' ? 'light-content' :'dark-content'}/>
           <Router />
         </NavigationContainer>
       </FilterState>
