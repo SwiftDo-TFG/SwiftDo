@@ -77,15 +77,15 @@ function ActionScreen(props) {
       filter.context_id = filterContext.context_id;
     }
 
-    if(fetchFilters){
+    if (fetchFilters) {
       //provisional
-      if(fetchFilters.project_id){
+      if (fetchFilters.project_id) {
         filter.project_id = fetchFilters.project_id;
       }
-      if(fetchFilters.context_id){
+      if (fetchFilters.context_id) {
         filter.context_id = fetchFilters.context_id;
       }
-      if(fetchFilters.tags){
+      if (fetchFilters.tags) {
         filter.tags = fetchFilters.tags
       }
     }
@@ -209,9 +209,9 @@ function ActionScreen(props) {
 
   const addFilter = async (filters) => {
     console.log("Añado los filtros", filters)
-    if(filters){
+    if (filters) {
       setFilters(filters);
-    }else{
+    } else {
       setFilters({})
     }
     applyFilters(filters);
@@ -315,14 +315,14 @@ function ActionScreen(props) {
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
-              {filterContext.isFiltered && <ContextBadge context_name={filterContext.context_name} handlePress={() => {
+              {filterContext.isFiltered && <ContextBadge style={{marginRight: 10}} context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();
               }} />}
-              <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />:
-              {Object.keys(filters).length > 0 && 
-                <Text style={{color: Colors[theme].white}}>({Object.keys(filters).length})</Text>
+              <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+              {Object.keys(filters).length > 0 &&
+                <Text style={{ color: Colors[theme].white }}>({Object.keys(filters).length})</Text>
               }
             </TouchableOpacity>
           </View>
@@ -405,7 +405,7 @@ function ActionScreen(props) {
           />
 
           {/* ADD FILTER MODAL */}
-          <FilterModal 
+          <FilterModal
             onAccept={addFilter}
             isModalOpen={isFilterModalOpen}
             setIsModalOpen={setIsFilterModalOpen}

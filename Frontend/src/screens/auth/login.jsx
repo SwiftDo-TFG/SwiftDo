@@ -6,6 +6,7 @@ import ConfirmButton from '../../components/common/ConfirmButton';
 import LoginImg from '../../components/common/ImageComponent';
 import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
+import Colors from '../../styles/colors';
 
 
 function LoadingIndicator(style) {
@@ -63,7 +64,7 @@ function SignInScreen({ navigation }) {
             <SafeAreaView>
                 <LoginImg />
                 <View style={formStyle.textWrapper}>
-                    <Text style={[textStyle.largeText, { fontWeight: 'bold', textAlign: 'center' }]}>Domina el caos, conquista tu día.</Text>
+                    <Text style={[textStyle.largeText, { fontWeight: 'bold', textAlign: 'center', color: Colors[theme].white }]}>Domina el caos, conquista tu día.</Text>
                 </View>
 
                 {authState.isLoading && <LoadingIndicator style={formStyle}/>}
@@ -89,9 +90,9 @@ function SignInScreen({ navigation }) {
                 </View>
 
                 <View style={formStyle.linkContainer} >
-                    <Text style={textStyle.smallText}>¿Aun no tienes cuenta?</Text>
+                    <Text style={[textStyle.smallText, {color: Colors[theme].white}]}>¿Aun no tienes cuenta?</Text>
                     <TouchableOpacity onPress={() => { navigation.navigate('SignUp') }}>
-                        <Text style={[textStyle.smallText, textStyle.linkText]}>Registrate</Text>
+                        <Text style={[textStyle.smallText, textStyle.linkText]}> Registrate</Text>
                     </TouchableOpacity>
                 </View>
 

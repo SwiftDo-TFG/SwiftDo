@@ -52,6 +52,11 @@ function FilterModal(props) {
         fetchProjects();
         getTags()
         console.log("ESTO ESTA CUANDO ABRRES FILTER MODAL", selectedProjects)
+
+        if(filterContext.isFiltered){
+            setSelectedContexts([...selectedContexts, filterContext.context_id])
+        }
+
     }, [props.isModalOpen])
 
     useEffect(() => {
@@ -274,6 +279,15 @@ function FilterModal(props) {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
                         <TouchableOpacity onPress={() => {
+                            const newContexts = [];
+
+                            if(filterContext.isFiltered){
+                                newContexts.push(filterContext.context_id);
+                            }
+                            
+                            setSelectedContexts(newContexts)
+                            setSelectedProjects([])
+                            setSelectedTags([])
                             props.onAccept();
                             onCloseModal()
                         }}>

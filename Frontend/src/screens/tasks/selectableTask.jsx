@@ -232,7 +232,7 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                 {task.important_fixed && (
                   <Ionicons name="flag" size={15} color="#be201c" />
                 )}
-                {task.tags && (
+                {task.tags.length > 0 && (
                   <FontAwesome name="tag" size={20} color={Colors[theme].white} style={{ marginLeft: 7 }} />
                 )}
               </View>
