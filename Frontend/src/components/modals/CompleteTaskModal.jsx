@@ -21,7 +21,7 @@ function CompleteTaskModal({texto, ...props}) {
                         <Text style={{fontSize: 16, fontWeight: '500'}}>
                             {props.title}
                         </Text>
-                        <Text style={{ color: '#182E44', fontSize: 16, fontWeight: '500' }}>
+                        <Text style={{ color: '#182E44', fontSize: 16, fontWeight: '500', textAlign: 'center', marginTop: 20}}>
                             {texto}
                         </Text>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
