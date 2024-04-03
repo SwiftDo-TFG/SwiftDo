@@ -2,7 +2,6 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { registerRootComponent } from 'expo';
-import { StatusBar } from 'expo-status-bar';
 import AuthState from './services/auth/context/authState';
 import FilterState from './services/filters/FilterState';
 import Router from './components/navigation/Router';
