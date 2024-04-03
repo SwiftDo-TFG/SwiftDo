@@ -99,6 +99,19 @@ function Project(props) {
             console.error("Error al actualizar la tarea en la base de datos");
         }
     };
+
+    const handleCompleteProject = async () => {
+        if(projectData.tasks.length === 0){
+            const updatedProjectResult = await projectService.modifyProject(projectData.project.project_id, { completed: true });
+
+            if (updatedProjectResult !== -1) {
+                closeModal()
+            } else {
+                console.error("Error al actualizar la tarea en la base de datos");
+            }
+        }
+    }
+
     return (
         <ActionScreen {...props} state={TaskStates.PROJECT} project_id={projectData.project.project_id}>
             {isDataLoaded &&
@@ -119,6 +132,7 @@ function Project(props) {
                 texto={completeModalText}
                 isModalOpen={isCompleteModalVisible}
                 setIsModalOpen={closeModal}
+                onAccept={handleCompleteProject}
             />
             {/* EDIT PROJECT MODAL   */}
             <CreateProjectModal
