@@ -78,7 +78,7 @@ function FilterModal(props) {
         } else {
             setMostrarAreas(!mostrarAreas);
             Animated.timing(animatedHeightArea, {
-                toValue: Math.ceil(Object.keys(contexts).length / 3) * 22,
+                toValue: Math.ceil(Object.keys(contexts).length / 3) * 24,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -105,7 +105,7 @@ function FilterModal(props) {
         } else {
             setMostrarProyectos(!mostrarProyectos);
             Animated.timing(animatedHeightProject, {
-                toValue: Math.ceil(Object.keys(projects).length / 3) * 22,
+                toValue: Math.ceil(Object.keys(projects).length / 3) * 24,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -132,7 +132,7 @@ function FilterModal(props) {
         } else {
             setMostrarTags(!mostrarTags);
             Animated.timing(animatedHeightTags, {
-                toValue: Math.ceil(Object.keys(tags).length / 4) * 22,
+                toValue: Math.ceil(Object.keys(tags).length / 4) * 25,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -224,7 +224,7 @@ function FilterModal(props) {
                         {mostrarAreas && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightArea }]}>
                                 {Object.keys(contexts).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%' }, selectedContexts.includes(contexts[key].context_id) && filterStyle.selectedTag]}>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%' }, selectedContexts.includes(contexts[key].context_id) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => {
                                             handleContextSelection(contexts[key])
                                         }}>
@@ -247,7 +247,7 @@ function FilterModal(props) {
                         {mostrarProyectos && (
                             <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightProject }]}>
                                 {Object.keys(projects).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.7%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key].project_id) && filterStyle.selectedTag]}>
+                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key].project_id) && filterStyle.selectedTag]}>
                                         <TouchableOpacity onPress={() => { handleProjectSelection(projects[key]) }}>
                                             <Text style={{ paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
                                         </TouchableOpacity>
