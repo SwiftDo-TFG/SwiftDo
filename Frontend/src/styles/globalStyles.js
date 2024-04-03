@@ -353,7 +353,7 @@ const filterModal = (theme) => {
             borderWidth: 1,
             borderRadius: 10,
             paddingHorizontal: 10,
-            height: 22,
+            height: 23,
             marginRight: 2,
             marginBottom: 2,
         },

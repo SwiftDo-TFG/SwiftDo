@@ -78,7 +78,7 @@ function FilterModal(props) {
         } else {
             setMostrarAreas(!mostrarAreas);
             Animated.timing(animatedHeightArea, {
-                toValue: Math.ceil(Object.keys(contexts).length / 3) * 24,
+                toValue: Math.ceil(Object.keys(contexts).length / 3) * 25,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -105,7 +105,7 @@ function FilterModal(props) {
         } else {
             setMostrarProyectos(!mostrarProyectos);
             Animated.timing(animatedHeightProject, {
-                toValue: Math.ceil(Object.keys(projects).length / 3) * 24,
+                toValue: Math.ceil(Object.keys(projects).length / 3) * 25,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
