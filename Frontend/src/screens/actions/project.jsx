@@ -101,14 +101,13 @@ function Project(props) {
     };
 
     const handleCompleteProject = async () => {
-        if(projectData.tasks.length === 0){
-            const updatedProjectResult = await projectService.modifyProject(projectData.project.project_id, { completed: true });
+        const updatedProjectResult = await projectService.completeProject(projectData.project.project_id);
 
-            if (updatedProjectResult !== -1) {
-                closeModal()
-            } else {
-                console.error("Error al actualizar la tarea en la base de datos");
-            }
+        if (updatedProjectResult !== -1) {
+            closeModal()
+            props.navigation.navigate('Inbox');
+        } else {
+            console.error("Error al completar el proyecto");
         }
     }
 
