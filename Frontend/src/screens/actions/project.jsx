@@ -62,7 +62,7 @@ function Project(props) {
         // Se debe avisar al usuario si quiere seguir con la accion de completar todas las tareas antes de completar el proyecto
         else {
             setCompleteModalTitle("Aún hay tareas sin completar")
-            setCompleteModalText("Al completar este proyecto se completarán éstas tareas. ¿Desea continuar?");
+            setCompleteModalText("Al completar este proyecto se completarán éstas tareas.\n\n ¿Desea continuar?");
             // TODO completar proyecto
             setIsCompleteModalVisible(true);
             console.log("Tareas")
