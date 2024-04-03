@@ -76,7 +76,20 @@ const modifyProject = async (projectId, project_data) => {
     }
 }
 
+// Completa el proyecto y si tiene tareas tambien
+const completeProject = async (projectId) => {
+    try {
+        const dir = `/project/${projectId}/complete`
+        const response = await instance.post(dir);
+        const project = response.data;
+
+        return project.project_id;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
 
 
 
-export default { createProject, showProjectsByUser, showContent, modifyProject }
+export default { createProject, showProjectsByUser, showContent, modifyProject, completeProject}

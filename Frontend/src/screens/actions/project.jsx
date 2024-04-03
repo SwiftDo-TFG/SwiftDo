@@ -62,7 +62,7 @@ function Project(props) {
         // Se debe avisar al usuario si quiere seguir con la accion de completar todas las tareas antes de completar el proyecto
         else {
             setCompleteModalTitle("Aún hay tareas sin completar")
-            setCompleteModalText("Al completar este proyecto se completarán éstas tareas. ¿Desea continuar?");
+            setCompleteModalText("Al completar este proyecto se completarán éstas tareas.\n\n ¿Desea continuar?");
             // TODO completar proyecto
             setIsCompleteModalVisible(true);
             console.log("Tareas")
@@ -99,6 +99,18 @@ function Project(props) {
             console.error("Error al actualizar la tarea en la base de datos");
         }
     };
+
+    const handleCompleteProject = async () => {
+        const updatedProjectResult = await projectService.completeProject(projectData.project.project_id);
+
+        if (updatedProjectResult !== -1) {
+            closeModal()
+            props.navigation.navigate('Inbox');
+        } else {
+            console.error("Error al completar el proyecto");
+        }
+    }
+
     return (
         <ActionScreen {...props} state={TaskStates.PROJECT} project_id={projectData.project.project_id}>
             {isDataLoaded &&
@@ -119,6 +131,7 @@ function Project(props) {
                 texto={completeModalText}
                 isModalOpen={isCompleteModalVisible}
                 setIsModalOpen={closeModal}
+                onAccept={handleCompleteProject}
             />
             {/* EDIT PROJECT MODAL   */}
             <CreateProjectModal

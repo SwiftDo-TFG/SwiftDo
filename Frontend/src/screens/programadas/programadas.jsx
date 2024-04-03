@@ -4,7 +4,7 @@ import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
 import stylesAction from '../tasks/actionScreen.styles'
 import utils from "./calendar/utils"
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { NativeBaseProvider } from "native-base"
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
@@ -16,7 +16,9 @@ import CompleteTaskModal from "../../components/modals/CompleteTaskModal"
 import { actStyles } from "../../styles/globalStyles";
 import tagService from "../../services/tag/tagService";
 import Colors from "../../styles/colors";
-
+import FilterModal from "../../components/modals/FilterModal";
+import FilterContext from "../../services/filters/FilterContext";
+import ContextBadge from "../../components/common/ContextBadge";
 
 
 const ProgramadasScreen = (props) => {
@@ -28,10 +30,18 @@ const ProgramadasScreen = (props) => {
     const [isDataLoaded, setDataLoaded] = useState(false);
     const [selectedTasks, setSelectedTasks] = useState({});
 
+    //Filters
+    const filterContext = useContext(FilterContext)
+    const [filters, setFilters] = useState({})
+
+
     //Modal states
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+
     const theme = useColorScheme();
     const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
@@ -44,11 +54,41 @@ const ProgramadasScreen = (props) => {
             }
         });
 
-        return unsubscribe;
-    }, [props.navigation])
+        if (isDataLoaded && filterContext.isFiltered) {
+            setFilters({ context_id: filterContext.context_id })
+            setDataLoaded(false)
+            fetchData()
+        } else if (filters.context_id) {
+            const auxFilters = filters; delete auxFilters.context_id
+            setFilters(auxFilters)
+            setDataLoaded(false)
+            fetchData();
+        }
 
-    async function fetchData() {
-        let tasksDB = await taskService.getTasks({ date_limit: '?', completed: false });
+        return unsubscribe;
+    }, [props.navigation, filterContext])
+
+    async function fetchData(fetchFilters) {
+        let filter = { date_limit: '?', completed: false }
+
+        if (filterContext.isFiltered) {
+            filter.context_id = filterContext.context_id;
+        }
+
+        if (fetchFilters) {
+            //provisional
+            if (fetchFilters.project_id) {
+                filter.project_id = fetchFilters.project_id;
+            }
+            if (fetchFilters.context_id) {
+                filter.context_id = fetchFilters.context_id;
+            }
+            if (fetchFilters.tags) {
+                filter.tags = fetchFilters.tags
+            }
+        }
+
+        let tasksDB = await taskService.getTasks(filter);
         if (tasksDB.error) {
             return authState.signOut();
         }
@@ -90,6 +130,11 @@ const ProgramadasScreen = (props) => {
     const reloadData = () => {
         setDataLoaded(false)
         fetchData()
+    }
+
+    const applyFilters = (filters) => {
+        setDataLoaded(false)
+        fetchData(filters)
     }
 
     const showEditPopUp = (id) => {
@@ -176,6 +221,16 @@ const ProgramadasScreen = (props) => {
         }
     };
 
+    const addFilter = async (filters) => {
+        console.log("Añado los filtros", filters)
+        if (filters) {
+            setFilters(filters);
+        } else {
+            setFilters({})
+        }
+        applyFilters(filters);
+    };
+
     const showCompleteModal = (id) => {
         const taskToEdit = tasks.find(task => task.task_id === id);
 
@@ -198,7 +253,7 @@ const ProgramadasScreen = (props) => {
     function TasksCalendar() {
         return (
             <>
-                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{calendarBackground: theme === 'dark' ? Colors[theme].themeColor: 'white'}} /> : <ExpandableCalendar
+                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{ calendarBackground: theme === 'dark' ? Colors[theme].themeColor : 'white' }} /> : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}
@@ -230,7 +285,7 @@ const ProgramadasScreen = (props) => {
                                 }}
                             // style={[marking?.customContainerStyle, theme?.textDayStyle]}
                             >
-                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : 'white'}}>
+                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : 'white' }}>
                                     {numTasksDay !== 0 && isDataLoaded && <NumTasksBadge num={numTasksDay} />}
                                     <Text style={{ fontSize: 16, color: dayTextcolor }}>
                                         {date?.day}
@@ -240,7 +295,7 @@ const ProgramadasScreen = (props) => {
                         );
                     }}
                     theme={{
-                        calendarBackground: theme === 'dark' ? Colors[theme].themeColor: 'white',
+                        calendarBackground: theme === 'dark' ? Colors[theme].themeColor : 'white',
                     }}
                 />}
 
@@ -300,16 +355,16 @@ const ProgramadasScreen = (props) => {
 
                         // scrollToNextEvent
                         sectionStyle={styles.section}
-                        // theme={{
-                        //     textDayStyle: {color: 'red'},
-                        //     selectedDayTextColor: 'red',
-                        //     agendaDayTextColor: 'red',
-                        //     agendaTodayColor: 'red',
-                        //     agendaDayNumColor: 'red',
-                        //     textSectionTitleColor: 'red',
-                        //     textSectionTitleColor: 'red'
-                        //     // textDay                    
-                        // }}
+                    // theme={{
+                    //     textDayStyle: {color: 'red'},
+                    //     selectedDayTextColor: 'red',
+                    //     agendaDayTextColor: 'red',
+                    //     agendaTodayColor: 'red',
+                    //     agendaDayNumColor: 'red',
+                    //     textSectionTitleColor: 'red',
+                    //     textSectionTitleColor: 'red'
+                    //     // textDay                    
+                    // }}
                     // dayFormat={'yyyy-MM-d'}
                     />
                 }
@@ -359,15 +414,31 @@ const ProgramadasScreen = (props) => {
                     onAccept={addTask}
                     mode='add'
                 /> */}
+
+                {/* ADD FILTER MODAL */}
+                <FilterModal
+                    onAccept={addFilter}
+                    isModalOpen={isFilterModalOpen}
+                    setIsModalOpen={setIsFilterModalOpen}
+                    fiterState={filters}
+                />
+
                 <View style={styles.container}>
                     <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
                         {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
                             <Feather name="sidebar" size={28} color={Colors[theme].white} />
                         </TouchableOpacity>)}
                         <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
-                            <TouchableOpacity style={stylesAction.area}>
-                                {/* <Text style={{ color: Colors[theme].white }}>Contexto</Text> */}
+                            <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
+                                {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
+                                    // handleContextAction(null, context_name);
+                                    filterContext.clearFilter();
+                                    reloadData();
+                                }} />}
                                 <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+                                {Object.keys(filters).length > 0 &&
+                                    <Text style={{ color: Colors[theme].white }}>({Object.keys(filters).length})</Text>
+                                }
                             </TouchableOpacity>
                         </View>
                     </View>
