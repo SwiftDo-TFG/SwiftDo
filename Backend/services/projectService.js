@@ -89,6 +89,23 @@ projectService.modifyProject = async (project_id, project) => {
 
 }
 
+
+projectService.completeProject = async (project_id, user_id) => {
+    const client = await db.getClient();
+    const project_updated = await client.query("UPDATE projects SET completed = $3 WHERE project_id = $1 and user_id = $2 RETURNING project_id", [project_id, user_id, true])
+
+    if (project_updated.rows.length !== 1) {
+        throw new Error("The project does not exist")
+    }
+
+    const completedTask = await client.query("UPDATE tasks SET completed = $3 WHERE project_id = $1 and user_id = $2", [project_id, user_id, true]);
+
+    if (client) {
+        client.release()
+        return project_updated.rows[0].project_id;
+    }
+}
+
 function completeDefValues(project) {
     if (!project.user_id) {
         throw new Error("Invalid project Data")
