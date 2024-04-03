@@ -27,7 +27,8 @@
       "package": "com.pabluskagamo.GTDApp"
     },
     "web": {
-      "": "./src/assets/favicon.png"
+      "": "./src/assets/favicon.png",
+      "bundler": "metro"
     },
     "extra": {
       "eas": {
