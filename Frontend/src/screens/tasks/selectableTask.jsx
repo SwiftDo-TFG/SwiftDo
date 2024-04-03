@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, useColorScheme } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import styles from './actionScreen.styles'
@@ -75,7 +76,7 @@ function formattedDate(date) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
+const SelectableTask = ({ currentScreen, navigation, task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -87,7 +88,6 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
   //   extrapolate: 'clamp',
   // });
   const theme = useColorScheme();
-
   useEffect(() => {
     const subscription = translateX.addListener(({ value }) => {
       // setIsSwiped(value === 0);
@@ -216,12 +216,16 @@ const SelectableTask = ({ task, onPress, onDelete, scale, opacity, selectedTasks
                             </View>
                           ))}
                         </View>
-                      </View>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <TouchableOpacity onPress={() => showEditPopUp(task.task_id)}>
+                        <TouchableOpacity style={{justifyContent: 'flex-start'}} onPress={() => showEditPopUp(task.task_id)}>
                           <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                         </TouchableOpacity>
                       </View>
+                      
+                        <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={() => navigation.navigate('Details', {task, currentScreen})} >
+                          <Text> Detalles </Text>
+                          <AntDesign name="arrowright" size={13} color="black" />
+                        </TouchableOpacity>
+                        
                     </View>
                   </View>
                 </View>

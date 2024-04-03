@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity } from "react-native"
+import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity, SafeAreaView } from "react-native"
 import { AntDesign } from '@expo/vector-icons';
 import { filterModal } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
@@ -190,6 +190,7 @@ function FilterModal(props) {
     }
 
     return (
+
         <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={onCloseModal} >
             <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%' }}>
                 <Animated.View

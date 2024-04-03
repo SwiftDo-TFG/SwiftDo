@@ -8,7 +8,6 @@ import SelectionPanel from "./SelectionPanel";
 function TaskList(props) {
     const scrollY = useRef(new Animated.Value(0)).current;
     const ITEM_SIZE = 62; //Tamaño tarea + margin
-
     useEffect(() => {
         const seletedAux = {}
 
@@ -88,6 +87,8 @@ function TaskList(props) {
                     })
 
                     return (<SelectableTask
+                        currentScreen={props.currentScreen}
+                        navigation={props.navigation}
                         task={item}
                         onPress={() => toggleSelectTask(item.task_id)}
                         onDelete={deleteTask}

@@ -12,7 +12,7 @@ import Colors from "../../styles/colors";
 function Inbox(props) {
     const theme = useColorScheme();
     const actStyle = actStyles(theme);
-
+    
     return (
         <ActionScreen {...props} state={TaskStates.INBOX} emptyIcon={<FontAwesome5 style={actStyle.emptyIcon} name="inbox" color={Colors[theme].grey}/>}>
             <View style={actStyle.action}>
