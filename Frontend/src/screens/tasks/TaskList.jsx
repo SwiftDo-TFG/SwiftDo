@@ -87,7 +87,6 @@ function TaskList(props) {
                     })
 
                     return (<SelectableTask
-                        currentScreen={props.currentScreen}
                         navigation={props.navigation}
                         task={item}
                         onPress={() => toggleSelectTask(item.task_id)}

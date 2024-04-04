@@ -190,9 +190,11 @@ function FilterModal(props) {
     }
 
     return (
+       
 
         <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={onCloseModal} >
-            <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%' }}>
+             <SafeAreaView>
+                <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%' }}>
                 <Animated.View
                     style={{
                         transform: [{ translateY }],
@@ -213,7 +215,7 @@ function FilterModal(props) {
                             <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{ height: '87%' }}>
+                    <View style={{ height: '80%' }}>
                         <TouchableOpacity onPress={() => toggleArea()}>
                             <View style={filterStyle.filterContainer}>
                                 <Text style={[filterStyle.filterText, { color: (!mostrarAreas) ? Colors[theme].white : Colors[theme].orange }]}>Contextos</Text>
@@ -321,7 +323,9 @@ function FilterModal(props) {
                     </View>
                 </Animated.View>
             </View>
+            </SafeAreaView>
         </Modal>
+        
     )
 }
 

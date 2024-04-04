@@ -76,17 +76,13 @@ function formattedDate(date) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-const SelectableTask = ({ currentScreen, navigation, task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
+const SelectableTask = ({ navigation, task, onPress, onDelete, scale, opacity, selectedTasks, showMovePopUp, showEditPopUp, showCompleteModal }) => {
   const [isSwiped, setIsSwiped] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id, isMenuVisible);
   const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ showCompleteModal, id: task.task_id, translateX, isMenuVisible });
-  // const backgroundTask = translateX.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: ['#f2f2f2', 'rgba(0, 0, 0, 0)'],
-  //   extrapolate: 'clamp',
-  // });
+
   const theme = useColorScheme();
   useEffect(() => {
     const subscription = translateX.addListener(({ value }) => {
@@ -220,8 +216,8 @@ const SelectableTask = ({ currentScreen, navigation, task, onPress, onDelete, sc
                           <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                         </TouchableOpacity>
                       </View>
-                      
-                        <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={() => navigation.navigate('Details', {task, currentScreen})} >
+                            
+                        <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={() => navigation.navigate('Details', {task})} >
                           <Text> Detalles </Text>
                           <AntDesign name="arrowright" size={13} color="black" />
                         </TouchableOpacity>

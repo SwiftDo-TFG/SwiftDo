@@ -15,7 +15,7 @@ const DetailScreen = ({ navigation, route}) => {
             <View style={style.container}>
                 {/* TITLE + TAGS + CONTEXT */}
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <TouchableOpacity onPress={() => navigation.navigate(lastScreen.name)}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <AntDesign name="left" size={20} color= {Colors[theme].white} />
                     </TouchableOpacity>
                     <View style={[style.contextContainer, {flexDirection: 'row'}]}>

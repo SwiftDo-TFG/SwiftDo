@@ -334,7 +334,6 @@ function ActionScreen(props) {
         <NativeBaseProvider>
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
             <TaskList
-              currentScreen={props.route}
               tasks={tasks}
               navigation={props.navigation}
               showEditPopUp={showEditPopUp}

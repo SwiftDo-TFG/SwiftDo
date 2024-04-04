@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 20,
-        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white'
+        // backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white'
     },
     taskContainer: {
         flex: 1,
@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
         // fontSize: '120%'
     },
     section: {
-        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white',
+        backgroundColor: Colors[theme].activeColor,
         fontSize: 16,
-        color: theme ==='light' ? 'grey': Colors[theme].white,
+        color: theme ==='light' ? 'grey': Colors[theme].themeColor,
         textTransform: 'capitalize',
         // textDecorationLine: 'underline'
     },

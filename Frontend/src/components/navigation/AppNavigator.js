@@ -32,6 +32,7 @@ const AppNavigator = ({projects, state }) => {
                     // width: '80%'
                 },
             }}
+            backBehavior="history"
             defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
         >
             {state.userToken == null ? (
