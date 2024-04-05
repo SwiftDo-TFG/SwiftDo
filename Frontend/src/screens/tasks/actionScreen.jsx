@@ -383,7 +383,7 @@ function ActionScreen(props) {
             onAccept={addTask}
             isModalOpen={isCreateModalOpen}
             setIsModalOpen={setIsCreateModalOpen}
-            currentState={props.state}
+            currentState={props.state === 0 ? 1 : props.state}
             project_id={props.project_id ? props.project_id : null}
           />
 

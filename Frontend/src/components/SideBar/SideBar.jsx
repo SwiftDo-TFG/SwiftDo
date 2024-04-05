@@ -119,9 +119,7 @@ export default ({ navigation }) => {
                 <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
-                    <View style={{marginVertical: 5}}>
-                        <ActionScheme icon={"play"} iconColor={Colors[theme].white} text={"Hoy"} />
-                    </View>
+                    <ActionScheme onPress={() => navigation.navigate('Today')} icon={"play"} iconColor={Colors[theme].white} text={"Hoy"} />
                     <ActionScheme onPress={() => navigation.navigate('CuantoAntes')} icon={"bolt"} iconColor={Colors[theme].yellow} text={"Cuanto Antes"} totalTasks={caData[0]} importantTasks={caData[1]} />
                     <ActionScheme onPress={() => navigation.navigate('Programadas')} icon={"calendar"} iconColor={Colors[theme].green} text={"Programadas"} totalTasks={progData[0]} importantTasks={progData[1]} />
                     <ActionScheme onPress={() => navigation.navigate('Archivadas')} icon={"archive"} iconColor={Colors[theme].brown} text={"Archivadas"} totalTasks={archData[0]} importantTasks={archData[1]} />

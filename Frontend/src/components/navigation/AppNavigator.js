@@ -6,6 +6,7 @@ import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Project from '../../screens/actions/project';
+import Today from '../../screens/actions/today';
 import SideBar from '../SideBar/SideBar';
 import { sidebarStyles } from '../../styles/globalStyles';
 import { useColorScheme, useWindowDimensions } from 'react-native';
@@ -14,7 +15,7 @@ import Colors from '../../styles/colors';
 
 const Drawer = createDrawerNavigator();
 
-const AppNavigator = ({projects, state }) => {
+const AppNavigator = ({ projects, state }) => {
     const dimensions = useWindowDimensions();
     const theme = useColorScheme();
     const sideBar = sidebarStyles(theme)
@@ -45,7 +46,7 @@ const AppNavigator = ({projects, state }) => {
                     // width: '80%'
                 },
             }}
-            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
+            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"}
         >
             {state.userToken == null ? (
                 // No token found, user isn't signed in
@@ -61,6 +62,13 @@ const AppNavigator = ({projects, state }) => {
                     <Drawer.Screen
                         name="Inbox"
                         component={Inbox}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="Today"
+                        component={Today}
                         options={{
                             headerShown: false
                         }}
