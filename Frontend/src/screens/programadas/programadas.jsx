@@ -1,4 +1,4 @@
-import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme, SafeAreaView } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
@@ -20,7 +20,6 @@ import FilterModal from "../../components/modals/FilterModal";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 
-
 const ProgramadasScreen = (props) => {
     const [calendarHeight, setCalendarHeight] = useState(0);
     const [tasks, setTasks] = useState([]);
@@ -33,7 +32,7 @@ const ProgramadasScreen = (props) => {
     //Filters
     const filterContext = useContext(FilterContext)
     const [filters, setFilters] = useState({})
-
+    console.log("PROPS DE PROGRAMADAS ", props.route)
 
     //Modal states
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -252,8 +251,8 @@ const ProgramadasScreen = (props) => {
 
     function TasksCalendar() {
         return (
-            <>
-                {Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{ calendarBackground: theme === 'dark' ? Colors[theme].themeColor : 'white' }} /> : <ExpandableCalendar
+            
+            <>{Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{ calendarBackground: 'red' }} /> : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}
@@ -268,15 +267,16 @@ const ProgramadasScreen = (props) => {
                         //     ? colors.actionSecondary
                         //     : colors.textPrimary;
                         const numTasksDay = numTaskPerDay[date.dateString] ? numTaskPerDay[date.dateString] : 0;
-                        let dayTextcolor = 'black';
+                        let dayTextcolor = Colors[theme].white;
 
                         if (state === 'disabled') {
                             dayTextcolor = 'lightgrey'
                         } else if (state === 'selected') {
-                            dayTextcolor = 'white'
+                            dayTextcolor = Colors[theme].white
                         }
 
                         return (
+
                             <TouchableOpacity
                                 onPress={() => {
                                     // selectDay(state, date, onPress);
@@ -285,7 +285,7 @@ const ProgramadasScreen = (props) => {
                                 }}
                             // style={[marking?.customContainerStyle, theme?.textDayStyle]}
                             >
-                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : 'white' }}>
+                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : Colors[theme].selectColor}}>
                                     {numTasksDay !== 0 && isDataLoaded && <NumTasksBadge num={numTasksDay} />}
                                     <Text style={{ fontSize: 16, color: dayTextcolor }}>
                                         {date?.day}
@@ -295,7 +295,7 @@ const ProgramadasScreen = (props) => {
                         );
                     }}
                     theme={{
-                        calendarBackground: theme === 'dark' ? Colors[theme].themeColor : 'white',
+                        calendarBackground: Colors[theme].themeColor ,
                     }}
                 />}
 
@@ -329,6 +329,7 @@ const ProgramadasScreen = (props) => {
                             return (
                                 <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
                                     <SelectableTask
+                                        navigation={props.navigation}
                                         task={item.item} selectedTasks={selectedTasks}
                                         showEditPopUp={showEditPopUp}
                                         showMovePopUp={showMovePopUp}
@@ -354,7 +355,7 @@ const ProgramadasScreen = (props) => {
                         // }}
 
                         // scrollToNextEvent
-                        sectionStyle={styles.section}
+                        sectionStyle={[styles.section, {backgroundColor: Colors[theme].activeColor}]}
                     // theme={{
                     //     textDayStyle: {color: 'red'},
                     //     selectedDayTextColor: 'red',
@@ -373,6 +374,7 @@ const ProgramadasScreen = (props) => {
     }
 
     return (
+    <SafeAreaView style={{flex:1}}>
         <NativeBaseProvider>
             <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
                 {/* MOVE MODAL   */}
@@ -421,8 +423,9 @@ const ProgramadasScreen = (props) => {
                     isModalOpen={isFilterModalOpen}
                     setIsModalOpen={setIsFilterModalOpen}
                     fiterState={filters}
-                />
+                    />
 
+                    
                 <View style={styles.container}>
                     <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
                         {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
@@ -442,6 +445,7 @@ const ProgramadasScreen = (props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+
                     <View style={actStyle.action}>
                         <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
                         <Text style={{ ...actStyle.actionTitle, color: Colors[theme].white }}>Programadas</Text>
@@ -450,6 +454,7 @@ const ProgramadasScreen = (props) => {
                 <TasksCalendar />
             </CalendarProvider>
         </NativeBaseProvider>
+    </SafeAreaView>
     )
 }
 

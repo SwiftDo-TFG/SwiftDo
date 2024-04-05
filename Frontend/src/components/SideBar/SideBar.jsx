@@ -103,7 +103,6 @@ export default ({ navigation }) => {
     const addProjects = () => {
         return sideProjects.map((project, i) => (
             <View key={i}>
-                {/* <ActionScheme onPress={() => navigation.navigate(project.project_id)} icon={progressIcon(projectAttributes[i].completionPercentage)} type={'M'} iconColor={projectAttributes[i].color !== null ? projectAttributes[i].color : Colors.paper} text={project.title} /> */}
                 <ActionScheme onPress={() => { navigateFromProjectToProject(navigation, project) }} icon={progressIcon(project.percentage)} type={'M'} iconColor={project.color !== null ? project.color : Colors.paper} text={project.title} />
             </View>
 

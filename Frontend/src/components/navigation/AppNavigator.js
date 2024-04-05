@@ -12,6 +12,7 @@ import { sidebarStyles } from '../../styles/globalStyles';
 import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
+import DetailScreen from '../../screens/details';
 
 const Drawer = createDrawerNavigator();
 
@@ -19,20 +20,6 @@ const AppNavigator = ({ projects, state }) => {
     const dimensions = useWindowDimensions();
     const theme = useColorScheme();
     const sideBar = sidebarStyles(theme)
-
-    const addProjects = useMemo(() => {
-        return projects.map((project, i) => (
-            <Drawer.Screen
-                key={i}
-                name={project.title}
-                initialParams={{ id: project.project_id, color: project.color, description: project.description, percentage: project.completionPercentage }}
-                component={Project}
-                options={{
-                    title: project.title,
-                    headerShown: false
-                }}
-            />))
-    }, [projects])
 
     return (
         <Drawer.Navigator
@@ -46,7 +33,8 @@ const AppNavigator = ({ projects, state }) => {
                     // width: '80%'
                 },
             }}
-            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"}
+            backBehavior="history"
+            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
         >
             {state.userToken == null ? (
                 // No token found, user isn't signed in
@@ -99,6 +87,14 @@ const AppNavigator = ({ projects, state }) => {
                     <Drawer.Screen
                         name={"project"}
                         component={Project}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    {/* Detalles */}
+                    <Drawer.Screen 
+                        name={"Details"}
+                        component={DetailScreen}
                         options={{
                             headerShown: false
                         }}

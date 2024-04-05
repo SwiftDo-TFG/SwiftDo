@@ -4,7 +4,7 @@ import { sidebarStyles } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
 import { useState } from "react";
 
-const ActionScheme = ({ onPress, icon, iconColor, text, totalTasks, importantTasks, type }) => {
+const ActionScheme = ({ navigation, onPress, icon, iconColor, text, totalTasks, importantTasks, type }) => {
     const theme = useColorScheme();
     const sideBar = sidebarStyles(theme);
 

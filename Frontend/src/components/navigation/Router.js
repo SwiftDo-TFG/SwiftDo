@@ -31,22 +31,6 @@ export default function Router(theme) {
           state.checkSession();
         };
         bootstrapAsync();
-        const fetchData = async () => {
-          try {
-            
-            const projectData = await projectService.showProjectsByUser(); // Informacion sin detallar
-            const detailedProjects = await Promise.all(projectData.map(async project => { // Accedemos a una informacion mas detallada de cada proyecto
-              const projectDetails = await projectService.showContent(project.project_id);
-              return { ...project, completionPercentage: projectDetails.percentage };
-            }));
-            setProjects(detailedProjects);
-            console.log("Detalles de los proyectos:", projects);
-            // Hacer algo con los detalles de los proyectos, como guardarlos en el estado
-          } catch (error) {
-            console.error("Error al obtener los proyectos:", error);
-          }
-        };
-        // fetchData();
     
     }, []);
 

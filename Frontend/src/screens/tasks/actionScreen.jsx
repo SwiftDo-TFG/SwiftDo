@@ -42,7 +42,7 @@ function ActionScreen(props) {
   //Filters
   const filterContext = useContext(FilterContext)
   const [filters, setFilters] = useState({})
-
+  console.log("PROPS: ", props.route)
   useEffect(() => {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -335,6 +335,7 @@ function ActionScreen(props) {
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
             <TaskList
               tasks={tasks}
+              navigation={props.navigation}
               showEditPopUp={showEditPopUp}
               showMovePopUp={showMovePopUp}
               showCompleteModal={showCompleteModal}
