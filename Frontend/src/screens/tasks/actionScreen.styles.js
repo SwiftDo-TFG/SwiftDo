@@ -228,17 +228,19 @@ const styles = StyleSheet.create({
     modalDatePickerContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     modalDatePickerBackground: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalDatePickerContent: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors[theme].themeColor,
         width: '90%',
         borderRadius: 10,
         padding: 20,
+        borderWidth: theme === 'dark' ? 0.5 : 0,
+        borderColor: theme === 'dark' ? 'white' : ''
     },
     closeDatePickerButton: {
         position: 'absolute',
