@@ -84,7 +84,7 @@ module.exports.saveToken = async function (token, client, user) {
     token.accessToken,
     token.accessTokenExpiresAt,
     token.refreshToken,
-    token.accessTokenExpiresAt,
+    token.refreshTokenExpiresAt,
     client.id,
     user.id
   ])
