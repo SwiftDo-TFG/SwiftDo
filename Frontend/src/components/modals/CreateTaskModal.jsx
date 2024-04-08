@@ -1,5 +1,5 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useState, useEffect } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -11,6 +11,8 @@ import AddTagModal from "./AddTagModal";
 import TaskStates from "../../utils/enums/taskStates"
 import projectService from "../../services/project/projectService";
 import ContextBadge from "../common/ContextBadge";
+import Colors from "../../styles/colors";
+
 
 function CreateTaskModal(props) {
     const [state, setState] = useState({
@@ -32,6 +34,7 @@ function CreateTaskModal(props) {
     const [showTagSelector, setShowTagSelector] = useState(false)
     const [colorIndex, setcolorIndex] = useState(0)
 
+    const theme = useColorScheme();
 
     async function openModalInProject() {
         if (!state.project) {
@@ -176,8 +179,8 @@ function CreateTaskModal(props) {
                     const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
-                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: project.color, paddingHorizontal: 6, backgroundColor: 'white' }}>
-                        <Text style={{ color: '#272c34', fontWeight: 600 }}>
+                    <View style={[styles.selectionProjectPanel, {borderColor: project.color}]}>
+                        <Text style={{ color: theme === 'light' ? '#272c34': Colors[theme].white, fontWeight: 600 }}>
                             <MaterialCommunityIcons name="circle-outline" size={14} color={project.color} /> {(project.title.length > 8 ? `${project.title.substring(0, 8)}...` : project.title)} <MaterialCommunityIcons name="close" size={14} color={project.color} />
                         </Text>
                     </View>
@@ -191,7 +194,7 @@ function CreateTaskModal(props) {
                     setState({ ...state, editedTitle: title, editedDescription: description })
                     setShowAssProjectSelector(true)
                 }}>
-                    <View style={{ borderRadius: 100, borderWidth: 1, borderColor: 'lightgrey', paddingHorizontal: 6, backgroundColor: 'white' }}>
+                    <View style={styles.selectionProjectPanel}>
                         <Text style={{ color: 'lightgrey', fontWeight: 600 }}><MaterialCommunityIcons name="circle-outline" size={16} color='lightgrey' /> Proyecto</Text>
                     </View>
                 </TouchableOpacity>
@@ -203,7 +206,7 @@ function CreateTaskModal(props) {
                 {/* Title */}
                 <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
+                        style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
                         placeholder="Nueva Tarea"
                         onChangeText={onTitleChange}
@@ -289,7 +292,7 @@ function CreateTaskModal(props) {
                                         setState({ ...state, editedTitle: title, editedDescription: description })
                                         setShowStatusSelector(true)
                                     }}>
-                                        <Text style={{ fontSize: 18 }}>
+                                        <Text style={{ fontSize: 18, color: Colors[theme].white }}>
                                             {
                                                 (state.state === "2") ? (
                                                     <>
