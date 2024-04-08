@@ -240,7 +240,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         borderWidth: theme === 'dark' ? 0.5 : 0,
-        borderColor: theme === 'dark' ? 'white' : ''
+        borderColor: theme === 'dark' ? 'white' : '',
+        maxHeight: 500,
+        maxWidth: 500,
     },
     closeDatePickerButton: {
         position: 'absolute',
