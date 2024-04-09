@@ -53,8 +53,8 @@ function PopUpModal(props) {
                         backgroundColor: Colors[theme].themeColor,
                         borderColor: theme === 'dark' ? Colors[theme].white : '',
                         borderTopWidth: theme === 'dark' ? 0.5 : 0,
-                        // borderLeftWidth: theme === 'dark' ? 0.5 : 0,
-                        // borderRightWidth: theme === 'dark' ? 0.5 : 0
+                        borderLeftWidth: theme === 'dark' ? 0.5 : 0,
+                        borderRightWidth: theme === 'dark' ? 0.5 : 0
                     }}
                 >
                     {props.children}

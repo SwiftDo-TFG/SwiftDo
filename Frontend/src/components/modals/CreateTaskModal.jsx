@@ -209,6 +209,7 @@ function CreateTaskModal(props) {
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
                         placeholder="Nueva Tarea"
+                        placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                         onChangeText={onTitleChange}
                         onEndEditing={() => { console.log("THIS END") }}
                         maxLength={50}
@@ -224,6 +225,7 @@ function CreateTaskModal(props) {
                                     style={styles.textInput}
                                     value={description}
                                     placeholder="Descripcion..."
+                                    placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                                     onChangeText={onDescriptionChange}
                                     multiline={true}
                                     maxLength={200}
