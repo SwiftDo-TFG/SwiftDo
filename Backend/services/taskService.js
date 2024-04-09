@@ -319,11 +319,15 @@ function addFiltersToQuery(query, filters) {
     }
 
     if (filters.state) {
-        console.log("Estado", filters.state)
-        if (filters.state !== '0') {
+        if (filters.state !== '0' && filters.state !== '6') {
             finalQuery = finalQuery.concat(" AND t.state = ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
             finalFilters.state = filters.state;
+        } else if(filters.state !== '6'){
+            const fechaActual = new Date();
+            finalQuery = finalQuery.concat(" AND t.date_limit < ")
+            finalQuery = finalQuery.concat(paramNumbers[nextParam++])
+            finalFilters.today = fechaActual;
         } else {
             const fechaActual = new Date();
             const fechaManana = new Date();
@@ -377,6 +381,10 @@ function addFiltersToQuery(query, filters) {
     }
     else{
         finalQuery = finalQuery.concat(" order by t.important_fixed DESC");
+    }
+
+    if (filters.limit){
+        finalQuery = finalQuery.concat(" limit 6");
     }
 
     console.log("FinalFilters: ", finalFilters)
