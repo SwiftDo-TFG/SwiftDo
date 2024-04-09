@@ -465,8 +465,10 @@ const ProgramadasScreen = (props) => {
         <SafeAreaView style={{ flex: 1 }}>
             <NativeBaseProvider>
                 <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton onDateChanged={(date)=> {
-                    const auxDate = new Date(date);
-                    weekRef.current.setSelectedDate(auxDate.toISOString())
+                    if(Platform.OS === 'web'){
+                        const auxDate = new Date(date);
+                        weekRef.current.setSelectedDate(auxDate.toISOString())
+                    }
                 }}>
                     {/* MOVE MODAL   */}
                     <MoveTaskModal
