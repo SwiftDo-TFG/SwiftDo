@@ -71,6 +71,7 @@ function CreateProjectModal(props) {
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
                         value={title}
                         placeholder="Nuevo Proyecto"
+                        placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                         onChangeText={onTitleChange}
                         onEndEditing={() => { console.log("THIS END") }}
                         maxLength={50}
@@ -84,6 +85,7 @@ function CreateProjectModal(props) {
                             style={{ fontSize: 16, fontWeight: 'normal', color: theme === 'light' ? '#182E44': Colors[theme].white, }}
                             value={description}
                             placeholder="Descripcion..."
+                            placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                             onChangeText={onDescriptionChange}
                             multiline={true}
                             maxLength={200}
