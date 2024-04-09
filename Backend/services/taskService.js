@@ -373,7 +373,10 @@ function addFiltersToQuery(query, filters) {
 
 
     if (filters.date_limit) {
-        finalQuery = finalQuery.concat(" order by t.date_limit");
+        finalQuery = finalQuery.concat(" order by t.date_limit, t.important_fixed DESC");
+    }
+    else{
+        finalQuery = finalQuery.concat(" order by t.important_fixed DESC");
     }
 
     console.log("FinalFilters: ", finalFilters)
