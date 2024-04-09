@@ -323,7 +323,7 @@ function addFiltersToQuery(query, filters) {
             finalQuery = finalQuery.concat(" AND t.state = ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
             finalFilters.state = filters.state;
-        } else if(filters.state !== '6'){
+        } else if(filters.state === '6'){
             const fechaActual = new Date();
             finalQuery = finalQuery.concat(" AND t.date_limit < ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++])

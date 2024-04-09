@@ -22,6 +22,8 @@ import ContextBadge from "../../components/common/ContextBadge";
 
 function ActionScreen(props) {
   const [tasks, setTasks] = useState([]);
+  const [delayTask, setDelayTasks] = useState([]);
+  const [amountTask, setAmountTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState({});
   const [editingTask, setEditingTask] = useState({});
   const [isDataLoaded, setDataLoaded] = useState(false);
@@ -95,6 +97,28 @@ function ActionScreen(props) {
     if (tasksDB.error) {
       return authState.signOut();
     }
+
+    filter.state = 6;
+
+    const delayDB = await taskService.getTasks(filter);
+
+    if (delayDB.error) {
+      return authState.signOut();
+    }
+
+    console.log("DELAY TASK: ", delayDB)
+
+    filter.state = 2;
+    filter.limit = true;
+
+    const amountDB = await taskService.getTasks(filter);
+
+    if (amountDB.error) {
+      return authState.signOut();
+    }
+
+    console.log("AMOUNT TASK: ", amountDB)
+
 
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
