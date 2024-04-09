@@ -115,7 +115,7 @@ const buttonStyles = (theme) => {
         buttonText: {
             fontWeight: 'bold',
             textAlign: 'center',
-            color: Colors[theme].light,
+            color: Colors.dark.white,
             fontSize: 18
         },
 
