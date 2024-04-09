@@ -13,7 +13,7 @@ function Today(props) {
     return (
         <ActionScreen {...props} state={0} emptyIcon={<FontAwesome5 name="play" style={[actStyle.emptyIcon]} color={Colors[theme].grey} />}>
             <View style={actStyle.action}>
-                <FontAwesome5 name="play" style={[actStyle.iconAction]} color={Colors[theme].white} />
+                <FontAwesome5 name="play" style={[actStyle.iconAction]} color={"#515f8f"} />
                 <Text style={[actStyle.actionTitle, { color: Colors[theme].white }]}>Hoy</Text>
             </View>
         </ActionScreen>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
@@ -124,11 +124,19 @@ function ActionScreen(props) {
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
     })
+    delayDB.forEach(async (task) => {
+      seletedAux[task.task_id] = false;
+    })
+    amountDB.forEach(async (task) => {
+      seletedAux[task.task_id] = false;
+    })
     console.log("Estas son las tareas que se devuelven", tasksDB)
 
     seletedAux.total = 0;
 
     setTasks(tasksDB)
+    setDelayTasks(delayDB)
+    setAmountTasks(amountDB)
     setSelectedTasks(seletedAux)
     setDataLoaded(true)
   }
@@ -339,7 +347,7 @@ function ActionScreen(props) {
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
-              {filterContext.isFiltered && <ContextBadge style={{marginRight: 10}} context_name={filterContext.context_name} handlePress={() => {
+              {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();
@@ -357,17 +365,62 @@ function ActionScreen(props) {
         {!isDataLoaded && <LoadingIndicator />}
         <NativeBaseProvider>
           {isDataLoaded && tasks.length === 0 ? <EmptyTaskListPanel icon={props.emptyIcon} /> :
-            <TaskList
-              tasks={tasks}
-              navigation={props.navigation}
-              showEditPopUp={showEditPopUp}
-              showMovePopUp={showMovePopUp}
-              showCompleteModal={showCompleteModal}
-              selectedTasks={selectedTasks}
-              setSelectedTasks={setSelectedTasks}
-              setIsMoveModalOpen={setIsMoveModalOpen}
-              setIsCompleteModalOpen={setIsCompleteModalOpen}
-            />
+            props.state === 0 ?
+              <>
+                <TaskList
+                  tasks={tasks}
+                  navigation={props.navigation}
+                  showEditPopUp={showEditPopUp}
+                  showMovePopUp={showMovePopUp}
+                  showCompleteModal={showCompleteModal}
+                  selectedTasks={selectedTasks}
+                  setSelectedTasks={setSelectedTasks}
+                  setIsMoveModalOpen={setIsMoveModalOpen}
+                  setIsCompleteModalOpen={setIsCompleteModalOpen}
+                />
+                <View style={{ marginVertical: 4, flexDirection: 'row' }}>
+                  <MaterialCommunityIcons name="timer-sand-complete" size={24} color="#515f8f" />
+                  <Text style={{ marginLeft: 4, fontWeight: 'bold', fontSize: 18, color: "#515f8f"}}>Retrasadas</Text>
+                </View>
+                <TaskList
+                  tasks={delayTask}
+                  navigation={props.navigation}
+                  showEditPopUp={showEditPopUp}
+                  showMovePopUp={showMovePopUp}
+                  showCompleteModal={showCompleteModal}
+                  selectedTasks={selectedTasks}
+                  setSelectedTasks={setSelectedTasks}
+                  setIsMoveModalOpen={setIsMoveModalOpen}
+                  setIsCompleteModalOpen={setIsCompleteModalOpen}
+                />
+                <View style={{ marginVertical: 4, flexDirection: 'row' }}>
+                  <Ionicons name="layers" size={24} color="#515f8f" />
+                  <Text style={{ marginLeft: 4, fontWeight: 'bold', fontSize: 18, color: "#515f8f"}}>Acumuladas</Text>
+                </View>
+                <TaskList
+                  tasks={amountTask}
+                  navigation={props.navigation}
+                  showEditPopUp={showEditPopUp}
+                  showMovePopUp={showMovePopUp}
+                  showCompleteModal={showCompleteModal}
+                  selectedTasks={selectedTasks}
+                  setSelectedTasks={setSelectedTasks}
+                  setIsMoveModalOpen={setIsMoveModalOpen}
+                  setIsCompleteModalOpen={setIsCompleteModalOpen}
+                />
+              </>
+              :
+              <TaskList
+                tasks={tasks}
+                navigation={props.navigation}
+                showEditPopUp={showEditPopUp}
+                showMovePopUp={showMovePopUp}
+                showCompleteModal={showCompleteModal}
+                selectedTasks={selectedTasks}
+                setSelectedTasks={setSelectedTasks}
+                setIsMoveModalOpen={setIsMoveModalOpen}
+                setIsCompleteModalOpen={setIsCompleteModalOpen}
+              />
           }
 
           <AddButton onPress={() => showAddTaskPopUp()} onLongPress={() => setIsModalVisible(true)} />
