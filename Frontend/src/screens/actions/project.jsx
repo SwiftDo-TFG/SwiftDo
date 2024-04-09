@@ -22,6 +22,8 @@ function Project(props) {
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const theme = useColorScheme();
     const actStyle = actStyles(theme);
+
+    console.log("props de project***", props)
     React.useEffect(() => {
         // || projectData.project.project_id !== props.route.params.project_id
         // if (!isDataLoaded) {

@@ -192,14 +192,16 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         maxHeight: '25%',
-        backgroundColor: theme === 'light' ? 'white' : 'black'
+        backgroundColor: theme === 'light' ? 'white' : 'black',
+        borderColor: theme === 'dark' ? Colors[theme].white : '',
+        borderWidth: theme === 'dark' ? 0.5 : 0,
     },
     moveContainer: {
         //flex: 1,
         justifyContent: 'flex-end',
     },
     moveStyle: {
-        backgroundColor: 'white',
+        backgroundColor: Colors[theme].themeColor,
         marginHorizontal: 20,
         paddingHorizontal: 12,
         paddingVertical: 12,
@@ -210,11 +212,15 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         width: '100%',
     },
+    moveTextStyle: {
+        fontSize: 17,
+        color: Colors[theme].white
+    },
     defaultTextModal: {
         fontSize: 17,
         color: Colors[theme].white
     },
-    contextTextModal:{
+    contextTextModal: {
         fontSize: 16,
         marginLeft: 15,
         color: Colors[theme].white
@@ -222,17 +228,21 @@ const styles = StyleSheet.create({
     modalDatePickerContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     modalDatePickerBackground: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalDatePickerContent: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors[theme].themeColor,
         width: '90%',
         borderRadius: 10,
         padding: 20,
+        borderWidth: theme === 'dark' ? 0.5 : 0,
+        borderColor: theme === 'dark' ? 'white' : '',
+        maxHeight: 500,
+        maxWidth: 500,
     },
     closeDatePickerButton: {
         position: 'absolute',
@@ -265,7 +275,7 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 16,
         fontWeight: 'normal',
-        color: '#182E44',
+        color: theme === 'light' ? '#182E44' : Colors[theme].white,
         height: '80%',
         width: '100%',
         marginBottom: 2,
@@ -291,6 +301,13 @@ const styles = StyleSheet.create({
         paddingVertical: 1.5,
         marginRight: 2,
         marginBottom: 3,
+    },
+    selectionProjectPanel: {
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: 'lightgrey',
+        paddingHorizontal: 6,
+        backgroundColor: Colors[theme].themeColor
     }
 });
 

@@ -1,19 +1,23 @@
 import PopUpModal from "./PopUpModal"
-import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
+import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView, useColorScheme } from "react-native"
 
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useState, useEffect } from "react"
 import * as React from 'react';
 import ColorPicker from 'react-native-wheel-color-picker'
+import Colors from "../../styles/colors";
+
 function CreateProjectModal(props) {
 
     const [state, setState] = useState({
         show: false,
         editedTitle: '',
         editedDescription: '',
-        editedColor: '#000000'
+        editedColor: '#0000FF'
     });
+
+    const theme = useColorScheme();
 
     function setValuesToEdit() {
         console.log('PROPIEDADESSSSSSS:', props.editingProject);
@@ -22,7 +26,7 @@ function CreateProjectModal(props) {
                 ...state,
                 editedTitle: props.editingProject.title ? props.editingProject.title : '',
                 editedDescription: props.editingProject.description ? props.editingProject.description : '',
-                editedColor: props.editingProject.color ? props.editingProject.color : '#000000',
+                editedColor: props.editingProject.color ? props.editingProject.color : '#0000FF',
             })
         }
     }
@@ -64,9 +68,10 @@ function CreateProjectModal(props) {
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 20, marginLeft: 20, marginRight: 8, marginBottom: 10 }}>
                     <MaterialCommunityIcons name="circle-outline" size={26} color={color} />
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
+                        style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', width: '100%', marginLeft: 10 }}
                         value={title}
                         placeholder="Nuevo Proyecto"
+                        placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                         onChangeText={onTitleChange}
                         onEndEditing={() => { console.log("THIS END") }}
                         maxLength={50}
@@ -77,16 +82,17 @@ function CreateProjectModal(props) {
                 <View style={{ flex: 1, justifyContent: 'space-between', marginHorizontal: 15}}>
                     <View>
                         <TextInput
-                            style={{ fontSize: 16, fontWeight: 'normal', color: '#182E44', }}
+                            style={{ fontSize: 16, fontWeight: 'normal', color: theme === 'light' ? '#182E44': Colors[theme].white, }}
                             value={description}
                             placeholder="Descripcion..."
+                            placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
                             onChangeText={onDescriptionChange}
                             multiline={true}
                             maxLength={200}
                         />
                     </View>
                     <View>
-                        <Text style={{ fontSize: 16, fontWeight: 600, color: '#182E44', marginBottom: 15 }}>Selecciona un color: </Text>
+                        <Text style={{ fontSize: 16, fontWeight: 600, color: theme === 'light' ? '#182E44': Colors[theme].white, marginBottom: 15 }}>Selecciona un color: </Text>
                         <ColorPicker
                             color={color}
                             swatchesOnly={true}

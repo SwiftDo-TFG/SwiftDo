@@ -6,32 +6,20 @@ import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Project from '../../screens/actions/project';
+import Today from '../../screens/actions/today';
 import SideBar from '../SideBar/SideBar';
 import { sidebarStyles } from '../../styles/globalStyles';
 import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
+import DetailScreen from '../../screens/details';
 
 const Drawer = createDrawerNavigator();
 
-const AppNavigator = ({projects, state }) => {
+const AppNavigator = ({ projects, state }) => {
     const dimensions = useWindowDimensions();
     const theme = useColorScheme();
     const sideBar = sidebarStyles(theme)
-
-    const addProjects = useMemo(() => {
-        return projects.map((project, i) => (
-            <Drawer.Screen
-                key={i}
-                name={project.title}
-                initialParams={{ id: project.project_id, color: project.color, description: project.description, percentage: project.completionPercentage }}
-                component={Project}
-                options={{
-                    title: project.title,
-                    headerShown: false
-                }}
-            />))
-    }, [projects])
 
     return (
         <Drawer.Navigator
@@ -45,6 +33,7 @@ const AppNavigator = ({projects, state }) => {
                     // width: '80%'
                 },
             }}
+            backBehavior="history"
             defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
         >
             {state.userToken == null ? (
@@ -61,6 +50,13 @@ const AppNavigator = ({projects, state }) => {
                     <Drawer.Screen
                         name="Inbox"
                         component={Inbox}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="Today"
+                        component={Today}
                         options={{
                             headerShown: false
                         }}
@@ -91,6 +87,14 @@ const AppNavigator = ({projects, state }) => {
                     <Drawer.Screen
                         name={"project"}
                         component={Project}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    {/* Detalles */}
+                    <Drawer.Screen 
+                        name={"Details"}
+                        component={DetailScreen}
                         options={{
                             headerShown: false
                         }}

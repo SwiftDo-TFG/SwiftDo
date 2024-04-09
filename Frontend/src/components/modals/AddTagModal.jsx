@@ -1,4 +1,4 @@
-import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator } from "react-native"
+import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
@@ -15,6 +15,9 @@ const AddTagModal = (props) => {
     const [tag, setTag] = useState([]);
     const [search, setSearch] = useState([]);
     const [isSearching, setIsSearching] = useState(false)
+    const theme = useColorScheme();
+
+
     const onNameChange = async (text) => {
         console.log("TESTING", tag, search, isSearching)
         if (text != tag && text.length > 0) {
@@ -53,7 +56,7 @@ const AddTagModal = (props) => {
                 <View style={styles.modalStyle}>
 
                     <TextInput
-                        style={{ color: '#182E44', fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
+                        style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
                         placeholder="Busca una etiqueta..."
                         value={tag}
                         onChangeText={onNameChange}

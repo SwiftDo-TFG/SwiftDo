@@ -1,10 +1,13 @@
 
-import { View, TouchableWithoutFeedback, Modal } from "react-native";
+import { View, TouchableWithoutFeedback, Modal, useColorScheme } from "react-native";
 import styles from '../../screens/tasks/actionScreen.styles'
 import DatePicker from "../DatePicker";
 
 
 const DatePickerModal = (props) => {
+    const theme = useColorScheme();
+
+
     return (
         <Modal
             transparent={true}
@@ -24,6 +27,7 @@ const DatePickerModal = (props) => {
                         today={new Date()}
                         state={props.state}
                         setState={props.setState}
+                        theme={theme}
                     />
                 </View>
             </View>

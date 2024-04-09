@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 20,
-        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white'
+        // backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white'
     },
     taskContainer: {
         flex: 1,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         // fontSize: '120%'
     },
     section: {
-        backgroundColor: theme === 'dark' ? Colors[theme].themeColor: 'white',
+        backgroundColor: Colors[theme].activeColor,
         fontSize: 16,
         color: theme ==='light' ? 'grey': Colors[theme].white,
         textTransform: 'capitalize',
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     },
     expandableCalendar: {
         borderRadius: 50,
-        borderWidth: 1,
-        borderColor: 'white',
+        // borderWidth: 1,
+        // borderColor: 'white',
         padding: 3,
         width: 30,
         height: 30,
