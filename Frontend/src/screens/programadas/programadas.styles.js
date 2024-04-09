@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     section: {
         backgroundColor: Colors[theme].activeColor,
         fontSize: 16,
-        color: theme ==='light' ? 'grey': Colors[theme].themeColor,
+        color: theme ==='light' ? 'grey': Colors[theme].white,
         textTransform: 'capitalize',
         // textDecorationLine: 'underline'
     },
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     },
     expandableCalendar: {
         borderRadius: 50,
-        borderWidth: 1,
-        borderColor: 'white',
+        // borderWidth: 1,
+        // borderColor: 'white',
         padding: 3,
         width: 30,
         height: 30,

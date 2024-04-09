@@ -1,5 +1,5 @@
 import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme, SafeAreaView } from "react-native";
-import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar } from "react-native-calendars";
+import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar, Calendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
 import stylesAction from '../tasks/actionScreen.styles'
@@ -32,7 +32,6 @@ const ProgramadasScreen = (props) => {
     //Filters
     const filterContext = useContext(FilterContext)
     const [filters, setFilters] = useState({})
-    console.log("PROPS DE PROGRAMADAS ", props.route)
 
     //Modal states
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -44,6 +43,8 @@ const ProgramadasScreen = (props) => {
     const theme = useColorScheme();
     const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
+    const [showCalendar, setShowCalendar] = useState(true);
+
 
     useEffect(() => {
 
@@ -250,9 +251,77 @@ const ProgramadasScreen = (props) => {
     }
 
     function TasksCalendar() {
+        //provisional
+        const screenWidth = Dimensions.get('window').width;
+        const padding = 0.052 * screenWidth; // 6% of the screen width
+        const calendarWidth = screenWidth * 0.93 - 2 * padding; // subtract padding from both sides
+
+
         return (
-            
-            <>{Platform.OS === 'web' ? <WeekCalendar testID={"weekCalendar"} firstDay={1} markedDates={marked.current} theme={{ calendarBackground: 'red' }} /> : <ExpandableCalendar
+
+            <>{Platform.OS === 'web' ?
+                // <WeekCalendar
+                //     testID={"weekCalendar"}
+                //     firstDay={1}
+                //     // markedDates={marked.current}
+                //     current="2024-04-12"
+                //     theme={{ calendarBackground: Colors[theme].themeColor, textDayStyle: { color: Colors[theme].white } }}
+                //     calendarWidth={500}
+                //     animateScroll={true}
+                //     showScrollIndicator={true}
+                //     staticHeader={true}
+                // />
+                <View style={{ marginBottom: 10 }}>
+                    {showCalendar && <Calendar
+                        enableSwipeMonths={true}
+                        firstDay={1}
+                        renderArrow={direction => {
+                            const iconType = direction === 'left' ? "arrow-left" : "arrow-right"
+                            return (
+                                <MaterialCommunityIcons name={iconType} size={20} color={Colors[theme].white} />
+                            )
+                        }}
+                        theme={{ arrowColor: 'red', calendarBackground: Colors[theme].themeColor, monthTextColor: '#00bbf2' }}
+                        dayComponent={({ date, marking, state, onPress, theme2 }) => {
+                            // const textColor =
+                            //   marking?.today === true
+                            //     ? colors.actionPrimary
+                            //     : marking?.selected === true
+                            //     ? colors.backgroundPrimary
+                            //     : marking?.marked === true
+                            //     ? colors.actionSecondary
+                            //     : colors.textPrimary;
+                            const numTasksDay = numTaskPerDay[date.dateString] ? numTaskPerDay[date.dateString] : 0;
+                            let dayTextcolor = Colors[theme].white;
+
+                            if (state === 'disabled') {
+                                dayTextcolor = 'lightgrey'
+                            } else if (state === 'selected') {
+                                dayTextcolor = Colors[theme].white
+                            }
+
+                            return (
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        // selectDay(state, date, onPress);
+                                        onPress(date)
+                                        console.log(onPress)
+                                    }}
+                                // style={[marking?.customContainerStyle, theme?.textDayStyle]}
+                                >
+                                    <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : Colors[theme].themeColor }}>
+                                        {numTasksDay !== 0 && isDataLoaded && <NumTasksBadge num={numTasksDay} />}
+                                        <Text style={{ fontSize: 16, color: dayTextcolor }}>
+                                            {date?.day}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        }}
+                    />}
+                </View>
+                : <ExpandableCalendar
                     testID={"expandableCalendar"}
                     firstDay={1}
                     markedDates={marked.current}
@@ -280,12 +349,12 @@ const ProgramadasScreen = (props) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     // selectDay(state, date, onPress);
-                                    onPress(date)
+                                    // onPress(date)
                                     console.log(onPress)
                                 }}
                             // style={[marking?.customContainerStyle, theme?.textDayStyle]}
                             >
-                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : Colors[theme].selectColor}}>
+                                <View style={{ ...styles.expandableCalendar, backgroundColor: state === 'selected' ? '#00bbf2' : Colors[theme].themeColor }}>
                                     {numTasksDay !== 0 && isDataLoaded && <NumTasksBadge num={numTasksDay} />}
                                     <Text style={{ fontSize: 16, color: dayTextcolor }}>
                                         {date?.day}
@@ -295,7 +364,7 @@ const ProgramadasScreen = (props) => {
                         );
                     }}
                     theme={{
-                        calendarBackground: Colors[theme].themeColor ,
+                        calendarBackground: Colors[theme].themeColor,
                     }}
                 />}
 
@@ -355,7 +424,9 @@ const ProgramadasScreen = (props) => {
                         // }}
 
                         // scrollToNextEvent
-                        sectionStyle={[styles.section, {backgroundColor: Colors[theme].activeColor}]}
+                        sectionStyle={[styles.section, { backgroundColor: Colors[theme].activeColor }]}
+                        
+                        // theme={{textSectionTitleColor: 'red'}}
                     // theme={{
                     //     textDayStyle: {color: 'red'},
                     //     selectedDayTextColor: 'red',
@@ -374,41 +445,41 @@ const ProgramadasScreen = (props) => {
     }
 
     return (
-    <SafeAreaView style={{flex:1}}>
-        <NativeBaseProvider>
-            <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
-                {/* MOVE MODAL   */}
-                <MoveTaskModal
-                    title="Move"
-                    // touch={hideEditPopUp}
-                    editingTask={editingTask}
-                    onAccept={handleUpdateTasks}
-                    isModalOpen={isMoveModalOpen}
-                    setIsModalOpen={setIsMoveModalOpen}
-                />
+        <SafeAreaView style={{ flex: 1 }}>
+            <NativeBaseProvider>
+                <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
+                    {/* MOVE MODAL   */}
+                    <MoveTaskModal
+                        title="Move"
+                        // touch={hideEditPopUp}
+                        editingTask={editingTask}
+                        onAccept={handleUpdateTasks}
+                        isModalOpen={isMoveModalOpen}
+                        setIsModalOpen={setIsMoveModalOpen}
+                    />
 
-                {/* EDIT MODAL   */}
-                <CreateTaskModal
-                    title="Editar"
-                    // touch={hideEditPopUp}
-                    editingTask={editingTask}
-                    onAccept={updateTask}
-                    isModalOpen={isEditModalOpen}
-                    setIsModalOpen={setIsEditModalOpen}
-                />
+                    {/* EDIT MODAL   */}
+                    <CreateTaskModal
+                        title="Editar"
+                        // touch={hideEditPopUp}
+                        editingTask={editingTask}
+                        onAccept={updateTask}
+                        isModalOpen={isEditModalOpen}
+                        setIsModalOpen={setIsEditModalOpen}
+                    />
 
-                <CompleteTaskModal
-                    title="Completar tarea"
-                    texto={"¿Desea completar esta tarea?"}
-                    // touch={hideEditPopUp}
-                    // editingTask={editingTask}
-                    onAccept={completeTask}
-                    isModalOpen={isCompleteModalOpen}
-                    setIsModalOpen={setIsCompleteModalOpen}
-                />
+                    <CompleteTaskModal
+                        title="Completar tarea"
+                        texto={"¿Desea completar esta tarea?"}
+                        // touch={hideEditPopUp}
+                        // editingTask={editingTask}
+                        onAccept={completeTask}
+                        isModalOpen={isCompleteModalOpen}
+                        setIsModalOpen={setIsCompleteModalOpen}
+                    />
 
-                {/* ADD MODAL   */}
-                {/* <PopUpModal
+                    {/* ADD MODAL   */}
+                    {/* <PopUpModal
                     title="Añadir"
                     ref={(target) => addRef = target}
                     touch={hideAddTaskPopUp}
@@ -417,44 +488,47 @@ const ProgramadasScreen = (props) => {
                     mode='add'
                 /> */}
 
-                {/* ADD FILTER MODAL */}
-                <FilterModal
-                    onAccept={addFilter}
-                    isModalOpen={isFilterModalOpen}
-                    setIsModalOpen={setIsFilterModalOpen}
-                    fiterState={filters}
+                    {/* ADD FILTER MODAL */}
+                    <FilterModal
+                        onAccept={addFilter}
+                        isModalOpen={isFilterModalOpen}
+                        setIsModalOpen={setIsFilterModalOpen}
+                        fiterState={filters}
                     />
 
-                    
-                <View style={styles.container}>
-                    <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-                        {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Feather name="sidebar" size={28} color={Colors[theme].white} />
-                        </TouchableOpacity>)}
-                        <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
-                            <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
-                                {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
-                                    // handleContextAction(null, context_name);
-                                    filterContext.clearFilter();
-                                    reloadData();
-                                }} />}
-                                <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
-                                {Object.keys(filters).length > 0 &&
-                                    <Text style={{ color: Colors[theme].white }}>({Object.keys(filters).length})</Text>
-                                }
-                            </TouchableOpacity>
-                        </View>
-                    </View>
 
-                    <View style={actStyle.action}>
-                        <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
-                        <Text style={{ ...actStyle.actionTitle, color: Colors[theme].white }}>Programadas</Text>
+                    <View style={styles.container}>
+                        <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
+                            {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                                <Feather name="sidebar" size={28} color={Colors[theme].white} />
+                            </TouchableOpacity>)}
+                            <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
+                                <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
+                                    {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
+                                        // handleContextAction(null, context_name);
+                                        filterContext.clearFilter();
+                                        reloadData();
+                                    }} />}
+                                    <MaterialCommunityIcons name="filter-variant" size={28} color={Colors[theme].white} />
+                                    {Object.keys(filters).length > 0 &&
+                                        <Text style={{ color: Colors[theme].white }}>({Object.keys(filters).length})</Text>
+                                    }
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={actStyle.action}>
+                            <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
+                            <Text style={{ ...actStyle.actionTitle, color: Colors[theme].white }}>Programadas</Text>
+                        </View>
+                        <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
+                            <Text style={{ color: Colors[theme].white }}>Toggle calendar</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-                <TasksCalendar />
-            </CalendarProvider>
-        </NativeBaseProvider>
-    </SafeAreaView>
+                    <TasksCalendar />
+                </CalendarProvider>
+            </NativeBaseProvider>
+        </SafeAreaView>
     )
 }
 
