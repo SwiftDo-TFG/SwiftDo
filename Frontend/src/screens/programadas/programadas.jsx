@@ -19,6 +19,8 @@ import Colors from "../../styles/colors";
 import FilterModal from "../../components/modals/FilterModal";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
+import CalendarStrip from 'react-native-calendar-strip';
+
 
 const ProgramadasScreen = (props) => {
     const [calendarHeight, setCalendarHeight] = useState(0);
@@ -44,7 +46,7 @@ const ProgramadasScreen = (props) => {
     const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
     const [showCalendar, setShowCalendar] = useState(true);
-
+    const weekRef = useRef();
 
     useEffect(() => {
 
@@ -272,7 +274,22 @@ const ProgramadasScreen = (props) => {
                 //     staticHeader={true}
                 // />
                 <View style={{ marginBottom: 10 }}>
-                    {showCalendar && <Calendar
+                    <CalendarStrip
+                        scrollable={true}
+                        calendarAnimation={{type: 'sequence', duration: 30}}
+                        ref={weekRef}
+                        selectedDate={new Date()}
+                        style={{ height: 120, paddingTop: 20, paddingBottom: 10 }}
+                        calendarColor={Colors[theme].themeColor}
+                        calendarHeaderStyle={{ color: Colors[theme].white }}
+                        dateNumberStyle={{ color: Colors[theme].white }}
+                        dateNameStyle={{ color: Colors[theme].white }}
+                        highlightDateNumberStyle={{color:'#00bbf2'}}
+                        highlightDateNameStyle={{color:'#00bbf2'}}
+                        iconStyle={{tintColor: '#00bbf2'}}
+                        iconContainer={{ flex: 0.1 }}
+                    />
+                    {/* {showCalendar && <Calendar
                         enableSwipeMonths={true}
                         firstDay={1}
                         renderArrow={direction => {
@@ -319,7 +336,7 @@ const ProgramadasScreen = (props) => {
                                 </TouchableOpacity>
                             );
                         }}
-                    />}
+                    />} */}
                 </View>
                 : <ExpandableCalendar
                     testID={"expandableCalendar"}
@@ -425,8 +442,8 @@ const ProgramadasScreen = (props) => {
 
                         // scrollToNextEvent
                         sectionStyle={[styles.section, { backgroundColor: Colors[theme].activeColor }]}
-                        
-                        // theme={{textSectionTitleColor: 'red'}}
+
+                    // theme={{textSectionTitleColor: 'red'}}
                     // theme={{
                     //     textDayStyle: {color: 'red'},
                     //     selectedDayTextColor: 'red',
@@ -447,7 +464,10 @@ const ProgramadasScreen = (props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <NativeBaseProvider>
-                <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton>
+                <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton onDateChanged={(date)=> {
+                    const auxDate = new Date(date);
+                    weekRef.current.setSelectedDate(auxDate.toISOString())
+                }}>
                     {/* MOVE MODAL   */}
                     <MoveTaskModal
                         title="Move"
@@ -521,9 +541,9 @@ const ProgramadasScreen = (props) => {
                             <Ionicons name="calendar-outline" style={actStyle.iconAction} color={'#008080'} />
                             <Text style={{ ...actStyle.actionTitle, color: Colors[theme].white }}>Programadas</Text>
                         </View>
-                        <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
+                        {/* <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
                             <Text style={{ color: Colors[theme].white }}>Toggle calendar</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <TasksCalendar />
                 </CalendarProvider>
