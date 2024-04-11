@@ -381,7 +381,7 @@ function addFiltersToQuery(query, filters) {
     }
     else if (filters.state){
         if(filters.state === '0'){
-            finalQuery = finalQuery.concat(" order by case when p.project_id is null then 0 else 1 end, t.important_fixed DESC");
+            finalQuery = finalQuery.concat(" group by p.project_id, t.task_id, t.title, c.name, t2.tags, t2.tagcolors order by case when p.project_id is null then 0 else 1 end, t.important_fixed DESC");
         }
     }
     else{
