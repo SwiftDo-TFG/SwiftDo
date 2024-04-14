@@ -244,6 +244,17 @@ const styles = StyleSheet.create({
         maxHeight: 500,
         maxWidth: 500,
     },
+    modalSettingsContent: {
+        backgroundColor: Colors[theme].themeColor,
+        width: '90%',
+        borderRadius: 10,
+        padding: 20,
+        borderWidth: theme === 'dark' ? 0.5 : 0,
+        borderColor: theme === 'dark' ? 'white' : '',
+        height: 500,
+        maxHeight: 800,
+        maxWidth: 800,
+    },
     closeDatePickerButton: {
         position: 'absolute',
         top: 10,

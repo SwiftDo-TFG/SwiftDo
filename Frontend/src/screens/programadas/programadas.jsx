@@ -20,6 +20,7 @@ import FilterModal from "../../components/modals/FilterModal";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 import CalendarStrip from 'react-native-calendar-strip';
+import SettingsModal from "../../components/modals/settings/SettingsModal";
 
 
 const ProgramadasScreen = (props) => {
@@ -276,7 +277,7 @@ const ProgramadasScreen = (props) => {
                 <View style={{ marginBottom: 10 }}>
                     <CalendarStrip
                         scrollable={true}
-                        calendarAnimation={{type: 'sequence', duration: 30}}
+                        calendarAnimation={{ type: 'sequence', duration: 30 }}
                         ref={weekRef}
                         selectedDate={new Date()}
                         style={{ height: 120, paddingTop: 20, paddingBottom: 10 }}
@@ -284,9 +285,9 @@ const ProgramadasScreen = (props) => {
                         calendarHeaderStyle={{ color: Colors[theme].white }}
                         dateNumberStyle={{ color: Colors[theme].white }}
                         dateNameStyle={{ color: Colors[theme].white }}
-                        highlightDateNumberStyle={{color:'#00bbf2'}}
-                        highlightDateNameStyle={{color:'#00bbf2'}}
-                        iconStyle={{tintColor: '#00bbf2'}}
+                        highlightDateNumberStyle={{ color: '#00bbf2' }}
+                        highlightDateNameStyle={{ color: '#00bbf2' }}
+                        iconStyle={{ tintColor: '#00bbf2' }}
                         iconContainer={{ flex: 0.1 }}
                     />
                     {/* {showCalendar && <Calendar
@@ -464,8 +465,8 @@ const ProgramadasScreen = (props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <NativeBaseProvider>
-                <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton onDateChanged={(date)=> {
-                    if(Platform.OS === 'web'){
+                <CalendarProvider date={utils.getFormattedDateCalendar(new Date())} showTodayButton onDateChanged={(date) => {
+                    if (Platform.OS === 'web') {
                         const auxDate = new Date(date);
                         weekRef.current.setSelectedDate(auxDate.toISOString())
                     }
@@ -546,6 +547,7 @@ const ProgramadasScreen = (props) => {
                         {/* <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
                             <Text style={{ color: Colors[theme].white }}>Toggle calendar</Text>
                         </TouchableOpacity> */}
+                        
                     </View>
                     <TasksCalendar />
                 </CalendarProvider>
