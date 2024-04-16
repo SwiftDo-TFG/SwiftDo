@@ -217,9 +217,9 @@ const SelectableTask = ({ navigation, task, onPress, onDelete, scale, opacity, s
                         </TouchableOpacity>
                       </View>
                             
-                        <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={() => navigation.navigate('Details', {task})} >
-                          <Text> Detalles </Text>
-                          <AntDesign name="arrowright" size={13} color="black" />
+                        <TouchableOpacity style={{flexDirection: 'row', gap: 2, alignItems: 'center', padding:5, backgroundColor: Colors[theme].activeColor}} onPress={() => navigation.navigate('Details', {task})} >
+                          <Text style={{color: Colors[theme].white}}>Detalles <AntDesign name="arrowright" size={13} /> </Text>
+                         
                         </TouchableOpacity>
                         
                     </View>

@@ -12,7 +12,7 @@ import { sidebarStyles } from '../../styles/globalStyles';
 import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
-import DetailScreen from '../../screens/details';
+import DetailScreen from '../../screens/details/details';
 
 const Drawer = createDrawerNavigator();
 

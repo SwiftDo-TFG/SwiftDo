@@ -108,11 +108,6 @@ function CreateProjectModal(props) {
                         </View>
                     </View>
                 </View>
-                {/* <View>
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-
-                    </View>
-                </View> */}
             </>
         );
     }
