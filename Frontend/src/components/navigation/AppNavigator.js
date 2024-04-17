@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Inbox from '../../screens/actions/inbox';
 import CuantoAntes from '../../screens/actions/cuantoAntes';
 import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Project from '../../screens/actions/project';
 import Today from '../../screens/actions/today';
 import SideBar from '../SideBar/SideBar';

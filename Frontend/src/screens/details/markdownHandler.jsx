@@ -5,10 +5,10 @@ import Markdown from 'react-native-markdown-display';
 import Colors from "../../styles/colors";
 
 
-const MarkdownEditor = ({text, editing}) => {
+const markdownStyle = () => {
 
     const theme = useColorScheme()
-    const markdownStyle = {
+    return ({
         heading1:{
             fontSize: 32, 
             color: Colors[theme].white,
@@ -33,30 +33,7 @@ const MarkdownEditor = ({text, editing}) => {
             color: Colors[theme].white
         },
 
-    }
-    const [content, setContent] = useState(text)
-    useEffect(() =>{
-        setContent(text);
-    }, [text])
-
-    return (
-       <>
-            {editing ? (
-                    
-                <TextInput
-                    placeholder={`*Pulsa aqui* y añade mas detalles en **markdown**...`}
-                    value={content}
-                    multiline
-                    onChangeText={setContent}
-                    style={{color: Colors[theme].white}}
-                />
-
-            ) : (
-                <Markdown style={markdownStyle}>{content}</Markdown>
-            )}
-
-        </>
-    )
+    })
 }
 
 
@@ -64,4 +41,4 @@ const MarkdownEditor = ({text, editing}) => {
 
 
 
-export default MarkdownEditor
+export default markdownStyle
