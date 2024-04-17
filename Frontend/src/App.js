@@ -6,7 +6,6 @@ import FilterState from './services/filters/FilterState';
 import Router from './components/navigation/Router';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 
-
 export default function App() {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;

@@ -6,6 +6,8 @@ import Colors from "../../styles/colors";
 import Markdown from 'react-native-markdown-display';
 import ToolBar from "../../components/common/ToolBar";
 import { MaterialIcons, Feather } from '@expo/vector-icons';
+import CustomBottomSheet from "../../components/modals/customModal";
+import taskService from "../../services/task/taskService";
 
 
 
@@ -13,23 +15,42 @@ const DetailScreen = ({ navigation, route }) => {
     const lastScreen = route.params.currentScreen
     const theme = useColorScheme()
     const task = route.params.task
-    console.log(route.params.task.description)
-    const [editing, toggleEdit] = useState(false);
+
+   
     const mdtext = route.params.task.description
     const inputAccessoryViewID = 'uniqueID';
     const initialText = mdtext === null ? '' : mdtext;
     const [content, setContent] = useState(initialText)
+    const [editing, toggleEdit] = useState(false);
+
     useEffect(() =>{
         if(mdtext !== null)
             setContent(mdtext);
         else
             setContent('');
-    }, [mdtext])
+        toggleEdit(false);
+    }, [mdtext, task.task_id])
+
+
+    const updateTaskDescription = async() => {
+        const tempTask = {...task} //clonamos la task 
+        tempTask.description = mdtext
+        console.log(tempTask)
+        //actualizamos la tarea con la nueva descripcion
+        if(tempTask.description !== null){
+            const updatedTaskResult = await taskService.updateTask(tempTask.task_id, tempTask);
+            if(updatedTaskResult !== -1){
+                console.log("Se ha guardado la nueva descripcion")
+            }
+        }
+
+
+    }
     const handlePress = () => {
         Keyboard.dismiss();
         toggleEdit(false)
+        updateTaskDescription();
     }
-
     // Estilos de markdown 
     const markdownStyle = {
         heading1:{
@@ -57,11 +78,6 @@ const DetailScreen = ({ navigation, route }) => {
         },
     
     }
-
-
-
-
-
 
     return (
         <KeyboardAvoidingView 
@@ -118,6 +134,7 @@ const DetailScreen = ({ navigation, route }) => {
                             value={content}
                             multiline
                             placeholder="¡Prueba a añadir detalles a la tarea!"
+                            placeholderTextColor={Colors[theme].softGrey}
         
                         />
 
@@ -132,8 +149,13 @@ const DetailScreen = ({ navigation, route }) => {
                         </View>
                     )}
                     {
-                        Platform.OS !== 'web' && (<InputAccessoryView nativeID={inputAccessoryViewID}><ToolBar/></InputAccessoryView>)
+                        Platform.OS !== 'web' && 
+                        (<InputAccessoryView nativeID={inputAccessoryViewID}>
+                            <ToolBar />
+                        </InputAccessoryView>)
                     }
+                        
+                    
                 </View>
             </SafeAreaView> 
         </KeyboardAvoidingView>
