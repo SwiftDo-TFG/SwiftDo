@@ -82,7 +82,7 @@ const ConfigAPI = () => {
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <Text style={settingStyles.sideSettingsText}>
-                Configuracion api
+                Configuracion API
             </Text>
         </View>
     )
@@ -91,7 +91,7 @@ const Tema = () => {
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <Text style={settingStyles.sideSettingsText}>
-                Temaaaa
+                Tema
             </Text>
         </View>
     )
@@ -113,10 +113,11 @@ const AdminContext = () => {
             </Text>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {Object.keys(userContext).map((key, index) => (
-                    <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                        {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}
-                        <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
-                        <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+                    <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                            <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+                        </View>
                         <TouchableOpacity key={index} onPress={async () => {
                             await contextService.deleteContext(userContext[key].context_id)
                             getAreas();
@@ -144,20 +145,6 @@ const AdminTag = () => {
             <Text style={settingStyles.sideSettingsText}>
                 Administrar etiquetas
             </Text>
-            {/* <View style={settingStyles.tagContainer}>
-                {Object.keys(tags).map((key, index) => (
-                    <View key={index} style={[settingStyles.tag, { backgroundColor: tags[key].colour, flexBasis: '24%' }]}>
-                        <Text style={{ paddingBottom: 3, color: 'white' }}>{tags[key].name}</Text>
-                        <TouchableOpacity onPress={() => {
-                            tagService.deleteTag(tags[key].name)
-                            getTags()
-                        }}>
-
-                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
-                        </TouchableOpacity>
-                    </View>
-                ))}
-            </View> */}
             <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
                 {Object.keys(tags).map((key, index) => (
                     <View key={index} style={[settingStyles.tag, { backgroundColor: tags[key].colour }]}>
@@ -335,7 +322,7 @@ const settingStyles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         marginRight: 2,
-        marginBottom: 2,
+        marginBottom: 10
     },
 })
 
