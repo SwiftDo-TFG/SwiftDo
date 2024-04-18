@@ -9,6 +9,7 @@ import CustomButton from "../../buttons/Button";
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
+import CompleteTaskModal from "../CompleteTaskModal";
 const SettingsDrawer = createDrawerNavigator();
 
 const DatosPersonales = () => {
@@ -99,10 +100,19 @@ const Tema = () => {
 const AdminContext = () => {
     const [userContext, setUserContext] = useState([]);
     const theme = useColorScheme();
+    const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [deleteContextId, setDeleteContextId] = useState([]);
     async function getAreas() {
         const userContext = await contextService.showContextsByUser();
         setUserContext(userContext);
     }
+
+    async function handleDeleteContext() {
+        await contextService.deleteContext(deleteContextId);
+        getAreas();
+        setIsCompleteModalOpen(false);
+    }
+
     useEffect(() => {
         getAreas();
     }, [])
@@ -113,30 +123,45 @@ const AdminContext = () => {
             </Text>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {Object.keys(userContext).map((key, index) => (
-                    <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
                             <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
                         </View>
-                        <TouchableOpacity key={index} onPress={async () => {
-                            await contextService.deleteContext(userContext[key].context_id)
-                            getAreas();
+                        <TouchableOpacity onPress={async () => {
+                            setDeleteContextId(userContext[key].context_id);
+                            setIsCompleteModalOpen(true);
                         }}
                         ><MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].softGrey} /></TouchableOpacity>
                     </View>
                 ))}
             </View>
+            <CompleteTaskModal
+                title="Borrar contexto"
+                texto={"¿Desea borrar este contexto?"}
+                onAccept={handleDeleteContext}
+                isModalOpen={isCompleteModalOpen}
+                setIsModalOpen={setIsCompleteModalOpen}
+            />
         </View>
     )
 }
 
 const AdminTag = () => {
     const [tags, setTags] = useState([]);
-
+    const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [deleteTagId, setDeleteTagId] = useState([]);
     async function getTags() {
         const dataTags = await tagService.getAllTags();
         setTags(dataTags);
     }
+
+    async function handleDeleteTags() {
+        tagService.deleteTag(deleteTagId)
+        getTags()
+        setIsCompleteModalOpen(false);
+    }
+
     useEffect(() => {
         getTags()
     }, [])
@@ -150,15 +175,21 @@ const AdminTag = () => {
                     <View key={index} style={[settingStyles.tag, { backgroundColor: tags[key].colour }]}>
                         <Text style={{ color: 'white', paddingBottom: 3 }}>{tags[key].name}</Text>
                         <TouchableOpacity onPress={() => {
-                            tagService.deleteTag(tags[key].name)
-                            getTags()
+                            setDeleteTagId(tags[key].name);
+                            setIsCompleteModalOpen(true);
                         }}>
                             <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
                         </TouchableOpacity>
                     </View>
                 ))}
-
             </ScrollView>
+            <CompleteTaskModal
+                title="Borrar etiqueta"
+                texto={"¿Desea borrar esta etiqueta?"}
+                onAccept={handleDeleteTags}
+                isModalOpen={isCompleteModalOpen}
+                setIsModalOpen={setIsCompleteModalOpen}
+            />
         </View>
     )
 }
