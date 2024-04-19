@@ -13,6 +13,7 @@ import { useRoute } from '@react-navigation/native';
 import TaskStates from '../../utils/enums/taskStates';
 import { useDrawerStatus } from '@react-navigation/drawer'
 import { useWindowDimensions } from 'react-native';
+import deviceStorage from '../../offline/deviceStorage';
 
 
 
@@ -38,15 +39,25 @@ export default ({ navigation }) => {
     const isDrawerOpen = useDrawerStatus() === "open";
     const dimensions = useWindowDimensions();
 
-    if(dimensions.width >= 768 && !isDrawerOpen){
+    if (dimensions.width >= 768 && !isDrawerOpen) {
         navigation.openDrawer();
     }
 
-    React.useEffect(() => { 
-        
+    React.useEffect(() => {
+
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
+            
+            if (userAndTasks.error && userAndTasks.error.status === 'timeout') {
+                const offlineSidebar = await deviceStorage.getSidebarData();
+                setDataInSidebar(offlineSidebar)
+            } else {
+                setDataInSidebar(userAndTasks)
+                deviceStorage.storeSidebarData(userAndTasks);
+            }
+        }
 
+        const setDataInSidebar = (userAndTasks) => {
             setUsername(userAndTasks.userName);
             setInboxData([userAndTasks.tasksInfo[TaskStates.INBOX].total, userAndTasks.tasksInfo[TaskStates.INBOX].important]);
             setCaData([userAndTasks.tasksInfo[TaskStates.CUANTO_ANTES].total, userAndTasks.tasksInfo[TaskStates.CUANTO_ANTES].important]);
@@ -54,7 +65,6 @@ export default ({ navigation }) => {
             setArchData([userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].total, userAndTasks.tasksInfo[TaskStates.ARCHIVADAS].important]);
             setSideProjects(userAndTasks.projects);
             setSideContexts(userAndTasks.contexts);
-
         }
 
         // const interval = setInterval(fetchData, 10000); // Llamada a fetchData cada 20 segundos
@@ -114,7 +124,7 @@ export default ({ navigation }) => {
         <View style={sideBar.container}>
 
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
-                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} navigation={navigation}/>
+                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} navigation={navigation} />
                 <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />

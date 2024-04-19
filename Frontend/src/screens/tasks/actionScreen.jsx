@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService";
 import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme } from "react-native";
-import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
 import AddButton from "../../components/common/addButton";
@@ -18,6 +18,8 @@ import styles from "./actionScreen.styles";
 import Colors from "../../styles/colors";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
+import deviceStorage from "../../offline/deviceStorage";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 function ActionScreen(props) {
@@ -43,8 +45,12 @@ function ActionScreen(props) {
   const filterContext = useContext(FilterContext)
   const [filters, setFilters] = useState({})
   console.log("PROPS: ", props.route)
-  useEffect(() => {
 
+  //Offline
+  const offlineContext = useContext(OfflineContext);
+
+  useEffect(() => {
+    console.log("OFFLINE STATUS", offlineContext.isOffline)
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (!isDataLoaded) {
         fetchData()
@@ -92,15 +98,48 @@ function ActionScreen(props) {
 
     const tasksDB = await taskService.getTasks(filter);
 
+    console.log("A OCURRIDO UN ERROR EN ACTIONSCREEEN", tasksDB.error)
+
     if (tasksDB.error) {
-      return authState.signOut();
+      if (tasksDB.error.status === 401) {
+        return authState.signOut();
+      } else if (tasksDB.error.status === 'timeout') {
+        console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION", tasksDB.error.status)
+        //AQUI RECARGAMOS CON LO QUE HAY OFFLINE SI HAY
+        offlineContext.setOfflineMode();
+        let offLineTasks;
+        if(props.state === 5){
+          //Es de proyecto
+          
+          offLineTasks = await deviceStorage.getProjectTasks(props.project_id);
+          console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION Y ES UN PROYECTO", props.state, props.project_id, offLineTasks)
+        }else{
+          offLineTasks = await deviceStorage.getActionScreenData(props.state);
+        }
+        if(offLineTasks){
+          setDataInScreen(offLineTasks)
+        }
+      }
+    } else {
+      console.log("Estas son las tareas que se devuelven", tasksDB)
+      setDataInScreen(tasksDB)
+      if(tasksDB.length > 0){
+        if(props.state === 5){
+          //ES de proyecto
+          deviceStorage.storeProjectTasks(props.project_id, tasksDB);
+        }else{
+          deviceStorage.storeActionScreenData(props.state, tasksDB);
+        }
+      }
     }
 
+  }
+
+  const setDataInScreen = (tasksDB) => {
     const seletedAux = {}
     tasksDB.forEach(async (task) => {
       seletedAux[task.task_id] = false;
     })
-    console.log("Estas son las tareas que se devuelven", tasksDB)
 
     seletedAux.total = 0;
 
@@ -311,11 +350,13 @@ function ActionScreen(props) {
             <Feather name="sidebar" size={28} color={Colors[theme].white} />
           </TouchableOpacity>)}
 
+          {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
+
           {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
             <TouchableOpacity style={styles.area} onPress={() => setIsFilterModalOpen(true)}>
               {/* AQUI IRIA EL TEXTO DEL CONTEXTO FILTRADO */}
-              {filterContext.isFiltered && <ContextBadge style={{marginRight: 10}} context_name={filterContext.context_name} handlePress={() => {
+              {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
                 // handleContextAction(null, context_name);
                 filterContext.clearFilter();
                 reloadData();

@@ -8,6 +8,7 @@ import { actStyles } from "../../styles/globalStyles";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import Colors from "../../styles/colors";
+import deviceStorage from "../../offline/deviceStorage";
 
 
 function Project(props) {
@@ -42,10 +43,22 @@ function Project(props) {
 
     async function fetchData() {
         const project = await projectService.showContent(props.route.params.project_id);
+
+        if (project.error && project.error.status === 'timeout') {
+            const offlineData = await deviceStorage.getProjectData(props.route.params.project_id)
+            setDataInScreen(offlineData);
+        }else{
+            setDataInScreen(project)
+            deviceStorage.storeProjectData(project.project.project_id, project)
+        }
+    }
+
+    const setDataInScreen = (project) => {
         setData(project);
         setDataLoaded(true);
         console.log("ID PROJECT, ", project);
     }
+
     const progressIcon = () => {
         let slice = Math.ceil(projectData.percentage / 12.5);
         if (isNaN(slice)) slice = 0

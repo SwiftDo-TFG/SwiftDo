@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator, useColorScheme } from "react-native";
 import { sidebarStyles, textStyles } from "../../styles/globalStyles";
-import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 import FilterContext from "../../services/filters/FilterContext";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 const Profile = ({ name, formattedDate, contexts, navigation }) => {
@@ -18,6 +19,9 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const sideBar = sidebarStyles(theme);
     const textStyle = textStyles(theme);
     const filterContext = useContext(FilterContext);
+
+    //offline Mode
+    const offlineContext = useContext(OfflineContext);
 
     useEffect(() => {
         async function getAreas() {
@@ -88,6 +92,12 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
                     <Text style={[textStyle.smallText, { color: Colors[theme].white }]}>{formattedDate}</Text>
                 </View>
             </View>
+            {offlineContext.isOffline && 
+                <View style={sideBar.offLineTextContainer}>
+                    <Text style={{color: Colors[theme].white, textAlign: 'center', marginRight: 5}}>Modo sin conexión</Text>
+                    <Ionicons name="cloud-offline" size={16} color={Colors[theme].white} style={{alignSelf: 'center'}}/>
+                </View>
+            }
             <View style={{ flexDirection: 'column' }}>
                 <TouchableOpacity onPress={toggleAreas}>
                     <View style={sideBar.areaContainer}>

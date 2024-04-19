@@ -29,4 +29,8 @@ const clearToken = function () {
     authtoken = null;
 }
 
-export default { setAuthHeaders, clearToken }
+const parseError = function (error){
+    return { error: {status: error.response ? error.response.status : 'timeout'}}
+}
+
+export default { setAuthHeaders, clearToken, parseError }

@@ -93,6 +93,13 @@ const sidebarStyles = (theme) => {
             justifyContent: 'center',
             paddingHorizontal: 10,
             borderRadius: 10,
+        },
+        offLineTextContainer: {
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            marginTop: 10,
+            justifyContent: 'center',
+            alignContent: 'center'
         }
     })
 }
