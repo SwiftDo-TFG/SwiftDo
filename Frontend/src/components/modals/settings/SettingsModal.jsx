@@ -10,6 +10,8 @@ import { MaterialCommunityIcons, Feather, AntDesign, Ionicons } from '@expo/vect
 import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
 import CompleteTaskModal from "../CompleteTaskModal";
+import MultiSwitch from 'react-native-multiple-switch'
+
 const SettingsDrawer = createDrawerNavigator();
 
 const DatosPersonales = () => {
@@ -88,12 +90,27 @@ const ConfigAPI = () => {
         </View>
     )
 }
+
 const Tema = () => {
+    const items = ['Predeterminado', 'Claro', 'Oscuro']
+    const [value, setValue] = useState(items[0])
+
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <Text style={settingStyles.sideSettingsText}>
                 Tema
             </Text>
+
+            {
+                <MultiSwitch
+                    items={items}
+                    value={value}
+                    onChange={(val) => {
+                        setValue(val)
+                        console.log(val)
+                    }}
+                    mediumHeight
+                />}
         </View>
     )
 }
@@ -354,25 +371,10 @@ const settingStyles = StyleSheet.create({
         flexDirection: 'row'
     },
     icon: {
-        width: 35,
-        height: 35,
+        width: 45,
+        height: 45,
         borderRadius: 15
-    },
-    tagContainer: {
-        // overflow: 'hidden',
-        // paddingHorizontal: 22,
-        // flexWrap: 'wrap',
-        // flexDirection: 'column'
-    },
-    tag: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginRight: 2,
-        marginBottom: 10
-    },
+    }
 })
 
 
