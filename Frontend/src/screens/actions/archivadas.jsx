@@ -5,11 +5,15 @@ import { View, Text, useColorScheme } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import { actStyles } from "../../styles/globalStyles";
-
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function Archivadas(props) {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    
     const actStyle = actStyles(theme);
     return (
         <ActionScreen {...props} state={TaskStates.ARCHIVADAS} emptyIcon={<FontAwesome5 style={actStyle.emptyIcon} name="archive" color={Colors[theme].grey}/>}>

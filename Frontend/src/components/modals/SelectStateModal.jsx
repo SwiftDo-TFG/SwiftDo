@@ -2,10 +2,15 @@ import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollVi
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, Entypo } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const SelectStateModal = (props) => {
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const OutSide = ({ onCloseModal, isModalOpen }) => {
         const view = <View style={{ flex: 1, width: '100%' }} />;
         if (!isModalOpen) return view;

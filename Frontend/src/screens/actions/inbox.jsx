@@ -8,10 +8,13 @@ import { actStyles } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
 import React from "react";
 import SettingsModal from "../../components/modals/settings/SettingsModal";
-
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 function Inbox(props) {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
 

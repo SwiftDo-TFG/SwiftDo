@@ -5,6 +5,7 @@ import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/ve
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 import FilterContext from "../../services/filters/FilterContext";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const Profile = ({ name, formattedDate, contexts, navigation }) => {
@@ -14,10 +15,15 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const [userContext, setUserContext] = useState([]);
     const [newContextName, setNewContextName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-    const theme = useColorScheme();
+    const filterContext = useContext(FilterContext);
+    
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme);
     const textStyle = textStyles(theme);
-    const filterContext = useContext(FilterContext);
+
 
     useEffect(() => {
         async function getAreas() {

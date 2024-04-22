@@ -13,6 +13,8 @@ import { useRoute } from '@react-navigation/native';
 import TaskStates from '../../utils/enums/taskStates';
 import { useDrawerStatus } from '@react-navigation/drawer'
 import { useWindowDimensions } from 'react-native';
+import { useContext } from 'react';
+import ThemeContext from '../../services/theme/ThemeContext';
 
 
 
@@ -33,10 +35,15 @@ export default ({ navigation }) => {
     const [sideProjects, setSideProjects] = React.useState([]);
     const [sideContexts, setSideContexts] = React.useState([]);
     const authstate = React.useContext(AuthContext);
-    const theme = useColorScheme();
     const sideBar = sidebarStyles(theme)
     const isDrawerOpen = useDrawerStatus() === "open";
     const dimensions = useWindowDimensions();
+    
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+
 
     if(dimensions.width >= 768 && !isDrawerOpen){
         navigation.openDrawer();

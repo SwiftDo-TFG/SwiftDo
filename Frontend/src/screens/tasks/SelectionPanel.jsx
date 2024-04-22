@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Animated, TouchableOpacity, useColorScheme } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import styles from './actionScreen.styles'
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function SelectionPanel (props){
     const [selectAll, setSelectAll] = useState(false);
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    
     const archiveSelectedTask = () => {
         props.setIsMoveModalOpen(true);
     }

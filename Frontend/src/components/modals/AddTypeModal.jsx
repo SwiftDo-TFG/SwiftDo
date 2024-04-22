@@ -2,11 +2,17 @@ import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback, useColor
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../../screens/tasks/actionScreen.styles'
 import Colors from "../../styles/colors";
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 
 const AddTypeModal = (props) =>{
-    const theme = useColorScheme();
+  //Theme
+  const themeContext = useContext(ThemeContext);
+  // const theme = useColorScheme();
+  const theme = themeContext.theme;
+  
     return(
         <Modal
             visible={props.isModalVisible}

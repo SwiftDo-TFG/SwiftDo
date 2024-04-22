@@ -4,12 +4,16 @@ import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import CustomButton from "../buttons/Button";
 import Colors from "../../styles/colors";
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 
 function CompleteTaskModal({texto, ...props}) {
-    const theme = useColorScheme();
-
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     function onCloseModal() {
         props.setIsModalOpen(false);
     }

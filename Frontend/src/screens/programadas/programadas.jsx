@@ -21,6 +21,7 @@ import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 import CalendarStrip from 'react-native-calendar-strip';
 import SettingsModal from "../../components/modals/settings/SettingsModal";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const ProgramadasScreen = (props) => {
@@ -43,7 +44,9 @@ const ProgramadasScreen = (props) => {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
 
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
     const [showCalendar, setShowCalendar] = useState(true);

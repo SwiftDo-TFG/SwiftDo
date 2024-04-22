@@ -5,10 +5,13 @@ import { View, Text, useColorScheme } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import { actStyles } from "../../styles/globalStyles";
+import ThemeContext from "../../services/theme/ThemeContext";
+import { useContext } from "react";
 
 
 function CuantoAntes(props) {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
 
     return (

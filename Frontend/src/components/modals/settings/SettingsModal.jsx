@@ -1,6 +1,6 @@
 
 import { View, ScrollView, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet } from "react-native";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Colors from "../../../styles/colors";
@@ -11,6 +11,7 @@ import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
 import CompleteTaskModal from "../CompleteTaskModal";
 import MultiSwitch from 'react-native-multiple-switch'
+import ThemeContext from "../../../services/theme/ThemeContext";
 
 const SettingsDrawer = createDrawerNavigator();
 
@@ -92,31 +93,39 @@ const ConfigAPI = () => {
 }
 
 const Tema = () => {
-    const items = ['Predeterminado', 'Claro', 'Oscuro']
+    const items = [{name:'Predeterminado', value: themePedet}, {name:'Claro', value: 'light'}, {name:'Oscuro', value: 'dark'}]
     const [value, setValue] = useState(items[0])
+
+    const themePedet = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    const theme = themeContext.theme;
 
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <Text style={settingStyles.sideSettingsText}>
                 Tema
             </Text>
-
-            {
-                <MultiSwitch
-                    items={items}
-                    value={value}
-                    onChange={(val) => {
-                        setValue(val)
-                        console.log(val)
-                    }}
-                    mediumHeight
-                />}
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+                {items.map(option => {
+                    return (
+                        <TouchableOpacity onPress={() => {
+                            setValue(option)
+                            themeContext.changeTheme(option.value)
+                        }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
+                            <Text style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center' }}>{option.name}</Text>
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
         </View>
     )
 }
 const AdminContext = () => {
     const [userContext, setUserContext] = useState([]);
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteContextId, setDeleteContextId] = useState([]);
     async function getAreas() {
@@ -167,8 +176,11 @@ const AdminContext = () => {
 const AdminTag = () => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-    const [deleteTagId, setDeleteTagId] = useState([]);
-    const theme = useColorScheme();
+    const [deleteTagId, setDeleteTagId] = useState([]);ç
+
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     async function getTags() {
         const dataTags = await tagService.getAllTags();
@@ -308,7 +320,9 @@ const SideComponent = ({ theme, navigation }) => {
 }
 
 const SettingsModal = (props) => {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     return (
         <Modal
@@ -374,6 +388,15 @@ const settingStyles = StyleSheet.create({
         width: 45,
         height: 45,
         borderRadius: 15
+    },
+    themeSelectorPill: {
+        flex: 1,
+        padding: 10,
+    },
+    themeSelectorPillSelected: {
+        borderWidth: 1,
+        borderRadius: 20,
+        padding: 10,
     }
 })
 

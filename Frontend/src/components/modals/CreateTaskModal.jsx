@@ -1,7 +1,7 @@
 import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
@@ -12,6 +12,7 @@ import TaskStates from "../../utils/enums/taskStates"
 import projectService from "../../services/project/projectService";
 import ContextBadge from "../common/ContextBadge";
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function CreateTaskModal(props) {
@@ -34,7 +35,10 @@ function CreateTaskModal(props) {
     const [showTagSelector, setShowTagSelector] = useState(false)
     const [colorIndex, setcolorIndex] = useState(0)
 
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     async function openModalInProject() {
         if (!state.project) {

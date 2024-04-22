@@ -4,10 +4,13 @@ import { View, Text, useColorScheme } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import { actStyles } from "../../styles/globalStyles";
-
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 function Today(props) {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
 
     return (

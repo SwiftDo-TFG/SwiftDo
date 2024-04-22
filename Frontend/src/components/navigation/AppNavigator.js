@@ -11,12 +11,18 @@ import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
 import DetailScreen from '../../screens/details/details';
+import ThemeContext from '../../services/theme/ThemeContext';
+import { useContext } from 'react';
 
 const Drawer = createDrawerNavigator();
 
 const AppNavigator = ({ projects, state }) => {
     const dimensions = useWindowDimensions();
-    const theme = useColorScheme();
+
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
 
     return (

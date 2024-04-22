@@ -1,13 +1,17 @@
 import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, ScrollView, useColorScheme } from "react-native"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styles from '../../screens/tasks/actionScreen.styles'
 
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 function MoveTaskModal(props) {
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     const Title = () => {
         return (

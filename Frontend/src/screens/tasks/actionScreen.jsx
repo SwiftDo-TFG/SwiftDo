@@ -18,6 +18,7 @@ import styles from "./actionScreen.styles";
 import Colors from "../../styles/colors";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function ActionScreen(props) {
@@ -37,7 +38,11 @@ function ActionScreen(props) {
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
-  const theme = useColorScheme();
+  
+  //Theme
+  const themeContext = useContext(ThemeContext)
+  const theme = themeContext.theme;
+  // const theme = useColorScheme();
 
   //Filters
   const filterContext = useContext(FilterContext)

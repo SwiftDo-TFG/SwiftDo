@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, useColorScheme } from "react-native"
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const dvHeight = Dimensions.get('window').height;
@@ -17,7 +18,11 @@ function OutSide({onCloseModal, isModalOpen}) {
 
 function PopUpModal(props) {
     const [translateY, setTranslateY]  = useState(new Animated.Value(dvHeight));
-    const theme = useColorScheme();
+
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     useEffect(() => {
         animateModal()

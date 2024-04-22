@@ -2,10 +2,14 @@ import { TouchableOpacity, View, Text, useColorScheme } from "react-native";
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { sidebarStyles } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 const ActionScheme = ({ navigation, onPress, icon, iconColor, text, totalTasks, importantTasks, type }) => {
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme);
 
     return (
