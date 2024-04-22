@@ -1,5 +1,5 @@
 
-import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet } from "react-native";
+import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -18,7 +18,9 @@ const SettingsDrawer = createDrawerNavigator();
 const DatosPersonales = ({ navigation }) => {
     // const [email, setEmail] = useState('pepe@ucm.es');
     // const [user, setUser] = useState('Pepe');
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const [error, setError] = useState({ isError: false, msg: '' })
     function emptyValuesError() {
         let error = {}
@@ -92,7 +94,9 @@ const DatosPersonales = ({ navigation }) => {
 }
 
 const ConfigAPI = ({ navigation }) => {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
@@ -127,7 +131,7 @@ const Tema = ({ navigation }) => {
                     Tema
                 </Text>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
                 {items.map(option => {
                     return (
                         <TouchableOpacity onPress={() => {
@@ -267,7 +271,9 @@ const AdminTag = ({ navigation }) => {
     )
 }
 const TareasCompletadas = ({ navigation }) => {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     return (
 
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
@@ -284,7 +290,9 @@ const TareasCompletadas = ({ navigation }) => {
     )
 }
 const AcercaGTD = ({ navigation }) => {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
@@ -299,7 +307,9 @@ const AcercaGTD = ({ navigation }) => {
     )
 }
 const Tutorial = ({ navigation }) => {
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
@@ -409,6 +419,7 @@ const SettingsModal = (props) => {
                     }}
                         drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} /> : <></>}
                         defaultStatus={"closed"}
+                        detachInactiveScreens={Platform.OS === 'web'}
                     >
                         {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
                         <SettingsDrawer.Screen name="DatosPersonales" component={DatosPersonales} />
@@ -417,8 +428,8 @@ const SettingsModal = (props) => {
                         <SettingsDrawer.Screen name="AdminContext" component={AdminContext} />
                         <SettingsDrawer.Screen name="AdminTag" component={AdminTag} />
                         <SettingsDrawer.Screen name="TareasCompletadas" component={TareasCompletadas} />
-                        <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} />
-                        <SettingsDrawer.Screen name="Tutorial" component={Tutorial} />
+                        {/* <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} /> */}
+                        {/* <SettingsDrawer.Screen name="Tutorial" component={Tutorial} /> */}
 
                     </SettingsDrawer.Navigator>
                 </View>
