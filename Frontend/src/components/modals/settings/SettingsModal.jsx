@@ -18,6 +18,7 @@ const SettingsDrawer = createDrawerNavigator();
 const DatosPersonales = () => {
     // const [email, setEmail] = useState('pepe@ucm.es');
     // const [user, setUser] = useState('Pepe');
+    const theme = useColorScheme();
     const [error, setError] = useState({ isError: false, msg: '' })
     function emptyValuesError() {
         let error = {}
@@ -52,32 +53,40 @@ const DatosPersonales = () => {
     };
     return (
         <View style={{ flex: 1, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center' }}>
-            <SafeAreaView>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Image
-                        style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
-                        source={require('../../../assets/icon.png')}
-                    />
-                    <AuthTextInput
-                        placeholder="User"
-                        // value={user}
-                        // onChangeText={setUser}
-                        secureTextEntry
-                        inputKey="user"
-                        error={error}
-                        setError={setError}
-                    />
-                    <AuthTextInput
-                        placeholder="Email"
-                        // value={email}
-                        // onChangeText={setEmail}
-                        inputKey="email"
-                        error={error}
-                        setError={setError}
-                    />
-                    <CustomButton onPress={handlePress} text="Editar" />
-                </View>
-            </SafeAreaView>
+
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Datos personales
+                </Text>
+            </View>
+
+            <Image
+                style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
+                source={require('../../../assets/icon.png')}
+            />
+            <AuthTextInput
+                placeholder="User"
+                // value={user}
+                // onChangeText={setUser}
+                secureTextEntry
+                inputKey="user"
+                error={error}
+                setError={setError}
+            />
+            <AuthTextInput
+                placeholder="Email"
+                // value={email}
+                // onChangeText={setEmail}
+                inputKey="email"
+                error={error}
+                setError={setError}
+            />
+            <CustomButton onPress={handlePress} text="Editar" />
         </View>
     )
 }
@@ -85,8 +94,13 @@ const DatosPersonales = () => {
 const ConfigAPI = () => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Sidebar');
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Configuracion API
             </Text>
         </View>
@@ -103,9 +117,16 @@ const Tema = () => {
 
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Tema
-            </Text>
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Tema
+                </Text>
+            </View>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
                 {items.map(option => {
                     return (
@@ -145,9 +166,17 @@ const AdminContext = () => {
     }, [])
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Administrar contextos
-            </Text>
+
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Administrar contextos
+                </Text>
+            </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {Object.keys(userContext).map((key, index) => (
                     <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -199,9 +228,16 @@ const AdminTag = () => {
     }, [])
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Administrar etiquetas
-            </Text>
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Administrar etiquetas
+                </Text>
+            </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {/* <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}> */}
                 {Object.keys(tags).map((key, index) => (
@@ -233,18 +269,30 @@ const AdminTag = () => {
 const TareasCompletadas = () => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Tareas completadas
             </Text>
         </View>
+
     )
 }
 const AcercaGTD = () => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Acerca GTD
             </Text>
         </View>
@@ -253,8 +301,13 @@ const AcercaGTD = () => {
 const Tutorial = () => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Tutorial
             </Text>
         </View>
@@ -278,49 +331,49 @@ const SideComponent = ({ theme, navigation }) => {
             </View>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('DatosPersonales') }}>
                 <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Datos personales
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('ConfigAPI') }}>
                 <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Configuración de la API
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tema') }}>
                 <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Personalizar tema
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminContext') }}>
                 <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar contextos
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminTag') }}>
                 <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar etiquetas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('TareasCompletadas') }}>
                 <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tareas completadas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AcercaGTD') }}>
                 <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Acerca de GTD
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tutorial') }}>
                 <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tutorial de la app
                 </Text>
             </TouchableOpacity>
