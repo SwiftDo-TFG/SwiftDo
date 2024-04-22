@@ -354,9 +354,8 @@ const SettingsModal = (props) => {
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
-                        drawerContent={(props) => <SideComponent theme={theme} {...props} />}
+                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} />: <></>}
                         defaultStatus={"closed"}
-
                     >
                         {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
                         <SettingsDrawer.Screen name="DatosPersonales" component={DatosPersonales} />
