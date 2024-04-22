@@ -6,10 +6,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Colors from "../../../styles/colors";
 import AuthTextInput from '../../../components/auth/AuthTextInput';
 import CustomButton from "../../buttons/Button";
-import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
 import CompleteTaskModal from "../CompleteTaskModal";
+import MultiSwitch from 'react-native-multiple-switch'
+
 const SettingsDrawer = createDrawerNavigator();
 
 const DatosPersonales = () => {
@@ -88,12 +90,27 @@ const ConfigAPI = () => {
         </View>
     )
 }
+
 const Tema = () => {
+    const items = ['Predeterminado', 'Claro', 'Oscuro']
+    const [value, setValue] = useState(items[0])
+
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <Text style={settingStyles.sideSettingsText}>
                 Tema
             </Text>
+
+            {
+                <MultiSwitch
+                    items={items}
+                    value={value}
+                    onChange={(val) => {
+                        setValue(val)
+                        console.log(val)
+                    }}
+                    mediumHeight
+                />}
         </View>
     )
 }
@@ -151,6 +168,8 @@ const AdminTag = () => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteTagId, setDeleteTagId] = useState([]);
+    const theme = useColorScheme();
+
     async function getTags() {
         const dataTags = await tagService.getAllTags();
         setTags(dataTags);
@@ -170,19 +189,24 @@ const AdminTag = () => {
             <Text style={settingStyles.sideSettingsText}>
                 Administrar etiquetas
             </Text>
-            <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+            <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
+                {/* <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}> */}
                 {Object.keys(tags).map((key, index) => (
-                    <View key={index} style={[settingStyles.tag, { backgroundColor: tags[key].colour }]}>
-                        <Text style={{ color: 'white', paddingBottom: 3 }}>{tags[key].name}</Text>
+                    <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <MaterialCommunityIcons name="tag-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                            <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{tags[key].name}</Text>
+                        </View>
                         <TouchableOpacity onPress={() => {
                             setDeleteTagId(tags[key].name);
                             setIsCompleteModalOpen(true);
                         }}>
-                            <FontAwesome name="close" size={12} color="white" style={{ marginLeft: 3 }} />
+                            <MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].softGrey} />
                         </TouchableOpacity>
                     </View>
                 ))}
-            </ScrollView>
+                {/* </ScrollView> */}
+            </View>
             <CompleteTaskModal
                 title="Borrar etiqueta"
                 texto={"¿Desea borrar esta etiqueta?"}
@@ -225,48 +249,56 @@ const SideComponent = ({ theme, navigation }) => {
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: Colors[theme].themeColor }}>
             <View style={settingStyles.topContainer}>
-                <Text style={settingStyles.sideSettingsText}>Ajustes</Text>
+                <Text style={{ color: 'white', fontSize: 35, marginBottom: 15, marginLeft: 5 }}>Ajustes</Text>
                 <Image
                     style={settingStyles.icon}
                     source={require('../../../assets/icon.png')}
                 />
             </View>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('DatosPersonales') }}>
+                <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Datos personales
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('ConfigAPI') }}>
+                <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Configuración de la API
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tema') }}>
+                <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Personalizar tema
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminContext') }}>
+                <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Administrar contextos
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminTag') }}>
+                <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Administrar etiquetas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('TareasCompletadas') }}>
+                <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Tareas completadas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AcercaGTD') }}>
+                <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Acerca de GTD
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tutorial') }}>
+                <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={settingStyles.sideSettingsText}>
                     Tutorial de la app
                 </Text>
@@ -322,39 +354,27 @@ const settingStyles = StyleSheet.create({
     topContainer: {
         padding: 2,
         alignItems: 'center',
-        flex: 1, justifyContent: 'space-between',
+        flex: 1,
+        justifyContent: 'space-between',
         flexDirection: 'row',
         width: '100%',
-        marginBottom: 5
+        marginBottom: 25
     },
     sideSettingsText: {
         color: 'white',
-        fontSize: 20,
-        marginBottom: 15
+        fontSize: 16,
+        marginBottom: 15,
+        marginLeft: 10
     },
     sideSettingContainer: {
-        marginBottom: 10
+        marginBottom: 10,
+        flexDirection: 'row'
     },
     icon: {
-        width: 35,
-        height: 35,
+        width: 45,
+        height: 45,
         borderRadius: 15
-    },
-    tagContainer: {
-        // overflow: 'hidden',
-        // paddingHorizontal: 22,
-        // flexWrap: 'wrap',
-        // flexDirection: 'column'
-    },
-    tag: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginRight: 2,
-        marginBottom: 10
-    },
+    }
 })
 
 
