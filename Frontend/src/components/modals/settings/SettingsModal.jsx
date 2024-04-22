@@ -15,9 +15,10 @@ import ThemeContext from "../../../services/theme/ThemeContext";
 
 const SettingsDrawer = createDrawerNavigator();
 
-const DatosPersonales = () => {
+const DatosPersonales = ({ navigation }) => {
     // const [email, setEmail] = useState('pepe@ucm.es');
     // const [user, setUser] = useState('Pepe');
+    const theme = useColorScheme();
     const [error, setError] = useState({ isError: false, msg: '' })
     function emptyValuesError() {
         let error = {}
@@ -51,49 +52,62 @@ const DatosPersonales = () => {
         }
     };
     return (
-        <View style={{ flex: 1, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center' }}>
-            <SafeAreaView>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Image
-                        style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
-                        source={require('../../../assets/icon.png')}
-                    />
-                    <AuthTextInput
-                        placeholder="User"
-                        // value={user}
-                        // onChangeText={setUser}
-                        secureTextEntry
-                        inputKey="user"
-                        error={error}
-                        setError={setError}
-                    />
-                    <AuthTextInput
-                        placeholder="Email"
-                        // value={email}
-                        // onChangeText={setEmail}
-                        inputKey="email"
-                        error={error}
-                        setError={setError}
-                    />
-                    <CustomButton onPress={handlePress} text="Editar" />
-                </View>
-            </SafeAreaView>
+        <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Datos personales
+                </Text>
+            </View>
+
+            <Image
+                style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
+                source={require('../../../assets/icon.png')}
+            />
+            <AuthTextInput
+                placeholder="User"
+                // value={user}
+                // onChangeText={setUser}
+                secureTextEntry
+                inputKey="user"
+                error={error}
+                setError={setError}
+            />
+            <AuthTextInput
+                placeholder="Email"
+                // value={email}
+                // onChangeText={setEmail}
+                inputKey="email"
+                error={error}
+                setError={setError}
+            />
+            <CustomButton onPress={handlePress} text="Editar" />
         </View>
     )
 }
 
-const ConfigAPI = () => {
+const ConfigAPI = ({ navigation }) => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Sidebar');
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Configuracion API
             </Text>
         </View>
     )
 }
 
-const Tema = () => {
+const Tema = ({ navigation }) => {
     const items = [{ name: 'Predeterminado', value: themePedet }, { name: 'Claro', value: 'light' }, { name: 'Oscuro', value: 'dark' }]
     const [value, setValue] = useState(items[0])
 
@@ -103,16 +117,23 @@ const Tema = () => {
 
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Tema
-            </Text>
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Tema
+                </Text>
+            </View>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
                 {items.map(option => {
                     return (
                         <TouchableOpacity onPress={() => {
                             setValue(option)
                             themeContext.changeTheme(option.value)
-                        }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
+                        }} key={option.value} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
                             <Text style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center' }}>{option.name}</Text>
                         </TouchableOpacity>
                     )
@@ -121,7 +142,7 @@ const Tema = () => {
         </View>
     )
 }
-const AdminContext = () => {
+const AdminContext = ({ navigation }) => {
     const [userContext, setUserContext] = useState([]);
     //Theme
     const themeContext = useContext(ThemeContext);
@@ -145,9 +166,17 @@ const AdminContext = () => {
     }, [])
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Administrar contextos
-            </Text>
+
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Administrar contextos
+                </Text>
+            </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {Object.keys(userContext).map((key, index) => (
                     <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -174,7 +203,7 @@ const AdminContext = () => {
     )
 }
 
-const AdminTag = () => {
+const AdminTag = ({ navigation }) => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteTagId, setDeleteTagId] = useState([]);
@@ -199,9 +228,16 @@ const AdminTag = () => {
     }, [])
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
-                Administrar etiquetas
-            </Text>
+            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Administrar etiquetas
+                </Text>
+            </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
                 {/* <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}> */}
                 {Object.keys(tags).map((key, index) => (
@@ -230,31 +266,48 @@ const AdminTag = () => {
         </View>
     )
 }
-const TareasCompletadas = () => {
+const TareasCompletadas = ({ navigation }) => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Sidebar');
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Tareas completadas
             </Text>
         </View>
+
     )
 }
-const AcercaGTD = () => {
+const AcercaGTD = ({ navigation }) => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Sidebar');
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Acerca GTD
             </Text>
         </View>
     )
 }
-const Tutorial = () => {
+const Tutorial = ({ navigation }) => {
     const theme = useColorScheme();
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
-            <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('Sidebar');
+            }}>
+                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+            </TouchableOpacity>
+            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Tutorial
             </Text>
         </View>
@@ -278,49 +331,49 @@ const SideComponent = ({ theme, navigation }) => {
             </View>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('DatosPersonales') }}>
                 <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Datos personales
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('ConfigAPI') }}>
                 <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Configuración de la API
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tema') }}>
                 <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Personalizar tema
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminContext') }}>
                 <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar contextos
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminTag') }}>
                 <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar etiquetas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('TareasCompletadas') }}>
                 <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tareas completadas
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AcercaGTD') }}>
                 <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Acerca de GTD
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tutorial') }}>
                 <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, {color: Colors[theme].white}]}>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tutorial de la app
                 </Text>
             </TouchableOpacity>
@@ -348,13 +401,13 @@ const SettingsModal = (props) => {
                     <View style={styles.modalDatePickerBackground} />
                 </TouchableWithoutFeedback>
 
-                <View style={[styles.modalSettingsContent, { zIndex: 2 }, {backgroundColor: Colors[theme].themeColor,  borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '',}]}>
+                <View style={[styles.modalSettingsContent, { zIndex: 2 }, { backgroundColor: Colors[theme].themeColor, borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '', }]}>
                     <SettingsDrawer.Navigator id="settings drawer" screenOptions={{
                         headerShown: false,
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
-                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} />: <></>}
+                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} /> : <></>}
                         defaultStatus={"closed"}
                     >
                         {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
