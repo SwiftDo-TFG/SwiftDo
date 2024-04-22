@@ -23,7 +23,7 @@ const AddTypeModal = (props) =>{
             <TouchableWithoutFeedback onPress={() => props.setIsModalVisible(false)}>
               <View style={styles.modalContainer}>
               {/* , {backgroundColor: Colors[theme].paper} */}
-                <View style={[styles.modalStyle]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
                   <TouchableOpacity onPress={() => {
                     props.setIsModalVisible(false)
                     props.showAddTaskPopUp()

@@ -4,6 +4,7 @@ import styles from '../../screens/tasks/actionScreen.styles'
 import DatePicker from "../DatePicker";
 import { useContext } from "react";
 import ThemeContext from "../../services/theme/ThemeContext";
+import Colors from "../../styles/colors";
 
 
 const DatePickerModal = (props) => {
@@ -27,7 +28,7 @@ const DatePickerModal = (props) => {
                     <View style={styles.modalDatePickerBackground} />
                 </TouchableWithoutFeedback>
 
-                <View style={[styles.modalDatePickerContent, { zIndex: 2 }]}>
+                <View style={[styles.modalDatePickerContent, { zIndex: 2 }, {backgroundColor: Colors[theme].themeColor, borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : ''}]}>
                     <DatePicker
                         today={new Date()}
                         state={props.state}

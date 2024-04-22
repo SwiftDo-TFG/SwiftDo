@@ -178,13 +178,17 @@ function CreateTaskModal(props) {
 
 
         const ProjectBadgeSelectable = ({ project }) => {
+            //Theme
+            const themeContext = useContext(ThemeContext);
+            // const theme = useColorScheme();
+            const theme = themeContext.theme;
             return (
                 <TouchableOpacity onPress={() => {
                     const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
-                    <View style={[styles.selectionProjectPanel, {borderColor: project.color}]}>
-                        <Text style={{ color: theme === 'light' ? '#272c34': Colors[theme].white, fontWeight: 600 }}>
+                    <View style={[styles.selectionProjectPanel, { borderColor: project.color, backgroundColor: Colors[theme].themeColor }]}>
+                        <Text style={{ color: theme === 'light' ? '#272c34' : Colors[theme].white, fontWeight: 600 }}>
                             <MaterialCommunityIcons name="circle-outline" size={14} color={project.color} /> {(project.title.length > 8 ? `${project.title.substring(0, 8)}...` : project.title)} <MaterialCommunityIcons name="close" size={14} color={project.color} />
                         </Text>
                     </View>
@@ -193,12 +197,16 @@ function CreateTaskModal(props) {
         }
 
         const SelectProjectPanel = () => {
+            //Theme
+            const themeContext = useContext(ThemeContext);
+            // const theme = useColorScheme();
+            const theme = themeContext.theme;
             return (
                 <TouchableOpacity onPress={() => {
                     setState({ ...state, editedTitle: title, editedDescription: description })
                     setShowAssProjectSelector(true)
                 }}>
-                    <View style={styles.selectionProjectPanel}>
+                    <View style={[styles.selectionProjectPanel, {backgroundColor: Colors[theme].themeColor}]}>
                         <Text style={{ color: 'lightgrey', fontWeight: 600 }}><MaterialCommunityIcons name="circle-outline" size={16} color='lightgrey' /> Proyecto</Text>
                     </View>
                 </TouchableOpacity>
@@ -210,7 +218,7 @@ function CreateTaskModal(props) {
                 {/* Title */}
                 <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
                     <TextInput
-                        style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
+                        style={{ color: theme === 'light' ? '#182E44' : Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
                         placeholder="Nueva Tarea"
                         placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
@@ -226,7 +234,7 @@ function CreateTaskModal(props) {
                         <View style={styles.editStyle}>
                             <View style={{ height: '60%', width: '100%', flexDirection: 'column' }}>
                                 <TextInput
-                                    style={styles.textInput}
+                                    style={[styles.textInput, { color: theme === 'light' ? '#182E44' : Colors[theme].white }]}
                                     value={description}
                                     placeholder="Descripcion..."
                                     placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}

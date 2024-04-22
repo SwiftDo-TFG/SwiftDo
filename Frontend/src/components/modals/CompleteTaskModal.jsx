@@ -22,7 +22,7 @@ function CompleteTaskModal({texto, ...props}) {
         <Modal visible={props.isModalOpen} animationType="slide" transparent={true}>
             <View style={styles.confirmModalContainer}>
                 {/* <OutSide isModalOpen={props.state.showStatusSelector} onCloseModal={props.onCloseModal}/> */}
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
                     <View style={{ alignItems: 'center'}}>
                         <Text style={{fontSize: 16, fontWeight: '500', color: theme === 'light' ? '#182E44': Colors[theme].white,}}>
                             {props.title}

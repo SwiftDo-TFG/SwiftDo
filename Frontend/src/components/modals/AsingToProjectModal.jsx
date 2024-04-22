@@ -1,12 +1,17 @@
 import { Modal, View, Text, TouchableWithoutFeedback, TouchableOpacity, ScrollView } from "react-native";
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import projectService from "../../services/project/projectService";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
+
 
 
 const AssignToProjectModal = (props) => {
-
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
@@ -30,6 +35,7 @@ const AssignToProjectModal = (props) => {
     }
 
     const ProjectsSelection = () => {
+
         return (
             <View>
                 {projects.map(pro => {
@@ -37,7 +43,7 @@ const AssignToProjectModal = (props) => {
                         <TouchableOpacity key={pro.project_id} onPress={() => props.handleSelectProject(pro.project_id, pro)}>
                             <View style={styles.textContainer}>
                                 <MaterialCommunityIcons style={{ width: '15%' }} name="circle-slice-8" size={26} color={pro.color} />
-                                <Text style={styles.defaultTextModal}>{pro.title}</Text>
+                                <Text style={{fontSize: 17,color: Colors[theme].white}}>{pro.title}</Text>
                             </View>
                         </TouchableOpacity>
                     )
@@ -55,7 +61,7 @@ const AssignToProjectModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
                     <ScrollView>
                         <ProjectsSelection />
                     </ScrollView>
