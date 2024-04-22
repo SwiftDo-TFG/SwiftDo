@@ -1,5 +1,5 @@
 
-import { View, ScrollView, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet } from "react-native";
+import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -93,7 +93,7 @@ const ConfigAPI = () => {
 }
 
 const Tema = () => {
-    const items = [{name:'Predeterminado', value: themePedet}, {name:'Claro', value: 'light'}, {name:'Oscuro', value: 'dark'}]
+    const items = [{ name: 'Predeterminado', value: themePedet }, { name: 'Claro', value: 'light' }, { name: 'Oscuro', value: 'dark' }]
     const [value, setValue] = useState(items[0])
 
     const themePedet = useColorScheme();
@@ -176,7 +176,7 @@ const AdminContext = () => {
 const AdminTag = () => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-    const [deleteTagId, setDeleteTagId] = useState([]);ç
+    const [deleteTagId, setDeleteTagId] = useState([]);
 
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
@@ -258,6 +258,11 @@ const Tutorial = () => {
 }
 
 const SideComponent = ({ theme, navigation }) => {
+    if (!theme) {
+        const themeContext = useContext(ThemeContext);
+        // const theme = useColorScheme();
+        theme = themeContext.theme;
+    }
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: Colors[theme].themeColor }}>
             <View style={settingStyles.topContainer}>
@@ -323,6 +328,7 @@ const SettingsModal = (props) => {
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
 
     return (
         <Modal
@@ -341,12 +347,14 @@ const SettingsModal = (props) => {
                 <View style={[styles.modalSettingsContent, { zIndex: 2 }]}>
                     <SettingsDrawer.Navigator id="settings drawer" screenOptions={{
                         headerShown: false,
-                        drawerType: 'permanent',
+                        drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
                         drawerContent={(props) => <SideComponent theme={theme} {...props} />}
+                        defaultStatus={"closed"}
 
                     >
+                        {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
                         <SettingsDrawer.Screen name="DatosPersonales" component={DatosPersonales} />
                         <SettingsDrawer.Screen name="ConfigAPI" component={ConfigAPI} />
                         <SettingsDrawer.Screen name="Tema" component={Tema} />
