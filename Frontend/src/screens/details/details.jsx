@@ -10,12 +10,11 @@ import CustomBottomSheet from "../../components/modals/customModal";
 import taskService from "../../services/task/taskService";
 
 
-
 const DetailScreen = ({ navigation, route }) => {
     const lastScreen = route.params.currentScreen
     const theme = useColorScheme()
     const task = route.params.task
-
+    console.log("TArea:", task.description);
    
     const mdtext = route.params.task.description
     const inputAccessoryViewID = 'uniqueID';
@@ -29,13 +28,12 @@ const DetailScreen = ({ navigation, route }) => {
         else
             setContent('');
         toggleEdit(false);
-    }, [mdtext, task.task_id])
+    }, [task.task_id])
 
 
     const updateTaskDescription = async() => {
-        const tempTask = {...task} //clonamos la task 
-        tempTask.description = mdtext
-        console.log(tempTask)
+        const tempTask = {task_id: task.task_id, description: content}
+        console.log()
         //actualizamos la tarea con la nueva descripcion
         if(tempTask.description !== null){
             const updatedTaskResult = await taskService.updateTask(tempTask.task_id, tempTask);
