@@ -7,6 +7,7 @@ import contextService from '../../services/context/contextService';
 import projectService from '../../services/project/projectService';
 import tagService from "../../services/tag/tagService";
 import FilterContext from "../../services/filters/FilterContext";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const dvHeight = Dimensions.get('window').height;
@@ -29,7 +30,10 @@ function FilterModal(props) {
     const [selectedProjects, setSelectedProjects] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
 
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const filterStyle = filterModal(theme);
     const filterContext = useContext(FilterContext);
 

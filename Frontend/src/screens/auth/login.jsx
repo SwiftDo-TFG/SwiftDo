@@ -7,6 +7,7 @@ import LoginImg from '../../components/common/ImageComponent';
 import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
 import Colors from '../../styles/colors';
+import ThemeContext from '../../services/theme/ThemeContext';
 
 
 function LoadingIndicator(style) {
@@ -21,7 +22,11 @@ function SignInScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
-    const theme = useColorScheme();
+
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const textStyle = textStyles(theme);
     const formStyle = formStyles(theme);
     const authState = useContext(AuthContext);

@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Inbox from '../../screens/actions/inbox';
 import CuantoAntes from '../../screens/actions/cuantoAntes';
 import Programadas from '../../screens/programadas/programadas';
 import Archivadas from '../../screens/actions/archivadas';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Project from '../../screens/actions/project';
 import Today from '../../screens/actions/today';
 import SideBar from '../SideBar/SideBar';
@@ -12,13 +10,19 @@ import { sidebarStyles } from '../../styles/globalStyles';
 import { useColorScheme, useWindowDimensions } from 'react-native';
 import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
-import DetailScreen from '../../screens/details';
+import DetailScreen from '../../screens/details/details';
+import ThemeContext from '../../services/theme/ThemeContext';
+import { useContext } from 'react';
 
 const Drawer = createDrawerNavigator();
 
 const AppNavigator = ({ projects, state }) => {
     const dimensions = useWindowDimensions();
-    const theme = useColorScheme();
+
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
 
     return (

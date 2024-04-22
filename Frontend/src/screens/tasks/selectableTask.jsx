@@ -10,6 +10,7 @@ import AuthContext from '../../services/auth/context/authContext';
 import Checkbox from "../../components/common/Tickbox";
 import Colors from "../../styles/colors";
 import ProjectBadge from "../../components/common/ProjectBadge";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 const getTaskItemStyle = () => {
   return {
@@ -83,7 +84,11 @@ const SelectableTask = ({ navigation, task, onPress, onDelete, scale, opacity, s
   const leftActions = selectedTasks.total > 0 ? () => null : () => LeftSwipeActions(showMovePopUp, task.task_id, isMenuVisible);
   const rightActions = selectedTasks.total > 0 ? () => null : () => RightSwipeActions({ showCompleteModal, id: task.task_id, translateX, isMenuVisible });
 
-  const theme = useColorScheme();
+
+  //Theme
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  // const theme = useColorScheme();
   useEffect(() => {
     const subscription = translateX.addListener(({ value }) => {
       // setIsSwiped(value === 0);
@@ -217,9 +222,9 @@ const SelectableTask = ({ navigation, task, onPress, onDelete, scale, opacity, s
                         </TouchableOpacity>
                       </View>
                             
-                        <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={() => navigation.navigate('Details', {task})} >
-                          <Text> Detalles </Text>
-                          <AntDesign name="arrowright" size={13} color="black" />
+                        <TouchableOpacity style={{flexDirection: 'row', gap: 2, alignItems: 'center', padding:5, backgroundColor: Colors[theme].activeColor}} onPress={() => navigation.navigate('Details', {task})} >
+                          <Text style={{color: Colors[theme].white}}>Detalles <AntDesign name="arrowright" size={13} /> </Text>
+                         
                         </TouchableOpacity>
                         
                     </View>

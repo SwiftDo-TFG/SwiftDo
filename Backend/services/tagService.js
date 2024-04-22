@@ -41,4 +41,14 @@ tagService.getAllTagsByUser = async (id) => {
     return res.rows;
 }
 
+tagService.deleteTag = async (tag) => {
+    if (tag !== null) {
+        let res = await db.query('DELETE FROM tagstotask WHERE nametag = $1', [tag]);
+        let res2 = await db.query('DELETE FROM tags WHERE name = $1', [tag]);
+        return true; 
+    } else {
+        throw new Error("Tienen que estar rellenos los campos indicados");
+    }
+}
+
 module.exports = tagService;

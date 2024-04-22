@@ -49,6 +49,16 @@ router.get('/', async (req, res) => {
     res.sendStatus(404);
   }
 })
+router.delete('/:name', async (req, res)=>{//delete
+  try{
+      const name = req.params.name; 
+      const t = await tagService.deleteTag(name);
+      res.send(t);
+  }catch(err){
+      console.log('[Exception]:',err.message)
+      res.sendStatus(404);
+  }
+})
 
 
 module.exports = router;

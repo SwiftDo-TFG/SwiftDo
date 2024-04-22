@@ -59,6 +59,7 @@ const createTask = async (taskData) => {
 const updateTask = async (taskId, taskData) => {
     try {
         const dir = `/task/${taskId}`
+        console.log("En la base de datos se guarda", taskData)
         const response = await instance.post(dir, taskData);
         const taskid = response.data;
 

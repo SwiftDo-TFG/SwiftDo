@@ -81,4 +81,15 @@ const getAllTags = async () => {
     }
 }
 
-export default { getTags, createTag, searchTags, getAllTags }
+const deleteTag = async (tag) => {
+    try {
+        const dir = `/tag/${tag}`
+        const response = await instance.delete(dir);
+        const tagdata = response.data;
+        return tagdata;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+export default { getTags, createTag, searchTags, getAllTags, deleteTag }

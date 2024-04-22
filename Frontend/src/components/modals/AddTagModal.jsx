@@ -1,13 +1,13 @@
 import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
 import contextService from "../../services/context/contextService";
 import Colors from "../../styles/colors";
 import { FontAwesome, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import taskService from "../../services/task/taskService";
 import tagService from "../../services/tag/tagService";
-
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const AddTagModal = (props) => {
@@ -15,7 +15,11 @@ const AddTagModal = (props) => {
     const [tag, setTag] = useState([]);
     const [search, setSearch] = useState([]);
     const [isSearching, setIsSearching] = useState(false)
-    const theme = useColorScheme();
+    
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
 
     const onNameChange = async (text) => {
@@ -53,11 +57,12 @@ const AddTagModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
 
                     <TextInput
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
                         placeholder="Busca una etiqueta..."
+                        placeholderTextColor={theme === 'light' ? '#182E44': Colors[theme].white}
                         value={tag}
                         onChangeText={onNameChange}
                         maxLength={15}

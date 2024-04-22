@@ -3,10 +3,11 @@ import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedbac
 
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import * as React from 'react';
 import ColorPicker from 'react-native-wheel-color-picker'
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 function CreateProjectModal(props) {
 
@@ -17,7 +18,9 @@ function CreateProjectModal(props) {
         editedColor: '#0000FF'
     });
 
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     function setValuesToEdit() {
         console.log('PROPIEDADESSSSSSS:', props.editingProject);
@@ -108,11 +111,6 @@ function CreateProjectModal(props) {
                         </View>
                     </View>
                 </View>
-                {/* <View>
-                    <View style={{ height: '100%', marginLeft: 20, marginRight: 8 }}>
-
-                    </View>
-                </View> */}
             </>
         );
     }
