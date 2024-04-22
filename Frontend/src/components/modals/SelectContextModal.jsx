@@ -45,12 +45,12 @@ const SelectContextModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>
                                 <View key={index} style={contextModal.context}>
-                                <Text style={styles.contextTextModal}>
+                                <Text style={{fontSize: 16, marginLeft: 15, color: Colors[theme].white}}>
                                     <MaterialCommunityIcons name="home-city-outline" size={16} color={theme === 'light' ? '#272c34': Colors[theme].white} /> {context[key].name}
                                 </Text>
                                 {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}

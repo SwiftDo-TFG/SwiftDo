@@ -401,7 +401,7 @@ const SettingsModal = (props) => {
                     <View style={styles.modalDatePickerBackground} />
                 </TouchableWithoutFeedback>
 
-                <View style={[styles.modalSettingsContent, { zIndex: 2 }]}>
+                <View style={[styles.modalSettingsContent, { zIndex: 2 }, {backgroundColor: Colors[theme].themeColor,  borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '',}]}>
                     <SettingsDrawer.Navigator id="settings drawer" screenOptions={{
                         headerShown: false,
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',

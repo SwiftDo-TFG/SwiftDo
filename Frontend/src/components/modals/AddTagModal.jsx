@@ -57,7 +57,7 @@ const AddTagModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
 
                     <TextInput
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
