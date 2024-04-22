@@ -400,21 +400,21 @@ function Today(props) {
                         )}>
                         {tasks.map(task => {
 
-                            const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
-                            const scale = scrollY.interpolate({
-                                inputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
+                            // const scale = scrollY.interpolate({
+                            //     inputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
-                            const opacity = scrollY.interpolate({
-                                inputRange: opacityinputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
+                            // const opacity = scrollY.interpolate({
+                            //     inputRange: opacityinputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            index++;
+                            // index++;
 
                             let hasProject = false
 
@@ -438,14 +438,17 @@ function Today(props) {
                                             </View>
                                             : <></>
                                     }
-                                    <Animated.View style={{ transform: [{ scale }], opacity }}>
+                                    <Animated.View>
+                                        {/* <Animated.View style={{ transform: [{ scale }], opacity }}></Animated.View>  */}
                                         <SelectableTask
                                             navigation={props.navigation}
                                             task={task}
                                             onPress={() => toggleSelectTask(task.task_id)}
                                             onDelete={deleteTask}
-                                            scale={scale}
-                                            opacity={opacity}
+                                            // scale={scale}
+                                            // opacity={opacity}
+                                            scale={1}
+                                            opacity={1}
                                             selectedTasks={selectedTasks}
                                             showMovePopUp={showMovePopUp}
                                             showEditPopUp={showEditPopUp}
@@ -462,31 +465,34 @@ function Today(props) {
                             </View>
                         )}
                         {delayTask.map(task => {
-                            const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
-                            const scale = scrollY.interpolate({
-                                inputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
+                            // const scale = scrollY.interpolate({
+                            //     inputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
-                            const opacity = scrollY.interpolate({
-                                inputRange: opacityinputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
+                            // const opacity = scrollY.interpolate({
+                            //     inputRange: opacityinputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            index++;
+                            // index++;
 
                             return (
-                                <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}>
+                                <Animated.View key={task.task_id}>
+                                    {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
                                     <SelectableTask
                                         navigation={props.navigation}
                                         task={task}
                                         onPress={() => toggleSelectTask(task.task_id)}
                                         onDelete={deleteTask}
-                                        scale={scale}
-                                        opacity={opacity}
+                                        // scale={scale}
+                                        // opacity={opacity}
+                                        scale={1}
+                                        opacity={1}
                                         selectedTasks={selectedTasks}
                                         showMovePopUp={showMovePopUp}
                                         showEditPopUp={showEditPopUp}
@@ -502,31 +508,34 @@ function Today(props) {
                             </View>
                         )}
                         {amountTask.map(task => {
-                            const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
-                            const scale = scrollY.interpolate({
-                                inputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)]
+                            // const scale = scrollY.interpolate({
+                            //     inputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
-                            const opacity = scrollY.interpolate({
-                                inputRange: opacityinputRange,
-                                outputRange: [1, 1, 1, 0],
-                                extrapolate: 'clamp',
-                            })
+                            // const opacityinputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + .5)]
+                            // const opacity = scrollY.interpolate({
+                            //     inputRange: opacityinputRange,
+                            //     outputRange: [1, 1, 1, 0],
+                            //     extrapolate: 'clamp',
+                            // })
 
-                            index++;
+                            // index++;
 
                             return (
-                                <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}>
+                                <Animated.View key={task.task_id}>
+                                {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
                                     <SelectableTask
                                         navigation={props.navigation}
                                         task={task}
                                         onPress={() => toggleSelectTask(task.task_id)}
                                         onDelete={deleteTask}
-                                        scale={scale}
-                                        opacity={opacity}
+                                        // scale={scale}
+                                        // opacity={opacity}
+                                        scale={1}
+                                        opacity={1}
                                         selectedTasks={selectedTasks}
                                         showMovePopUp={showMovePopUp}
                                         showEditPopUp={showEditPopUp}
