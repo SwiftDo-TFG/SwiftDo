@@ -15,7 +15,7 @@ import ThemeContext from "../../../services/theme/ThemeContext";
 
 const SettingsDrawer = createDrawerNavigator();
 
-const DatosPersonales = () => {
+const DatosPersonales = ({ navigation }) => {
     // const [email, setEmail] = useState('pepe@ucm.es');
     // const [user, setUser] = useState('Pepe');
     const theme = useColorScheme();
@@ -52,11 +52,11 @@ const DatosPersonales = () => {
         }
     };
     return (
-        <View style={{ flex: 1, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
 
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
-
+                    navigation.navigate('Sidebar');
                 }}>
                     <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
                 </TouchableOpacity>
@@ -91,7 +91,7 @@ const DatosPersonales = () => {
     )
 }
 
-const ConfigAPI = () => {
+const ConfigAPI = ({ navigation }) => {
     const theme = useColorScheme();
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
@@ -107,7 +107,7 @@ const ConfigAPI = () => {
     )
 }
 
-const Tema = () => {
+const Tema = ({ navigation }) => {
     const items = [{ name: 'Predeterminado', value: themePedet }, { name: 'Claro', value: 'light' }, { name: 'Oscuro', value: 'dark' }]
     const [value, setValue] = useState(items[0])
 
@@ -119,7 +119,7 @@ const Tema = () => {
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
-
+                    navigation.navigate('Sidebar');
                 }}>
                     <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
                 </TouchableOpacity>
@@ -133,7 +133,7 @@ const Tema = () => {
                         <TouchableOpacity onPress={() => {
                             setValue(option)
                             themeContext.changeTheme(option.value)
-                        }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
+                        }} key={option.value} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
                             <Text style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center' }}>{option.name}</Text>
                         </TouchableOpacity>
                     )
@@ -142,7 +142,7 @@ const Tema = () => {
         </View>
     )
 }
-const AdminContext = () => {
+const AdminContext = ({ navigation }) => {
     const [userContext, setUserContext] = useState([]);
     //Theme
     const themeContext = useContext(ThemeContext);
@@ -169,7 +169,7 @@ const AdminContext = () => {
 
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
-
+                    navigation.navigate('Sidebar');
                 }}>
                     <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
                 </TouchableOpacity>
@@ -203,7 +203,7 @@ const AdminContext = () => {
     )
 }
 
-const AdminTag = () => {
+const AdminTag = ({ navigation }) => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteTagId, setDeleteTagId] = useState([]);
@@ -230,7 +230,7 @@ const AdminTag = () => {
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
-
+                    navigation.navigate('Sidebar');
                 }}>
                     <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
                 </TouchableOpacity>
@@ -266,13 +266,13 @@ const AdminTag = () => {
         </View>
     )
 }
-const TareasCompletadas = () => {
+const TareasCompletadas = ({ navigation }) => {
     const theme = useColorScheme();
     return (
 
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
-
+                navigation.navigate('Sidebar');
             }}>
                 <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
             </TouchableOpacity>
@@ -283,12 +283,12 @@ const TareasCompletadas = () => {
 
     )
 }
-const AcercaGTD = () => {
+const AcercaGTD = ({ navigation }) => {
     const theme = useColorScheme();
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
-
+                navigation.navigate('Sidebar');
             }}>
                 <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
             </TouchableOpacity>
@@ -298,12 +298,12 @@ const AcercaGTD = () => {
         </View>
     )
 }
-const Tutorial = () => {
+const Tutorial = ({ navigation }) => {
     const theme = useColorScheme();
     return (
         <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
-
+                navigation.navigate('Sidebar');
             }}>
                 <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
             </TouchableOpacity>
@@ -401,13 +401,13 @@ const SettingsModal = (props) => {
                     <View style={styles.modalDatePickerBackground} />
                 </TouchableWithoutFeedback>
 
-                <View style={[styles.modalSettingsContent, { zIndex: 2 }, {backgroundColor: Colors[theme].themeColor,  borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '',}]}>
+                <View style={[styles.modalSettingsContent, { zIndex: 2 }, { backgroundColor: Colors[theme].themeColor, borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '', }]}>
                     <SettingsDrawer.Navigator id="settings drawer" screenOptions={{
                         headerShown: false,
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
-                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} />: <></>}
+                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} /> : <></>}
                         defaultStatus={"closed"}
                     >
                         {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
