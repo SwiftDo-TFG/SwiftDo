@@ -126,8 +126,15 @@ const Tema = ({ navigation }) => {
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tema
                 </Text>
+                <Image
+                    style={{ width: 200, height: 200, marginBottom: 15, marginTop:20 }}
+                    source={require('../../../assets/temas.png')}
+                />
+
             </View>
+
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+
                 {items.map(option => {
                     return (
                         <TouchableOpacity onPress={() => {
