@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Keyboard, TextInput, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, InputAccessoryView, Platform } from "react-native";
 import { AntDesign, Ionicons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../tasks/actionScreen.styles'
@@ -8,11 +8,15 @@ import ToolBar from "../../components/common/ToolBar";
 import { MaterialIcons, Feather } from '@expo/vector-icons';
 import CustomBottomSheet from "../../components/modals/customModal";
 import taskService from "../../services/task/taskService";
+import ThemeContext from '../../services/theme/ThemeContext';
 
 
 const DetailScreen = ({ navigation, route }) => {
     const lastScreen = route.params.currentScreen
-    const theme = useColorScheme()
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const task = route.params.task
     console.log("TArea:", task.description);
    
