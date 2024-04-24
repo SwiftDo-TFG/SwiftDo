@@ -236,6 +236,7 @@ function completeTaskDefValues(task) {
     if (task.date_limit) {
         console.log("TASK DATE LIMIT CREATE", task.date_limit, new Date(task.date_limit).getTime(), new Date(2024, 2, 26).getTime())
         task.date_limit = new Date(new Date(task.date_limit).getTime())
+        task.state = 3;
     }
 
     return task
