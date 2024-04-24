@@ -229,7 +229,7 @@ function completeTaskDefValues(task) {
     task.date_changed = new Date();
     task.num_version = 1;
 
-    if (task.important_fixed) {
+    if (!task.important_fixed) {
         task.important_fixed = false;
     }
 
