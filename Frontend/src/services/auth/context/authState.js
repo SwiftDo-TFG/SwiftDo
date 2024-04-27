@@ -37,7 +37,7 @@ const AuthState = props => {
             }
         },
         {
-            isLoading: false,
+            isLoading: true,
             isSignout: false,
             userToken: null,
         }

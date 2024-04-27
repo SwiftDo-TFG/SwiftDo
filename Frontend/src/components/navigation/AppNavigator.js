@@ -12,7 +12,7 @@ import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
 import DetailScreen from '../../screens/details/details';
 import ThemeContext from '../../services/theme/ThemeContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +24,12 @@ const AppNavigator = ({ projects, state }) => {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
+
+    useEffect(()=>{
+        if(state.userToken !== null){
+            themeContext.setThemeOnInit();
+        }
+    },[state])
 
     return (
         <Drawer.Navigator
