@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({path:'./.env.local'});
+  require('dotenv').config({ path: './.env.local' });
 }
 
 const express = require('express');
@@ -8,6 +8,10 @@ const cookieParser = require('cookie-parser');
 const oauthServer = require('./oauth/server.js')
 const logger = require('morgan');
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
+
+
 
 const port = process.env.PORT || 3000;
 
@@ -36,12 +40,12 @@ app.use('/config', configRouter);
 app.use('/user', usersRouter);
 app.use('/task', oauthServer.authenticate(), taskRouter);
 app.use('/tag', oauthServer.authenticate(), tagsRouter);
-app.use('/project',oauthServer.authenticate(), projectRouter);
-app.use('/context',oauthServer.authenticate(), contextRouter);
+app.use('/project', oauthServer.authenticate(), projectRouter);
+app.use('/context', oauthServer.authenticate(), contextRouter);
 // Get secret.
 app.get('/secret', oauthServer.authenticate(), function (req, res) {
   // Will require a valid access_token.
-  res.send('Secret area, current user logged has id '+ res.locals.oauth.token.user.id);
+  res.send('Secret area, current user logged has id ' + res.locals.oauth.token.user.id);
 });
 
 // catch 404 and forward to error handler
@@ -61,12 +65,25 @@ app.use(function (err, req, res, next) {
   res.sendStatus(err.status || 500);
 });
 
-app.listen(port, function (err) {
-  if (err) {
-    console.log("Error openning server");
-  } else {
-    console.log(`App listening on port ${port}`)
-  }
-})
+if (process.env.NODE_ENV === 'production') {
+  const hostname = process.env.HOSTNAME;
+  const privateKey = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/privkey.pem`, 'utf8');
+  const certificate = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/cert.pem`, 'utf8');
+
+  const credentials = { key: privateKey, cert: certificate };
+
+  const httpsServer = https.createServer(credentials, app);
+
+  httpsServer.listen(port);
+}else{
+  app.listen(port, function (err) {
+    if (err) {
+      console.log("Error openning server");
+    } else {
+      console.log(`App listening on port ${port}`)
+    }
+  })
+}
+
 
 module.exports = app;

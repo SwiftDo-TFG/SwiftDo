@@ -3,13 +3,14 @@ services:
     image: node:18-alpine
     command: sh -c "npm install && npm run start"
     ports:
-      - 3000:3000
+      - 443:443
     working_dir: /Backend
     volumes:
       - ./:/Backend
     environment:
       NODE_ENV: production
-      PORT: 3000
+      PORT: 443
+      HOSTNAME: 16.16.226.94.nip.io
       POSTGRES_HOST: db 
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69
