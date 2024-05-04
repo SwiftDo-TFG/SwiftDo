@@ -67,8 +67,8 @@ app.use(function (err, req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
   const hostname = process.env.HOSTNAME;
-  const privateKey = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/privkey.pem`, 'utf8');
-  const certificate = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/cert.pem`, 'utf8');
+  const privateKey = fs.readFileSync(`/certs/${hostname}/privkey.pem`, 'utf8');
+  const certificate = fs.readFileSync(`/certs/${hostname}/cert.pem`, 'utf8');
 
   const credentials = { key: privateKey, cert: certificate };
 
