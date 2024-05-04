@@ -67,14 +67,15 @@ app.use(function (err, req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
   const hostname = process.env.HOSTNAME;
-  const privateKey = fs.readFileSync(`./certs/${hostname}/privkey.pem`, 'utf8');
-  const certificate = fs.readFileSync(`./certs/${hostname}/cert.pem`, 'utf8');
+  const privateKey = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/privkey.pem`, 'utf8');
+  const certificate = fs.readFileSync(`/etc/letsencrypt/live/${hostname}/cert.pem`, 'utf8');
 
   const credentials = { key: privateKey, cert: certificate };
 
   const httpsServer = https.createServer(credentials, app);
 
   httpsServer.listen(port);
+  console.log(`App listening on port ${port}`)
 }else{
   app.listen(port, function (err) {
     if (err) {

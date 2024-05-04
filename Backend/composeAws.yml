@@ -7,6 +7,7 @@ services:
     working_dir: /Backend
     volumes:
       - ./:/Backend
+      - /etc/letsencrypt:/etc/letsencrypt
     environment:
       NODE_ENV: production
       PORT: 443
