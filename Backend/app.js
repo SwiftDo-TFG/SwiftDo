@@ -18,6 +18,7 @@ const tagsRouter = require('./routes/tags');
 const authRouter = require('./routes/auth');
 const projectRouter = require('./routes/project');
 const contextRouter = require('./routes/context');
+const configRouter = require('./routes/config')
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/oauth', authRouter)
 app.use('/', indexRouter);
+app.use('/config', configRouter);
 app.use('/user', usersRouter);
 app.use('/task', oauthServer.authenticate(), taskRouter);
 app.use('/tag', oauthServer.authenticate(), tagsRouter);
