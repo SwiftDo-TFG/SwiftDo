@@ -125,7 +125,13 @@ function CreateTaskModal(props) {
         }
 
         const handleSelectState = (stateAux) => {
-            setState({ ...state, state: stateAux });
+            if(stateAux === "3"){
+                const auxFecha = new Date();
+                const fecha = `${auxFecha.getFullYear()}/${(auxFecha.getMonth() + 1).toString().padStart(2, '0')}/${auxFecha.getDate().toString().padStart(2, '0')} ${"23".padStart(2, '0')}:${"59".padStart(2, '0')}`
+                setState({ ...state, state: stateAux , date_name: fecha});
+            }else{
+                setState({ ...state, state: stateAux });
+            }
             setShowStatusSelector(false);
         }
 

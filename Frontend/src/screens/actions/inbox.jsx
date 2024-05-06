@@ -22,17 +22,11 @@ function Inbox(props) {
     return (
         <ActionScreen {...props} state={TaskStates.INBOX} emptyIcon={<FontAwesome5 style={actStyle.emptyIcon} name="inbox" color={Colors[theme].grey} />}>
             <View style={actStyle.action}>
-                <TouchableOpacity onPress={() => { setIsSettingsModalOpen(true) }}>
-                    <Feather name="settings" size={24} color={'#d2b48c'} />
-                </TouchableOpacity>
                 <FontAwesome5 name="inbox" style={actStyle.iconAction} color={Colors[theme].orange} />
                 <Text style={[actStyle.actionTitle, { color: Colors[theme].white } /*isDarkTheme ? {color: 'white'} : {color: 'black'}*/]}>{props.route.name}</Text>
             </View>
-            <SettingsModal isVisible={isSettingsModalOpen} setVisible={setIsSettingsModalOpen} />
-
+            {/* <SettingsModal isVisible={isSettingsModalOpen} setVisible={setIsSettingsModalOpen} /> */}
         </ActionScreen>
-
-
     )
 }
 

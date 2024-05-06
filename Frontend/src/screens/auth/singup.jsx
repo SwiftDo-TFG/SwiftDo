@@ -9,6 +9,9 @@ import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
 import Colors from '../../styles/colors';
 import ThemeContext from '../../services/theme/ThemeContext';
+import InitialConfigModal from './InitialConfigModal';
+import { FontAwesome5, Feather } from '@expo/vector-icons';
+
 
 
 function parseErrors(errors) {
@@ -27,6 +30,8 @@ function SingUpScren({ navigation }) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
+    const [isServerModalVisible, setIsServerModalVisible] = useState(false)
+
     
     //Theme
     const themeContext = useContext(ThemeContext);
@@ -159,6 +164,10 @@ function SingUpScren({ navigation }) {
                 </View>
 
                 <ConfirmButton onPress={handlePress} text="Registrar" />
+                <TouchableOpacity style={{flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}} onPress={()=>{setIsServerModalVisible(true)}}>
+                    <Feather name="settings" size={24} color={'#d2b48c'} />
+                </TouchableOpacity>
+                <InitialConfigModal isVisible={isServerModalVisible} setVisible={setIsServerModalVisible} navigation={navigation}/>
             </SafeAreaView>
         </View>
     )

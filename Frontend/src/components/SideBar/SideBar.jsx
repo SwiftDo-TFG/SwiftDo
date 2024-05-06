@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, useColorScheme } from 'react-native';
+import { View, useColorScheme, TouchableOpacity, Text } from 'react-native';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Profile from './Profile';
 import { sidebarStyles } from '../../styles/globalStyles';
@@ -15,7 +15,7 @@ import { useDrawerStatus } from '@react-navigation/drawer'
 import { useWindowDimensions } from 'react-native';
 import { useContext } from 'react';
 import ThemeContext from '../../services/theme/ThemeContext';
-
+import { FontAwesome5, Feather } from '@expo/vector-icons';
 
 
 const today = new Date();
@@ -38,19 +38,19 @@ export default ({ navigation }) => {
     const sideBar = sidebarStyles(theme)
     const isDrawerOpen = useDrawerStatus() === "open";
     const dimensions = useWindowDimensions();
-    
+
     //Theme
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
 
 
-    if(dimensions.width >= 768 && !isDrawerOpen){
+    if (dimensions.width >= 768 && !isDrawerOpen) {
         navigation.openDrawer();
     }
 
-    React.useEffect(() => { 
-        
+    React.useEffect(() => {
+
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
 
@@ -121,7 +121,7 @@ export default ({ navigation }) => {
         <View style={sideBar.container}>
 
             <DrawerContentScrollView showsVerticalScrollIndicator={false}>
-                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} navigation={navigation}/>
+                <Profile name={username} formattedDate={formattedDate} contexts={sideContexts} navigation={navigation} />
                 <View style={sideBar.separator} />
                 <View style={sideBar.actionContainer}>
                     <ActionScheme onPress={() => navigation.navigate('Inbox')} icon={"inbox"} iconColor={Colors[theme].orange} text={"Entrada"} totalTasks={inboxData[0]} importantTasks={inboxData[1]} />
@@ -135,8 +135,10 @@ export default ({ navigation }) => {
                 {addProjects()}
             </DrawerContentScrollView>
 
-            <ConfirmButton onPress={() => { navigation.closeDrawer(); authstate.signOut() }} text="Logout" />
-
+            {/* <ConfirmButton onPress={() => { navigation.closeDrawer(); authstate.signOut() }} text="Logout" /> */}
+            <TouchableOpacity onPress={() => { themeContext.openSettingsModal() }} >
+                <Feather name="settings" size={26} color={'#d2b48c'} /> 
+            </TouchableOpacity>
         </View>
 
 

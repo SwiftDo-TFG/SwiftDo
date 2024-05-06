@@ -13,6 +13,7 @@ import Colors from '../../styles/colors';
 import DetailScreen from '../../screens/details/details';
 import ThemeContext from '../../services/theme/ThemeContext';
 import { useContext, useEffect } from 'react';
+import SettingsModal from '../modals/settings/SettingsModal';
 
 const Drawer = createDrawerNavigator();
 

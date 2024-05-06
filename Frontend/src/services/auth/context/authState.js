@@ -3,7 +3,7 @@ import AuthContext from "./authContext";
 import authService from "../auth"
 import auth_utils from "../auth_utils";
 import tokenStorage from "../token_store/storage"
-
+import configStorage from "../../configStorage/configStorage";
 
 const AuthState = props => {
     const [state, dispatch] = React.useReducer(
@@ -34,12 +34,19 @@ const AuthState = props => {
                         ...prevState,
                         isLoading: true
                     }
+                case 'NEEDCONFIG':
+                    return {
+                        ...prevState,
+                        isConfig: false,
+                        isLoading: false,
+                    }
             }
         },
         {
             isLoading: true,
             isSignout: false,
             userToken: null,
+            isConfig: true,
         }
     );
 
@@ -92,6 +99,15 @@ const AuthState = props => {
                 }else{
                     dispatch({ type: 'SIGN_OUT' })
                 }
+            },
+            checkServerConfigured: async () => {
+                const config = await configStorage.getUserConfig();
+
+                if(!config || !config.servers){
+                    dispatch({ type: 'NEEDCONFIG' })
+                }
+
+                return config && config.servers && config.servers.list.length > 0;
             }
         }),
         []
@@ -104,9 +120,11 @@ const AuthState = props => {
                 signOut: authFunctions.signOut,
                 signUp: authFunctions.signUp,
                 checkSession: authFunctions.checkSession,
+                checkServerConfigured: authFunctions.checkServerConfigured,
                 isLoading: state.isLoading,
                 isSignout: state.isSignout,
-                userToken: state.userToken
+                userToken: state.userToken,
+                isConfig: state.isConfig
             }}
         >
             {props.children}

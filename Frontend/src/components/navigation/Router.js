@@ -28,7 +28,10 @@ export default function Router(theme) {
     
           // This will switch to the App screen or Auth screen and this loading
           // screen will be unmounted and thrown away.
-          state.checkSession();
+          const isConfig = await state.checkServerConfigured();
+          if(isConfig){
+            state.checkSession();
+          }
         };
         bootstrapAsync();
     

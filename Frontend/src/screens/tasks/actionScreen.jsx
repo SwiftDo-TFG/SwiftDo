@@ -19,6 +19,7 @@ import Colors from "../../styles/colors";
 import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 import ThemeContext from "../../services/theme/ThemeContext";
+import SettingsModal from "../../components/modals/settings/SettingsModal";
 
 
 function ActionScreen(props) {
@@ -47,7 +48,7 @@ function ActionScreen(props) {
   //Filters
   const filterContext = useContext(FilterContext)
   const [filters, setFilters] = useState({})
-  console.log("PROPS: ", props.route)
+  console.log("PROPS: ", props.route, theme)
   useEffect(() => {
 
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -417,6 +418,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsFilterModalOpen}
             fiterState={filters}
           />
+          <SettingsModal isVisible={themeContext.isSettingsModalOpen} setVisible={themeContext.closeSettingsModal} />
         </NativeBaseProvider>
 
       </View>

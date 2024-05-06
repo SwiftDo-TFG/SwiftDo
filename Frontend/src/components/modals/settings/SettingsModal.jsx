@@ -1,12 +1,12 @@
 
-import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform } from "react-native";
+import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform, TextInput, ActivityIndicator } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Colors from "../../../styles/colors";
 import AuthTextInput from '../../../components/auth/AuthTextInput';
 import CustomButton from "../../buttons/Button";
-import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, Octicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, Octicons, MaterialIcons } from '@expo/vector-icons';
 import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
 import taskService from "../../../services/task/taskService";
@@ -16,6 +16,12 @@ import LoadingIndicator from "../../LoadingIndicator";
 import TaskList from "../../../screens/tasks/TaskList";
 import { NativeBaseProvider } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import configStorage from "../../../services/configStorage/configStorage";
+import serverConfigService from "../../../services/serverconfig/serverConfigService";
+import AuthContext from "../../../services/auth/context/authContext";
+import settingStyles from "./settingsStyles.styles";
+import ConfigServer from "./pages/ConfigServer";
+
 const SettingsDrawer = createDrawerNavigator();
 
 const DatosPersonales = ({ navigation }) => {
@@ -92,24 +98,6 @@ const DatosPersonales = ({ navigation }) => {
                 setError={setError}
             />
             <CustomButton onPress={handlePress} text="Editar" />
-        </View>
-    )
-}
-
-const ConfigServer = ({ navigation }) => {
-    const themeContext = useContext(ThemeContext);
-    // const theme = useColorScheme();
-    const theme = themeContext.theme;
-    return (
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('Sidebar');
-            }}>
-                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-            </TouchableOpacity>
-            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                Configuración servidor
-            </Text>
         </View>
     )
 }
@@ -397,6 +385,8 @@ const Tutorial = ({ navigation }) => {
 }
 
 const SideComponent = ({ theme, navigation }) => {
+    const authContext = useContext(AuthContext);
+
     if (!theme) {
         const themeContext = useContext(ThemeContext);
         // const theme = useColorScheme();
@@ -467,6 +457,15 @@ const SideComponent = ({ theme, navigation }) => {
                     Tutorial de la app
                 </Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { 
+                    authContext.signOut() 
+                }}>
+                <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Cerrar sesión
+                </Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -517,54 +516,5 @@ const SettingsModal = (props) => {
         </Modal >
     )
 }
-
-
-const settingStyles = StyleSheet.create({
-    topContainer: {
-        padding: 2,
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        width: '100%',
-        marginBottom: 25
-    },
-    sideSettingsText: {
-        color: 'white',
-        fontSize: 16,
-        marginLeft: 10
-    },
-    sideSettingContainer: {
-        marginBottom: 10,
-        padding: 7,
-        flexDirection: 'row',
-        borderWidth: 0.5,
-        borderRadius: 10,
-        alignItems: 'center'
-    },
-    sideContainerBackgrLight: {
-        borderColor: "lightgrey",
-        backgroundColor: "lightgrey",
-    },
-    sideContainerBackgrDark: {
-        borderColor: Colors["dark"].activeColor,
-        backgroundColor: Colors["dark"].activeColor,
-    },
-    icon: {
-        width: 45,
-        height: 45,
-        borderRadius: 15
-    },
-    themeSelectorPill: {
-        flex: 1,
-        padding: 10,
-    },
-    themeSelectorPillSelected: {
-        borderWidth: 1,
-        borderRadius: 20,
-        padding: 10,
-    }
-})
-
 
 export default SettingsModal;

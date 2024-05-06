@@ -1,18 +1,22 @@
 import axios from "axios";
 import authUtils from "../auth/auth_utils"
 
-const instance = axios.create({
-    // baseURL: 'http://localhost:3000',
-    // baseURL: 'http://192.168.0.137:3000',
-    baseURL: 'http://ec2-16-16-226-94.eu-north-1.compute.amazonaws.com:3000',
-    timeout: 1000,
-    // headers: { Authorization: `Bearer d04d34bd905b677bc04d205cf3c3a4e7d91601da` }
-});
+let apiConfig = {}
+
+let instance = axios.create({timeout: 1000});
+
+authUtils.getSelectedApiConfig().then(config => {
+    if(config){
+        apiConfig = config;
+        instance.defaults.baseURL = config.url;
+    }
+})
 
 // Interceptor for request --> Set AuthHeaders
 instance.interceptors.request.use(authUtils.setAuthHeaders, function (error) {
     return Promise.reject(error);
 });
+
 
 // Interceptor for response --> If 401, clear token
 instance.interceptors.response.use(function (response) {

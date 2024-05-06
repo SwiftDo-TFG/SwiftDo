@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
         width: '90%',
         borderRadius: 10,
         padding: 20,
-        height: 500,
+        height: 550,
         maxHeight: 800,
         maxWidth: 800,
     },
