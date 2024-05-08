@@ -26,7 +26,7 @@ CREATE TABLE tags (
 CREATE TABLE areas_contexts (
     context_id serial PRIMARY KEY,
     name VARCHAR,
-    user_id INTEGER references "users" (user_id),
+    user_id INTEGER references "users" (user_id)
 );
 
 CREATE TABLE tasks (
@@ -45,4 +45,12 @@ CREATE TABLE tasks (
     date_limit TIMESTAMP,
     date_changed TIMESTAMP,
     num_version NUMERIC
+);
+
+CREATE TABLE tagstotask (
+	task_id int4 NOT NULL,
+	nametag varchar NOT NULL,
+	CONSTRAINT tagstotask_pkey PRIMARY KEY (task_id, nametag),
+	CONSTRAINT tagstotask_nametag_fkey FOREIGN KEY (nametag) REFERENCES public.tags("name"),
+	CONSTRAINT tagstotask_task_id_fkey FOREIGN KEY (task_id) REFERENCES public.tasks(task_id)
 );

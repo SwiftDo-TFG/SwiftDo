@@ -1,17 +1,26 @@
 
-import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform } from "react-native";
+import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform, TextInput, ActivityIndicator } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Colors from "../../../styles/colors";
 import AuthTextInput from '../../../components/auth/AuthTextInput';
 import CustomButton from "../../buttons/Button";
-import { MaterialCommunityIcons, Feather, AntDesign, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, Octicons, MaterialIcons } from '@expo/vector-icons';
 import contextService from "../../../services/context/contextService";
 import tagService from "../../../services/tag/tagService";
+import taskService from "../../../services/task/taskService";
 import CompleteTaskModal from "../CompleteTaskModal";
-import MultiSwitch from 'react-native-multiple-switch'
 import ThemeContext from "../../../services/theme/ThemeContext";
+import LoadingIndicator from "../../LoadingIndicator";
+import TaskList from "../../../screens/tasks/TaskList";
+import { NativeBaseProvider } from "native-base";
+import { ScrollView } from "react-native-gesture-handler";
+import configStorage from "../../../services/configStorage/configStorage";
+import serverConfigService from "../../../services/serverconfig/serverConfigService";
+import AuthContext from "../../../services/auth/context/authContext";
+import settingStyles from "./settingsStyles.styles";
+import ConfigServer from "./pages/ConfigServer";
 
 const SettingsDrawer = createDrawerNavigator();
 
@@ -93,31 +102,14 @@ const DatosPersonales = ({ navigation }) => {
     )
 }
 
-const ConfigAPI = ({ navigation }) => {
-    const themeContext = useContext(ThemeContext);
-    // const theme = useColorScheme();
-    const theme = themeContext.theme;
-    return (
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('Sidebar');
-            }}>
-                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-            </TouchableOpacity>
-            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                Configuracion API
-            </Text>
-        </View>
-    )
-}
-
 const Tema = ({ navigation }) => {
     const items = [{ name: 'Predeterminado', value: themePedet }, { name: 'Claro', value: 'light' }, { name: 'Oscuro', value: 'dark' }]
-    const [value, setValue] = useState(items[0])
 
     const themePedet = useColorScheme();
     const themeContext = useContext(ThemeContext);
     const theme = themeContext.theme;
+    const index = themePedet === theme ? 0 : (theme === 'light' ? 1 : 2)
+    const [value, setValue] = useState(items[index])
 
     return (
         <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
@@ -130,14 +122,21 @@ const Tema = ({ navigation }) => {
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tema
                 </Text>
+                <Image
+                    style={{ width: 200, height: 200, marginBottom: 15, marginTop: 20 }}
+                    source={theme === 'light' ? require('../../../assets/temas_c.png') : require('../../../assets/temas.png')}
+                />
+
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+
+            <View style={{flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+
                 {items.map(option => {
                     return (
-                        <TouchableOpacity onPress={() => {
+                        <TouchableOpacity key={option.name} onPress={() => {
                             setValue(option)
                             themeContext.changeTheme(option.value)
-                        }} key={option.value} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
+                        }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
                             <Text style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center' }}>{option.name}</Text>
                         </TouchableOpacity>
                     )
@@ -154,12 +153,16 @@ const AdminContext = ({ navigation }) => {
     const theme = themeContext.theme;
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteContextId, setDeleteContextId] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     async function getAreas() {
         const userContext = await contextService.showContextsByUser();
         setUserContext(userContext);
+        setIsLoading(false);
     }
 
     async function handleDeleteContext() {
+        setIsLoading(true);
         await contextService.deleteContext(deleteContextId);
         getAreas();
         setIsCompleteModalOpen(false);
@@ -169,7 +172,7 @@ const AdminContext = ({ navigation }) => {
         getAreas();
     }, [])
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
+        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
 
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
@@ -181,20 +184,22 @@ const AdminContext = ({ navigation }) => {
                     Administrar contextos
                 </Text>
             </View>
-            <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
-                {Object.keys(userContext).map((key, index) => (
-                    <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
-                            <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+            <View style={{ overflow: 'hidden' }}>
+                <ScrollView style={{ flex: 1, flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+                    {!isLoading ? Object.keys(userContext).map((key, index) => (
+                        <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <MaterialCommunityIcons name="home-city-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                                <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{userContext[key].name}</Text>
+                            </View>
+                            <TouchableOpacity onPress={async () => {
+                                setDeleteContextId(userContext[key].context_id);
+                                setIsCompleteModalOpen(true);
+                            }}
+                            ><MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].white} /></TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={async () => {
-                            setDeleteContextId(userContext[key].context_id);
-                            setIsCompleteModalOpen(true);
-                        }}
-                        ><MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].softGrey} /></TouchableOpacity>
-                    </View>
-                ))}
+                    )) : <LoadingIndicator />}
+                </ScrollView>
             </View>
             <CompleteTaskModal
                 title="Borrar contexto"
@@ -211,6 +216,7 @@ const AdminTag = ({ navigation }) => {
     const [tags, setTags] = useState([]);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [deleteTagId, setDeleteTagId] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
@@ -219,9 +225,11 @@ const AdminTag = ({ navigation }) => {
     async function getTags() {
         const dataTags = await tagService.getAllTags();
         setTags(dataTags);
+        setIsLoading(false);
     }
 
     async function handleDeleteTags() {
+        setIsLoading(true);
         tagService.deleteTag(deleteTagId)
         getTags()
         setIsCompleteModalOpen(false);
@@ -231,7 +239,7 @@ const AdminTag = ({ navigation }) => {
         getTags()
     }, [])
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
+        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Sidebar');
@@ -243,22 +251,22 @@ const AdminTag = ({ navigation }) => {
                 </Text>
             </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
-                {/* <ScrollView style={{ flexDirection: 'row', width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}> */}
-                {Object.keys(tags).map((key, index) => (
-                    <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <MaterialCommunityIcons name="tag-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
-                            <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{tags[key].name}</Text>
+                <ScrollView style={{ flex: 1, flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+                    {!isLoading ? Object.keys(tags).map((key, index) => (
+                        <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <MaterialCommunityIcons name="tag-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                                <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{tags[key].name}</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => {
+                                setDeleteTagId(tags[key].name);
+                                setIsCompleteModalOpen(true);
+                            }}>
+                                <MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].white} />
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={() => {
-                            setDeleteTagId(tags[key].name);
-                            setIsCompleteModalOpen(true);
-                        }}>
-                            <MaterialCommunityIcons name="close-circle" size={16} color={Colors[theme].softGrey} />
-                        </TouchableOpacity>
-                    </View>
-                ))}
-                {/* </ScrollView> */}
+                    )) : <LoadingIndicator />}
+                </ScrollView>
             </View>
             <CompleteTaskModal
                 title="Borrar etiqueta"
@@ -272,20 +280,72 @@ const AdminTag = ({ navigation }) => {
 }
 const TareasCompletadas = ({ navigation }) => {
     const themeContext = useContext(ThemeContext);
-    // const theme = useColorScheme();
     const theme = themeContext.theme;
+    const [tasks, setTasks] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedTasks, setSelectedTasks] = useState({});
+
+    async function getTasks() {
+        const dataTasks = await taskService.getTasks({ completed: true });
+        setIsLoading(false);
+        const seletedAux = {}
+        dataTasks.forEach(async (task) => {
+            seletedAux[task.task_id] = false;
+        })
+        console.log("Estas son las tareas que se devuelven", dataTasks)
+        setTasks(dataTasks);
+
+        seletedAux.total = 0;
+        setSelectedTasks(seletedAux);
+
+    }
+
+    useEffect(() => {
+        getTasks()
+    }, [])
+
     return (
 
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('Sidebar');
-            }}>
-                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-            </TouchableOpacity>
-            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                Tareas completadas
-            </Text>
-        </View>
+        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
+            <View style={{ padding: 10, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Tareas completadas
+                </Text>
+            </View>
+            {/* <View style={{ flex: 1, overflow: 'hidden', paddingHorizontal: 22 }}>
+                    <NativeBaseProvider>
+                        <TaskList
+                            tasks={tasks}
+                            navigation={navigation}
+                            // showEditPopUp={showEditPopUp}
+                            // showMovePopUp={showMovePopUp}
+                            // showCompleteModal={showCompleteModal}
+                            selectedTasks={selectedTasks}
+                            setSelectedTasks={setSelectedTasks}
+                        // setIsMoveModalOpen={setIsMoveModalOpen}
+                        // setIsCompleteModalOpen={setIsCompleteModalOpen}
+                        /></NativeBaseProvider>
+
+            </View> */}
+            <View style={{ flex: 1, overflow: 'hidden', paddingHorizontal: 22 }}>
+                <ScrollView style={{ flex: 1, flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+                    {!isLoading ? Object.keys(tasks).map((key, index) => (
+                        <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <Octicons name="tasklist" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
+                                <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{tasks[key].title}</Text>
+                            </View>
+                        </View>
+                    )) : <LoadingIndicator />}
+                </ScrollView>
+            </View>
+        </View >
 
     )
 }
@@ -325,6 +385,8 @@ const Tutorial = ({ navigation }) => {
 }
 
 const SideComponent = ({ theme, navigation }) => {
+    const authContext = useContext(AuthContext);
+
     if (!theme) {
         const themeContext = useContext(ThemeContext);
         // const theme = useColorScheme();
@@ -339,52 +401,69 @@ const SideComponent = ({ theme, navigation }) => {
                     source={require('../../../assets/icon.png')}
                 />
             </View>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('DatosPersonales') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('DatosPersonales') }}>
                 <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Datos personales
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('ConfigAPI') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('ConfigServer') }}>
                 <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Configuración de la API
+                    Configuración del servidor
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tema') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('Tema') }}>
                 <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Personalizar tema
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminContext') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('AdminContext') }}>
                 <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar contextos
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AdminTag') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('AdminTag') }}>
                 <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Administrar etiquetas
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('TareasCompletadas') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('TareasCompletadas') }}>
                 <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tareas completadas
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('AcercaGTD') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('AcercaGTD') }}>
                 <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Acerca de GTD
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={settingStyles.sideSettingContainer} onPress={() => { navigation.navigate('Tutorial') }}>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('Tutorial') }}>
                 <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tutorial de la app
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { 
+                    authContext.signOut() 
+                }}>
+                <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Cerrar sesión
                 </Text>
             </TouchableOpacity>
         </View>
@@ -423,7 +502,7 @@ const SettingsModal = (props) => {
                     >
                         {dimensions.width < 768 && <SettingsDrawer.Screen name="Sidebar" component={SideComponent} />}
                         <SettingsDrawer.Screen name="DatosPersonales" component={DatosPersonales} />
-                        <SettingsDrawer.Screen name="ConfigAPI" component={ConfigAPI} />
+                        <SettingsDrawer.Screen name="ConfigServer" component={ConfigServer} />
                         <SettingsDrawer.Screen name="Tema" component={Tema} />
                         <SettingsDrawer.Screen name="AdminContext" component={AdminContext} />
                         <SettingsDrawer.Screen name="AdminTag" component={AdminTag} />
@@ -437,43 +516,5 @@ const SettingsModal = (props) => {
         </Modal >
     )
 }
-
-
-const settingStyles = StyleSheet.create({
-    topContainer: {
-        padding: 2,
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        width: '100%',
-        marginBottom: 25
-    },
-    sideSettingsText: {
-        color: 'white',
-        fontSize: 16,
-        marginBottom: 15,
-        marginLeft: 10
-    },
-    sideSettingContainer: {
-        marginBottom: 10,
-        flexDirection: 'row'
-    },
-    icon: {
-        width: 45,
-        height: 45,
-        borderRadius: 15
-    },
-    themeSelectorPill: {
-        flex: 1,
-        padding: 10,
-    },
-    themeSelectorPillSelected: {
-        borderWidth: 1,
-        borderRadius: 20,
-        padding: 10,
-    }
-})
-
 
 export default SettingsModal;

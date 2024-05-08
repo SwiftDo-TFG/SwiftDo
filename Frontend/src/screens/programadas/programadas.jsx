@@ -183,9 +183,10 @@ const ProgramadasScreen = (props) => {
 
     const updateTask = async (updatedTask) => {
         console.log(updatedTask)
-        for (let tag of updatedTask.tags) {
-            await tagService.createTag(tag);
-            await taskService.addTag(updatedTask.task_id, tag)
+        if (updatedTask.tags) {
+            for (let tag of updatedTask.tags) {
+                await taskService.addTag(updatedTask.task_id, tag)
+            }
         }
         const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
         console.log("ID: ", updatedTaskResult)
@@ -550,7 +551,7 @@ const ProgramadasScreen = (props) => {
                         {/* <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
                             <Text style={{ color: Colors[theme].white }}>Toggle calendar</Text>
                         </TouchableOpacity> */}
-                        
+
                     </View>
                     <TasksCalendar />
                 </CalendarProvider>

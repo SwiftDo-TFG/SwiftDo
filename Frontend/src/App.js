@@ -9,6 +9,7 @@ import Router from './components/navigation/Router';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 import { useContext } from 'react';
 import ThemeContext from './services/theme/ThemeContext';
+import configStorage from './services/configStorage/configStorage';
 
 export default function App() {
 

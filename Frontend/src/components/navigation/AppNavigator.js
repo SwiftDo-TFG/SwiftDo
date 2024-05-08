@@ -12,7 +12,8 @@ import AuthNavigator from './AuthNavigator';
 import Colors from '../../styles/colors';
 import DetailScreen from '../../screens/details/details';
 import ThemeContext from '../../services/theme/ThemeContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import SettingsModal from '../modals/settings/SettingsModal';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +25,12 @@ const AppNavigator = ({ projects, state }) => {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
+
+    useEffect(()=>{
+        if(state.userToken !== null){
+            themeContext.setThemeOnInit();
+        }
+    },[state])
 
     return (
         <Drawer.Navigator
@@ -55,7 +62,8 @@ const AppNavigator = ({ projects, state }) => {
                         name="Inbox"
                         component={Inbox}
                         options={{
-                            headerShown: false
+                            headerShown: false,
+                            animationTypeForReplace: 'push',
                         }}
                     />
                     <Drawer.Screen
@@ -87,18 +95,19 @@ const AppNavigator = ({ projects, state }) => {
                             headerShown: false
                         }}
                     />
-                    {/* {addProjects} */}
-                    <Drawer.Screen
-                        name={"project"}
-                        component={Project}
-                        options={{
-                            headerShown: false
-                        }}
-                    />
                     {/* Detalles */}
                     <Drawer.Screen 
                         name={"Details"}
                         component={DetailScreen}
+                        options={{
+                            headerShown: false,
+                            animationTypeForReplace: 'push',
+                        }}
+                    />
+                    {/* {addProjects} */}
+                    <Drawer.Screen
+                        name={"project"}
+                        component={Project}
                         options={{
                             headerShown: false
                         }}

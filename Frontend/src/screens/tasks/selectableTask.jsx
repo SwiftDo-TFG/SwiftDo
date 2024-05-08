@@ -136,7 +136,8 @@ const SelectableTask = ({ navigation, task, onPress, onDelete, scale, opacity, s
       // onLongPress={() => onPress(id)}
       onPress={() => {
         // if (isSelected) onPress(id);
-        setIsMenuVisible(!isMenuVisible);
+        // setIsMenuVisible(!isMenuVisible);
+        navigation.navigate('Details', {task})
       }}
     >
       <Animated.View style={[getTaskItemStyle(), { flexDirection: 'column', justifyContent: 'center', backgroundColor: (isMenuVisible ?  Colors[theme].activeColor : Colors[theme].themeColor), transform: [{ scale }], opacity, height: (isMenuVisible && !selectedTasks[task.task_id] ? 'auto' : 52) }]}>

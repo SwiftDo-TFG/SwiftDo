@@ -8,6 +8,8 @@ import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
 import Colors from '../../styles/colors';
 import ThemeContext from '../../services/theme/ThemeContext';
+import { FontAwesome5, Feather } from '@expo/vector-icons';
+import InitialConfigModal from './InitialConfigModal';
 
 
 function LoadingIndicator(style) {
@@ -22,6 +24,8 @@ function SignInScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
+    const [isServerModalVisible, setIsServerModalVisible] = useState(false)
+
 
     //Theme
     const themeContext = useContext(ThemeContext);
@@ -100,8 +104,11 @@ function SignInScreen({ navigation }) {
                         <Text style={[textStyle.smallText, textStyle.linkText]}> Registrate</Text>
                     </TouchableOpacity>
                 </View>
-
                 <ConfirmButton onPress={handlePress} text="Iniciar sesión" />
+                <TouchableOpacity style={{flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}} onPress={()=>{setIsServerModalVisible(true)}}>
+                    <Feather name="settings" size={24} color={'#d2b48c'} />
+                </TouchableOpacity>
+                <InitialConfigModal isVisible={isServerModalVisible} setVisible={setIsServerModalVisible} navigation={navigation}/>
             </SafeAreaView>
         </View>
 
