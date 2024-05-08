@@ -90,6 +90,7 @@ export default ({ navigation }) => {
 
     function navigateFromProjectToProject(navigation, project) {
         navigation.dispatch(state => {
+            console.log("PROJECT NAVIGATION", state)
             const index = state.routes.findIndex(r => r.name === 'project');
             const routes = state.routes.slice(0, index + 1);
 
@@ -97,6 +98,8 @@ export default ({ navigation }) => {
                 name: 'project',
                 params: { project_id: project.project_id },
             })
+
+            console.log("PROJECT NAVIGATION END", routes)
 
             return CommonActions.reset({
                 ...state,

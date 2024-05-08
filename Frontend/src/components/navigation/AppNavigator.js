@@ -62,7 +62,8 @@ const AppNavigator = ({ projects, state }) => {
                         name="Inbox"
                         component={Inbox}
                         options={{
-                            headerShown: false
+                            headerShown: false,
+                            animationTypeForReplace: 'push',
                         }}
                     />
                     <Drawer.Screen
@@ -94,18 +95,19 @@ const AppNavigator = ({ projects, state }) => {
                             headerShown: false
                         }}
                     />
-                    {/* {addProjects} */}
-                    <Drawer.Screen
-                        name={"project"}
-                        component={Project}
-                        options={{
-                            headerShown: false
-                        }}
-                    />
                     {/* Detalles */}
                     <Drawer.Screen 
                         name={"Details"}
                         component={DetailScreen}
+                        options={{
+                            headerShown: false,
+                            animationTypeForReplace: 'push',
+                        }}
+                    />
+                    {/* {addProjects} */}
+                    <Drawer.Screen
+                        name={"project"}
+                        component={Project}
                         options={{
                             headerShown: false
                         }}

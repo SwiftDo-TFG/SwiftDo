@@ -45,7 +45,15 @@ const getTasks = async (filters) => {
 }
 
 const getTaskById = async (taskId) => {
+    try {
+        const response = await instance.get('/task/' + taskId);
+        const tasks = response.data;
 
+        return tasks;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
 }
 
 const createTask = async (taskData) => {
