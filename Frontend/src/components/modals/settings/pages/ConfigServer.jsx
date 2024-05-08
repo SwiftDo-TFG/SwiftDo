@@ -16,6 +16,7 @@ const ConfigServer = ({ navigation, initialConfig }) => {
     const [servers, setServers] = useState({ list: [] });
     const [isCreating, setIsCreating] = useState(false);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [deleteIndex, setDeleteIndex] = useState(-1);
     const [showTest, setShowTest] = useState({ show: false });
 
     //Form crear conexión
@@ -38,11 +39,14 @@ const ConfigServer = ({ navigation, initialConfig }) => {
     }, [])
 
     const handleDeleteServer = async () => {
-        const newServersList = servers.list;
-        newServersList.splice(index, 1);
-        let newServers = { ...servers, list: newServersList };
-        setServers(newServers);
-        await configStorage.storeConfig("servers", newServers);
+        if(deleteIndex != -1){
+            const newServersList = servers.list;
+            newServersList.splice(deleteIndex, 1);
+            let newServers = { ...servers, list: newServersList };
+            await configStorage.storeConfig("servers", newServers);
+            setServers(newServers);
+            setIsCompleteModalOpen(false);
+        }
     }
 
     return (
@@ -78,7 +82,10 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                                     </Text>
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity disabled={index === servers.selected} style={{ alignItems: 'center', justifyContent: 'center', marginRight: 5, padding: 2, borderRadius: 5, borderWidth: 0.5, borderColor: 'red' }}
-                                            onPress={()=>{setIsCompleteModalOpen(true)}}
+                                            onPress={()=>{
+                                                setDeleteIndex(index);
+                                                setIsCompleteModalOpen(true)
+                                            }}
                                         >
                                             <Ionicons name="close-circle-outline" size={16} color={'red'} />
                                         </TouchableOpacity>

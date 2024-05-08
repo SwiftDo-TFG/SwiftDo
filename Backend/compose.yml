@@ -3,7 +3,7 @@ services:
     image: node:18-alpine
     command: sh -c "npm install && cp ./instalation/oauth/authorize-handler.js ./node_modules/oauth2-server/lib/handlers/authorize-handler.js && npm run start"
     ports:
-      - 127.0.0.1:3000:3000
+      - 3000:3000
     working_dir: /Backend
     volumes:
       - ./:/Backend

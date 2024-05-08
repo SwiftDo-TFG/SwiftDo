@@ -129,7 +129,7 @@ const Tema = ({ navigation }) => {
 
             </View>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
+            <View style={{flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
 
                 {items.map(option => {
                     return (

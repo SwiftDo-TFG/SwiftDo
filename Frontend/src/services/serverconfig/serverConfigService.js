@@ -20,7 +20,7 @@ const testServerConnection = async (serverConfig) => {
 }
 
 const createServerConnection = async (url, serverConfig) => {
-    serverConfig = {client_id: "123456789"}
+    serverConfig = {client_id: "1234567"}
 
     try {
         const response = await axios.post(`${url}/config/connect`, serverConfig);
