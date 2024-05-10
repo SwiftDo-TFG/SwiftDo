@@ -77,7 +77,7 @@ if (process.env.NODE_ENV === 'production') {
   const httpServer = http.createServer(app);
 
   httpsServer.listen(port);
-  httpsServer.listen(80);
+  httpServer.listen(80);
   console.log(`App listening on port ${port}`)
 }else{
   app.listen(port, function (err) {
