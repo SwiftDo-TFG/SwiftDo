@@ -9,7 +9,6 @@ const oauthServer = require('./oauth/server.js')
 const logger = require('morgan');
 const cors = require('cors');
 const https = require('https');
-const http = require('https');
 const fs = require('fs');
 
 
@@ -74,10 +73,8 @@ if (process.env.NODE_ENV === 'production') {
   const credentials = { key: privateKey, cert: certificate };
 
   const httpsServer = https.createServer(credentials, app);
-  const httpServer = http.createServer(app);
 
   httpsServer.listen(port);
-  httpServer.listen(port);
   console.log(`App listening on port ${port}`)
 }else{
   app.listen(port, function (err) {
