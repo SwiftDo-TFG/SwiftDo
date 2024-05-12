@@ -36,3 +36,6 @@ yarn-error.*
 
 #windows version
 windows/
+
+#desktop
+out/

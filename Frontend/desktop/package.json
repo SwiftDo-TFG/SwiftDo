@@ -1,0 +1,30 @@
+{
+  "name": "SessionGTD",
+  "version": "0.3.0",
+  "description": "Session GTD desktop app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "Pabluskagamo",
+  "license": "ISC",
+  "dependencies": {
+    "@electron-forge/plugin-fuses": "^7.3.1",
+    "electron-serve": "^1.0.0",
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.3.1",
+    "@electron-forge/maker-deb": "^7.3.1",
+    "@electron-forge/maker-dmg": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.3.1",
+    "@electron-forge/maker-squirrel": "^7.3.1",
+    "@electron-forge/maker-zip": "^7.3.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.3.1",
+    "electron": "^29.1.5",
+    "electron-winstaller": "^5.3.0"
+  }
+}
