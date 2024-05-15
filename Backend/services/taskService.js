@@ -56,6 +56,19 @@ taskService.findTaskById = async (id, user_id) => {
 
     if (res.rows.length !== 1) {
         throw new Error('The task does not exist');
+    }else{
+        //Parse tags to list of tags
+        res.rows.map((row) => {
+            const tags = row.tags === null ? [] : row.tags.split(",");
+            const tagsColors = row.tagcolors === null ? [] : row.tagcolors.split(",")
+            const fullTags = tags.map((t, index) => {
+                return { name: t, color: tagsColors[index] };
+            })
+
+            row.tags = fullTags;
+            delete row.tagcolors
+            return row;
+        })
     }
 
     return res.rows[0];
