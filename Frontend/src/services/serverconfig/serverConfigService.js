@@ -7,7 +7,7 @@ const testServerConnection = async (serverConfig) => {
         const response = await axios.get(`${serverConfig.url}/config/test`);
         const testServer = response.data;
 
-        if(testServer.app === "session-gtd"){
+        if(testServer.app === "SwiftDo"){
             return true
         }
 

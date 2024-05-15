@@ -421,6 +421,7 @@ const ProgramadasScreen = (props) => {
                                 <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
                                     <SelectableTask
                                         navigation={props.navigation}
+                                        route={props.route}
                                         task={item.item} selectedTasks={selectedTasks}
                                         showEditPopUp={showEditPopUp}
                                         showMovePopUp={showMovePopUp}

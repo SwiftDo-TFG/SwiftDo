@@ -7,7 +7,7 @@ router.get('/test', async (req, res) =>{
   try{
     // const ok = await userService.register(userData);
     let urlCompleta = req.protocol + '://' + req.get('host')
-    const info = {app: "session-gtd", url: urlCompleta}
+    const info = {app: "SwiftDo", url: urlCompleta}
     res.send(info);
   }catch (error){
     console.log('[Exception]:',error.message)

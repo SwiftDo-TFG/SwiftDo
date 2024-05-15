@@ -281,13 +281,13 @@ function CreateTaskModal(props) {
                                                 <FontAwesome5 name="user" size={22} color="#a0a0a0" />
                                             )}
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
+                                        {/* <TouchableOpacity onPress={() => {
 
                                         }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
                                             </Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                         <TouchableOpacity onPress={toggleImportant}>
                                             <Text>
                                                 {state.isImportant ? (

@@ -66,7 +66,7 @@ const getAuthToken = async (authcode) => {
 }
 
 const restoreToken = async (token) => {
-    const data = { client_id: apiConfig.client_id, client_secret: apiConfig.client_secret, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: apiConfig.url + apiConfig.redirect_uri }
+    const data = { client_id: apiConfig.client_id, client_secret: apiConfig.client_secret, grant_type: "refresh_token", refresh_token: token.refresh_token, redirect_uri: apiConfig.redirect_uri }
 
     console.log("[AXIOS] Refresh OAUTH Token", data)
     try {

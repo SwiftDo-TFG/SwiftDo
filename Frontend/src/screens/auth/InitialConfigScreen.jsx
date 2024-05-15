@@ -21,7 +21,7 @@ const InitialConfigScreen = ({navigation}) => {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme === 'dark' ? '#131720' : '' }}>
             <SafeAreaView>
                 <Text style={[textStyle.largeText, { fontWeight: 'bold', textAlign: 'center', color: Colors[theme].white, alignSelf: 'center', marginBottom: 15 }]}>
-                    Bienvenido a Session-GTD
+                    Bienvenido a SwiftDo
                 </Text>
                 <Image
                     style={{ width: 150, height: 150, borderRadius: 15, marginBottom: 20, alignSelf: 'center' }}
