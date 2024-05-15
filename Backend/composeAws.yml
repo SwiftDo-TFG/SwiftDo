@@ -7,12 +7,14 @@ services:
     working_dir: /Backend
     volumes:
       - ./:/Backend
+      - /etc/ssl/certs/:/etc/ssl/certs/
       - /etc/letsencrypt:/etc/letsencrypt
     environment:
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/intermediate.pem
       NODE_ENV: production
       PORT: 443
       HOSTNAME: 16.16.226.94.nip.io
-      POSTGRES_HOST: db 
+      POSTGRES_HOST: db
       POSTGRES_USER: tfggtdUser
       POSTGRES_PASSWORD: nodenodito@69
       POSTGRES_DB: tfggtd

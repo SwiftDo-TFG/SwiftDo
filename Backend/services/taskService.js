@@ -46,11 +46,29 @@ taskService.modifyTask = async (task_id, task) => {
 
 }
 
-taskService.findTaskById = async (id) => {
-    const res = await db.query(querySearchByID, [id])
+taskService.findTaskById = async (id, user_id) => {
+    const res = await db.query('SELECT t.* , p.color as project_color, p.title as project_title, c.name as context_name, t2.tags, t2.tagcolors ' +
+        'FROM tasks t LEFT JOIN projects p on t.project_id = p.project_id ' +
+        'left join (SELECT task_id, string_agg(nametag::text, \'\,\'\) as tags, string_agg(tg.colour::text, \'\,\'\) as tagcolors FROM tagstotask tot ' +
+        'join tags tg on tot.nametag = tg.name ' +
+        'group by task_id ) t2 on t.task_id = t2.task_id ' +
+        'LEFT JOIN areas_contexts c on t.context_id = c.context_id WHERE t.task_id = $1 AND t.user_id = $2 ', [id, user_id])
 
     if (res.rows.length !== 1) {
         throw new Error('The task does not exist');
+    }else{
+        //Parse tags to list of tags
+        res.rows.map((row) => {
+            const tags = row.tags === null ? [] : row.tags.split(",");
+            const tagsColors = row.tagcolors === null ? [] : row.tagcolors.split(",")
+            const fullTags = tags.map((t, index) => {
+                return { name: t, color: tagsColors[index] };
+            })
+
+            row.tags = fullTags;
+            delete row.tagcolors
+            return row;
+        })
     }
 
     return res.rows[0];
