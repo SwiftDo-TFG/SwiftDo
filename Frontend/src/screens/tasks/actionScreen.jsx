@@ -342,6 +342,7 @@ function ActionScreen(props) {
             <TaskList
               tasks={tasks}
               navigation={props.navigation}
+              route={props.route}
               showEditPopUp={showEditPopUp}
               showMovePopUp={showMovePopUp}
               showCompleteModal={showCompleteModal}

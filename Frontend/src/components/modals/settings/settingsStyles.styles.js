@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import Colors from "../../../styles/colors";
 
 
@@ -6,7 +6,7 @@ const settingStyles = StyleSheet.create({
     topContainer: {
         padding: 2,
         alignItems: 'center',
-        flex: 1,
+        flex: Platform.OS === 'web' ? 1 : 0,
         justifyContent: 'space-between',
         flexDirection: 'row',
         width: '100%',
@@ -40,6 +40,8 @@ const settingStyles = StyleSheet.create({
     },
     themeSelectorPill: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: 10,
     },
     themeSelectorPillSelected: {

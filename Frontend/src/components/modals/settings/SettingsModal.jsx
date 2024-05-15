@@ -110,9 +110,11 @@ const Tema = ({ navigation }) => {
     const theme = themeContext.theme;
     const index = themePedet === theme ? 0 : (theme === 'light' ? 1 : 2)
     const [value, setValue] = useState(items[index])
+    const dimensions = useWindowDimensions();
+
 
     return (
-        <View style={{ padding: 20, justifyContent: 'center', alignContent: 'center' }}>
+        <View style={{ flex: 1, padding: 20, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Sidebar');
@@ -122,25 +124,25 @@ const Tema = ({ navigation }) => {
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tema
                 </Text>
-                <Image
-                    style={{ width: 200, height: 200, marginBottom: 15, marginTop: 20 }}
-                    source={theme === 'light' ? require('../../../assets/temas_c.png') : require('../../../assets/temas.png')}
-                />
 
             </View>
-
-            <View style={{flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20 }}>
-
-                {items.map(option => {
-                    return (
-                        <TouchableOpacity key={option.name} onPress={() => {
-                            setValue(option)
-                            themeContext.changeTheme(option.value)
-                        }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
-                            <Text style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center' }}>{option.name}</Text>
-                        </TouchableOpacity>
-                    )
-                })}
+            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                <Image
+                    style={{ width: 200, height: 200, marginBottom: 15}}
+                    source={theme === 'light' ? require('../../../assets/temas_c.png') : require('../../../assets/temas.png')}
+                />
+                <View style={{ flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20, width: '100%' }}>
+                    {items.map(option => {
+                        return (
+                            <TouchableOpacity key={option.name} onPress={() => {
+                                setValue(option)
+                                themeContext.changeTheme(option.value)
+                            }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
+                                <Text numberOfLines={1} style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center', fontSize: dimensions.width >= 768 ? 16 : 12}}>{option.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </View>
             </View>
         </View>
     )
@@ -185,7 +187,7 @@ const AdminContext = ({ navigation }) => {
                 </Text>
             </View>
             <View style={{ overflow: 'hidden' }}>
-                <ScrollView style={{ flex: 1, flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+                <ScrollView style={{ flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
                     {!isLoading ? Object.keys(userContext).map((key, index) => (
                         <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -239,7 +241,7 @@ const AdminTag = ({ navigation }) => {
         getTags()
     }, [])
     return (
-        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
+        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
             <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Sidebar');
@@ -251,9 +253,9 @@ const AdminTag = ({ navigation }) => {
                 </Text>
             </View>
             <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
-                <ScrollView style={{ flex: 1, flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
+                <ScrollView style={{ flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
                     {!isLoading ? Object.keys(tags).map((key, index) => (
-                        <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                                 <MaterialCommunityIcons name="tag-outline" size={16} color=/*"#272c34"*/ {Colors[theme].white} />
                                 <Text style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15 }}>{tags[key].name}</Text>
@@ -458,8 +460,8 @@ const SideComponent = ({ theme, navigation }) => {
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { 
-                    authContext.signOut() 
+                onPress={() => {
+                    authContext.signOut()
                 }}>
                 <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>

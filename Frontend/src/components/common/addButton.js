@@ -57,7 +57,7 @@ const AddButton = ({onPress, onLongPress}) => {
                 })}]}>
                 <View style={addButton.iconContainer}>
                     <FontAwesome5 name={'plus'} size={20} color="white" />
-                    {drawerStatus === 'open' && <FontAwesome5 name="question" size={10} color="white" style={addButton.questionIcon} />}
+                    {/* {drawerStatus === 'open' && <FontAwesome5 name="question" size={10} color="white" style={addButton.questionIcon} />} */}
                 </View>
         </TouchableOpacity>
     )
