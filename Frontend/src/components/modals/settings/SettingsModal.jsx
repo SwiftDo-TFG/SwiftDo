@@ -1,5 +1,5 @@
 
-import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform, TextInput, ActivityIndicator } from "react-native";
+import { View, useWindowDimensions, TouchableWithoutFeedback, Image, SafeAreaView, TouchableOpacity, Modal, useColorScheme, Text, StyleSheet, Platform, Animated, TextInput, ActivityIndicator, FlatList } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../../screens/tasks/actionScreen.styles'
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -15,7 +15,7 @@ import ThemeContext from "../../../services/theme/ThemeContext";
 import LoadingIndicator from "../../LoadingIndicator";
 import TaskList from "../../../screens/tasks/TaskList";
 import { NativeBaseProvider } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-virtualized-view";
 import configStorage from "../../../services/configStorage/configStorage";
 import serverConfigService from "../../../services/serverconfig/serverConfigService";
 import AuthContext from "../../../services/auth/context/authContext";
@@ -63,41 +63,43 @@ const DatosPersonales = ({ navigation }) => {
         }
     };
     return (
-        <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
-
-            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Datos personales
-                </Text>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Datos personales
+                    </Text>
+                </View>
+                <Image
+                    style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
+                    source={require('../../../assets/icon.png')}
+                />
             </View>
-
-            <Image
-                style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
-                source={require('../../../assets/icon.png')}
-            />
-            <AuthTextInput
-                placeholder="User"
-                // value={user}
-                // onChangeText={setUser}
-                secureTextEntry
-                inputKey="user"
-                error={error}
-                setError={setError}
-            />
-            <AuthTextInput
-                placeholder="Email"
-                // value={email}
-                // onChangeText={setEmail}
-                inputKey="email"
-                error={error}
-                setError={setError}
-            />
-            <CustomButton onPress={handlePress} text="Editar" />
+            <View style={{ width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <AuthTextInput
+                    placeholder="User"
+                    // value={user}
+                    // onChangeText={setUser}
+                    secureTextEntry
+                    inputKey="user"
+                    error={error}
+                    setError={setError}
+                />
+                <AuthTextInput
+                    placeholder="Email"
+                    // value={email}
+                    // onChangeText={setEmail}
+                    inputKey="email"
+                    error={error}
+                    setError={setError}
+                />
+                <CustomButton onPress={handlePress} text="Editar" />
+            </View>
         </View>
     )
 }
@@ -114,21 +116,22 @@ const Tema = ({ navigation }) => {
 
 
     return (
-        <View style={{ flex: 1, padding: 20, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
-            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Tema
-                </Text>
-
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Tema
+                    </Text>
+                </View>
             </View>
-            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <View style={{ padding: 20, flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center' }}>
                 <Image
-                    style={{ width: 200, height: 200, marginBottom: 15}}
+                    style={{ width: 200, height: 200, marginBottom: 15 }}
                     source={theme === 'light' ? require('../../../assets/temas_c.png') : require('../../../assets/temas.png')}
                 />
                 <View style={{ flexDirection: 'row', justifyContent: 'center', borderColor: Colors[theme].white, borderWidth: 1, borderRadius: 20, width: '100%' }}>
@@ -138,7 +141,7 @@ const Tema = ({ navigation }) => {
                                 setValue(option)
                                 themeContext.changeTheme(option.value)
                             }} style={[settingStyles.themeSelectorPill, value.name === option.name ? { ...settingStyles.themeSelectorPillSelected, borderColor: Colors[theme].white, backgroundColor: Colors[theme].white } : []]}>
-                                <Text numberOfLines={1} style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center', fontSize: dimensions.width >= 768 ? 16 : 12}}>{option.name}</Text>
+                                <Text numberOfLines={1} style={{ color: value.name === option.name ? Colors[theme].themeColor : Colors[theme].white, textAlign: 'center', fontSize: dimensions.width >= 768 ? 16 : 12 }}>{option.name}</Text>
                             </TouchableOpacity>
                         )
                     })}
@@ -174,19 +177,20 @@ const AdminContext = ({ navigation }) => {
         getAreas();
     }, [])
     return (
-        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
-
-            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Administrar contextos
-                </Text>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Administrar contextos
+                    </Text>
+                </View>
             </View>
-            <View style={{ overflow: 'hidden' }}>
+            <View style={{ overflow: 'hidden', padding: 20 }}>
                 <ScrollView style={{ flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
                     {!isLoading ? Object.keys(userContext).map((key, index) => (
                         <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -241,18 +245,20 @@ const AdminTag = ({ navigation }) => {
         getTags()
     }, [])
     return (
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
-            <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Administrar etiquetas
-                </Text>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Administrar Etiquetas
+                    </Text>
+                </View>
             </View>
-            <View style={{ overflow: 'hidden', paddingHorizontal: 22 }}>
+            <View style={{ overflow: 'hidden', padding: 20 }}>
                 <ScrollView style={{ flexGrow: 1, width: '100%' }} vertical={true} showsVerticalScrollIndicator={false}>
                     {!isLoading ? Object.keys(tags).map((key, index) => (
                         <View key={index} style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -308,17 +314,18 @@ const TareasCompletadas = ({ navigation }) => {
 
     return (
 
-        <View style={{ flex: 1, padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'column' }}>
-            <View style={{ padding: 10, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Tareas completadas
-                </Text>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Tareas completadas
+                    </Text>
+                </View>
             </View>
             {/* <View style={{ flex: 1, overflow: 'hidden', paddingHorizontal: 22 }}>
                     <NativeBaseProvider>
@@ -365,6 +372,61 @@ const AcercaGTD = ({ navigation }) => {
             <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                 Acerca GTD
             </Text>
+        </View>
+    )
+}
+const Alexa = ({ navigation }) => {
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    const data = [
+        { key: '1', text: 'Acceda a la aplicación de "Amazon Alexa".' },
+        { key: '2', text: 'Acceda a la sección "Más" y a continuación "Skills y juegos".' },
+        { key: '3', text: 'Busque la skill de la aplicación: "SwiftDo"' },
+        { key: '4', text: 'Presione en "Permitir su uso"' },
+        { key: '5', text: 'Para vincular Alexa a SwiftDo, presione "Configuración" y a continuación "Vincular cuenta"' },
+        { key: '6', text: 'Introduzca su "Correo electrónico" y "Contraseña", y a continuación "Vincular"' },
+        { key: '7', text: 'Para hacer uso de la skill primero tiene que activarla mediante el siguiente comando de voz: "Alexa, abre añadir tarea"' },
+        { key: '8', text: 'Una vez activada tendrá que indicar el título de la tarea obligatoriamente ("Añade la tarea Prueba con Amazon"), después podrá añadir más campos ("Añade la descripción Esto es una prueba", "Si la tarea es importante", "Pon de fecha limite el 22 de mayo"), si no quiere aportar más información, puedes finalizar ("Eso es todo")' },
+    ];
+    const renderItem = ({ item }) => (
+        <View style={{ flexDirection: 'row', marginVertical: 5 }}>
+            <Text style={{ marginRight: 10, color: Colors[theme].white }}>{item.key}.</Text>
+            <Text style={{ color: Colors[theme].white }}>
+                {item.text.split('"').map((part, index) => {
+                    return index % 2 !== 0 ? <Text key={index} style={{ fontStyle: 'italic' }}>"{part}"</Text> : part;
+                })}
+            </Text>
+        </View>
+    );
+
+    return (
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Vincular con Alexa
+                    </Text>
+                </View>
+                <Image style={{ width: 50, height: 50 }} source={require('../../../assets/alexa.png')} />
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}            >
+                <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <View>
+                        <Text style={{ color: Colors[theme].white }}>La aplicación permite vincularse a una skill de Alexa para así añadir tareas a partir de ésta.</Text>
+                        <Text style={{ color: Colors[theme].white }}>Para su vinculación siga los siguientes pasos:</Text>
+                        <FlatList
+                            data={data}
+                            renderItem={renderItem}
+                        />
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -446,17 +508,24 @@ const SideComponent = ({ theme, navigation }) => {
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('AcercaGTD') }}>
-                <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Acerca de GTD
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
                 onPress={() => { navigation.navigate('Tutorial') }}>
                 <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Tutorial de la app
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('Alexa') }}>
+                <Feather name="link" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Vincular con Alexa
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                onPress={() => { navigation.navigate('AcercaGTD') }}>
+                <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Acerca de GTD
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
@@ -509,6 +578,7 @@ const SettingsModal = (props) => {
                         <SettingsDrawer.Screen name="AdminContext" component={AdminContext} />
                         <SettingsDrawer.Screen name="AdminTag" component={AdminTag} />
                         <SettingsDrawer.Screen name="TareasCompletadas" component={TareasCompletadas} />
+                        <SettingsDrawer.Screen name="Alexa" component={Alexa} />
                         {/* <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} /> */}
                         {/* <SettingsDrawer.Screen name="Tutorial" component={Tutorial} /> */}
 

@@ -1,4 +1,4 @@
-import { Text, TextInput, useColorScheme } from "react-native";
+import { Platform, Text, TextInput, useColorScheme } from "react-native";
 import { formStyles } from "../../styles/globalStyles";
 import { useContext } from "react";
 import ThemeContext from "../../services/theme/ThemeContext";

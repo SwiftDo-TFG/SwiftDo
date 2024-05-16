@@ -16,7 +16,7 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const [newContextName, setNewContextName] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const filterContext = useContext(FilterContext);
-    
+
     //Theme
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
@@ -67,16 +67,18 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     });
 
     const handleNewContextSubmit = async () => {
-        setIsSaving(true);
-        await contextService.createContext({ name: newContextName });
-        setUserContext([...userContext, { name: newContextName }]);
-        setNewContextName('');
-        setIsSaving(false);
-        Animated.timing(animatedHeight, {
-            toValue: (Object.keys(userContext).length + 2) * 31,
-            duration: 300,
-            useNativeDriver: false,
-        }).start();
+        if(newContextName.length > 0){
+            setIsSaving(true);
+            await contextService.createContext({ name: newContextName });
+            setUserContext([...userContext, { name: newContextName }]);
+            setNewContextName('');
+            setIsSaving(false);
+            Animated.timing(animatedHeight, {
+                toValue: (Object.keys(userContext).length + 2) * 31,
+                duration: 300,
+                useNativeDriver: false,
+            }).start();
+        }
     };
 
     return (
@@ -118,7 +120,13 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
                             </TouchableOpacity>
                         ))}
                         <View style={{ marginVertical: 5, marginLeft: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <FontAwesome name="plus-square" size={17} color={Colors[theme].white} />
+                            <TouchableOpacity onPress={handleNewContextSubmit}>
+                                {isSaving ? (
+                                    <ActivityIndicator color="#272c34" size="small" />
+                                ) : (
+                                    <FontAwesome name="plus-square" size={17} color={Colors[theme].white} />
+                                )}
+                            </TouchableOpacity>
                             <TextInput
                                 style={{ color: Colors[theme].white, fontSize: 16, marginLeft: 15, width: '60%' }}
                                 placeholder="Nueva área"
@@ -128,15 +136,6 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
                                 onChangeText={text => setNewContextName(text)
                                 }
                             />
-                            {newContextName.length > 0 && (
-                                <TouchableOpacity onPress={handleNewContextSubmit}>
-                                    {isSaving ? (
-                                        <ActivityIndicator color="#272c34" size="small" />
-                                    ) : (
-                                        <FontAwesome name="cloud-upload" size={17} color={Colors[theme].white} />
-                                    )}
-                                </TouchableOpacity>
-                            )}
                         </View>
                     </Animated.View>
                 )}
