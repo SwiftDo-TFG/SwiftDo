@@ -1,4 +1,4 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, Entypo } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
@@ -30,7 +30,7 @@ const SelectStateModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '40%' : '100%',}]}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                             <View style={styles.textContainer}>

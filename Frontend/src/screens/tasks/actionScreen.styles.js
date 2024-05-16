@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     stateModalContainer: {
         flex: 1,
         justifyContent: 'flex-end',
+        alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     assignProjectModalContainer: {
@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
     },
     confirmModalContainer: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: 'center'
         // maxHeight: 500
         // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },

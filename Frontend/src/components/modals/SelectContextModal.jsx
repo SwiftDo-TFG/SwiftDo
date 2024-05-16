@@ -1,4 +1,4 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState, useContext } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
@@ -45,7 +45,7 @@ const SelectContextModal = (props) => {
         >
             <View style={styles.stateModalContainer}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0,}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '40%' : '100%',}]}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>
