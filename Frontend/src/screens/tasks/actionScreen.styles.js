@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         maxHeight: '25%',
     },
     moveContainer: {
-        flex: 1,
+        //flex: 1,
         justifyContent: 'flex-end',
     },
     moveStyle: {

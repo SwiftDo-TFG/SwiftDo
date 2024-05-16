@@ -2,7 +2,7 @@
   "expo": {
     "name": "SwiftDo",
     "slug": "GTD-App",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -20,13 +20,31 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff", 
+        "foregroundImage": "./src/assets/tfggtdicon.png",
+        "backgroundColor": "#ffffff",
         "userInterfaceStyle": "automatic"
-      }
+      },
+      "package": "com.pabluskagamo.GTDApp"
     },
     "web": {
-      "": "./src/assets/favicon.png"
-    }
+      "": "./src/assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cf21098b-449e-4027-bf41-aeecc3d45d06"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "expo-secure-store"
+    ]
   }
 }

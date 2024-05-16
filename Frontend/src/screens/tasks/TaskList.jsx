@@ -88,6 +88,7 @@ function TaskList(props) {
 
                     return (<SelectableTask
                         navigation={props.navigation}
+                        route={props.route}
                         task={item}
                         onPress={() => toggleSelectTask(item.task_id)}
                         onDelete={deleteTask}

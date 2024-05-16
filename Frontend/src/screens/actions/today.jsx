@@ -445,6 +445,7 @@ function Today(props) {
                                         {/* <Animated.View style={{ transform: [{ scale }], opacity }}></Animated.View>  */}
                                         <SelectableTask
                                             navigation={props.navigation}
+                                            route={props.route}
                                             task={task}
                                             onPress={() => toggleSelectTask(task.task_id)}
                                             onDelete={deleteTask}
@@ -489,6 +490,7 @@ function Today(props) {
                                     {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
                                     <SelectableTask
                                         navigation={props.navigation}
+                                        route={props.route}
                                         task={task}
                                         onPress={() => toggleSelectTask(task.task_id)}
                                         onDelete={deleteTask}
@@ -532,6 +534,7 @@ function Today(props) {
                                 {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
                                     <SelectableTask
                                         navigation={props.navigation}
+                                        route={props.route}
                                         task={task}
                                         onPress={() => toggleSelectTask(task.task_id)}
                                         onDelete={deleteTask}

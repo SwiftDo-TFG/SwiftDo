@@ -21,8 +21,8 @@ function LoadingIndicator(style) {
 }
 
 function SignInScreen({ navigation }) {
-    const [email, setEmail] = useState('pepe@ucm.es');
-    const [password, setPassword] = useState('Pepe@123');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
     const [isServerModalVisible, setIsServerModalVisible] = useState(false)
 
