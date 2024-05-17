@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity, SafeAreaView, Platform } from "react-native"
+import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity, SafeAreaView, Platform, useWindowDimensions } from "react-native"
 import { AntDesign } from '@expo/vector-icons';
 import { filterModal } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
@@ -34,6 +34,7 @@ function FilterModal(props) {
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
     const filterStyle = filterModal(theme);
     const filterContext = useContext(FilterContext);
 
@@ -208,19 +209,19 @@ function FilterModal(props) {
 
         <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={onCloseModal} >
             <SafeAreaView>
-                <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%', flexDirection: 'row' }}>
-                    {Platform.OS === 'web' && (
+                <View style={{ flex: 1, backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)', height: '100%', flexDirection: 'row' }}>
+                    {Platform.OS === 'web' && dimensions.width >= 768 && (
                         <OutSide onCloseModal={onCloseModal} isModalOpen={props.isModalOpen} width={'60%'}/>
                     )}
                     <Animated.View
                         style={{
                             transform: [{ translateY }],
                             backgroundColor: Colors[theme].themeColor,
-                            width: Platform.OS === 'web' ? '40%' : '100%',
+                            width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',
                             borderColor: theme === 'dark' ? Colors[theme].white : '',
-                            borderTopLeftRadius: Platform.OS === 'web' ? 0 : 20,
-                            borderTopRightRadius: Platform.OS === 'web' ? 0 : 20,
-                            borderLeftWidth: (Platform.OS === 'web' && theme === 'dark') ? 0.5 : 0,
+                            borderTopLeftRadius: (Platform.OS === 'web' && dimensions.width >= 768) ? 0 : 20,
+                            borderTopRightRadius: (Platform.OS === 'web' && dimensions.width >= 768) ? 0 : 20,
+                            borderLeftWidth: (Platform.OS === 'web' && theme === 'dark' && dimensions.width >= 768) ? 0.5 : 0,
                             paddingHorizontal: 18,
                             paddingTop: 20,
                             maxHeight: dvHeight,

@@ -14,6 +14,7 @@ import DetailScreen from '../../screens/details/details';
 import ThemeContext from '../../services/theme/ThemeContext';
 import { useContext, useEffect } from 'react';
 import SettingsModal from '../modals/settings/SettingsModal';
+import Tutorial from '../../screens/tutorial/tutorial';
 
 const Drawer = createDrawerNavigator();
 
@@ -40,7 +41,7 @@ const AppNavigator = ({ projects, state }) => {
             screenOptions={{
                 drawerType: (dimensions.width >= 768 && state.userToken != null) ? 'permanent' : 'front',
                 drawerStyle: {
-                    backgroundColor: theme === 'dark' ? 'black' : Colors[theme].themeColor,
+                    backgroundColor: theme === 'dark' ? '#222022' : Colors[theme].themeColor,
                     // width: '80%'
                 },
             }}
@@ -108,6 +109,14 @@ const AppNavigator = ({ projects, state }) => {
                     <Drawer.Screen
                         name={"project"}
                         component={Project}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    {/* Tutorial */}
+                    <Drawer.Screen
+                        name={"Tutorial"}
+                        component={Tutorial}
                         options={{
                             headerShown: false
                         }}

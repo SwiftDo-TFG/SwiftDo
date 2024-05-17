@@ -21,6 +21,7 @@ import serverConfigService from "../../../services/serverconfig/serverConfigServ
 import AuthContext from "../../../services/auth/context/authContext";
 import settingStyles from "./settingsStyles.styles";
 import ConfigServer from "./pages/ConfigServer";
+import Tutorial from "../../../screens/tutorial/tutorial";
 
 const SettingsDrawer = createDrawerNavigator();
 
@@ -85,6 +86,7 @@ const DatosPersonales = ({ navigation }) => {
                     placeholder="User"
                     // value={user}
                     // onChangeText={setUser}
+                    addstyle={{ width: '70%' }}
                     secureTextEntry
                     inputKey="user"
                     error={error}
@@ -94,6 +96,7 @@ const DatosPersonales = ({ navigation }) => {
                     placeholder="Email"
                     // value={email}
                     // onChangeText={setEmail}
+                    addstyle={{ width: '70%' }}
                     inputKey="email"
                     error={error}
                     setError={setError}
@@ -430,25 +433,8 @@ const Alexa = ({ navigation }) => {
         </View>
     )
 }
-const Tutorial = ({ navigation }) => {
-    const themeContext = useContext(ThemeContext);
-    // const theme = useColorScheme();
-    const theme = themeContext.theme;
-    return (
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('Sidebar');
-            }}>
-                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-            </TouchableOpacity>
-            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                Tutorial
-            </Text>
-        </View>
-    )
-}
 
-const SideComponent = ({ theme, navigation }) => {
+const SideComponent = ({ theme, OnClose, navigation }) => {
     const authContext = useContext(AuthContext);
 
     if (!theme) {
@@ -465,78 +451,86 @@ const SideComponent = ({ theme, navigation }) => {
                     source={require('../../../assets/icon.png')}
                 />
             </View>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('DatosPersonales') }}>
-                <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Datos personales
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('ConfigServer') }}>
-                <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Configuración del servidor
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('Tema') }}>
-                <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Personalizar tema
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('AdminContext') }}>
-                <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Administrar contextos
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('AdminTag') }}>
-                <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Administrar etiquetas
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('TareasCompletadas') }}>
-                <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Tareas completadas
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('Tutorial') }}>
-                <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Tutorial de la app
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('Alexa') }}>
-                <Feather name="link" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Vincular con Alexa
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => { navigation.navigate('AcercaGTD') }}>
-                <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Acerca de GTD
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
-                onPress={() => {
-                    authContext.signOut()
-                }}>
-                <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Cerrar sesión
-                </Text>
-            </TouchableOpacity>
+            <ScrollView>
+
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('DatosPersonales') }}>
+                    <MaterialCommunityIcons name="account-settings-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Datos personales
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('ConfigServer') }}>
+                    <MaterialCommunityIcons name="cloud-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Configuración del servidor
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('Tema') }}>
+                    <Feather name="sun" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Personalizar tema
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('AdminContext') }}>
+                    <MaterialCommunityIcons name="home-city-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Administrar contextos
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('AdminTag') }}>
+                    <MaterialCommunityIcons name="tag-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Administrar etiquetas
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('TareasCompletadas') }}>
+                    <MaterialCommunityIcons name="sticker-check-outline" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Tareas completadas
+                    </Text>
+                </TouchableOpacity>
+                {Platform.OS !== 'web' && (
+                    <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                        onPress={() => {
+                            OnClose
+                            navigation.navigate('Tutorial')
+                        }}>
+                        <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                        <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                            Tutorial de la app
+                        </Text>
+                    </TouchableOpacity>
+                )}
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('Alexa') }}>
+                    <Feather name="link" size={20} color={Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Vincular con Alexa
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => { navigation.navigate('AcercaGTD') }}>
+                    <AntDesign name="warning" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Acerca de GTD
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
+                    onPress={() => {
+                        authContext.signOut()
+                    }}>
+                    <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Cerrar sesión
+                    </Text>
+                </TouchableOpacity>
+            </ScrollView>
         </View>
     )
 }
@@ -560,14 +554,13 @@ const SettingsModal = (props) => {
                 <TouchableWithoutFeedback onPress={() => props.setVisible(false)}>
                     <View style={styles.modalDatePickerBackground} />
                 </TouchableWithoutFeedback>
-
                 <View style={[styles.modalSettingsContent, { zIndex: 2 }, { backgroundColor: Colors[theme].themeColor, borderWidth: theme === 'dark' ? 0.5 : 0, borderColor: theme === 'dark' ? 'white' : '', }]}>
                     <SettingsDrawer.Navigator id="settings drawer" screenOptions={{
                         headerShown: false,
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
-                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} /> : <></>}
+                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} OnClose={() => props.setVisible(false)} {...props} /> : <></>}
                         defaultStatus={"closed"}
                         detachInactiveScreens={Platform.OS === 'web'}
                     >
@@ -580,7 +573,9 @@ const SettingsModal = (props) => {
                         <SettingsDrawer.Screen name="TareasCompletadas" component={TareasCompletadas} />
                         <SettingsDrawer.Screen name="Alexa" component={Alexa} />
                         {/* <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} /> */}
-                        {/* <SettingsDrawer.Screen name="Tutorial" component={Tutorial} /> */}
+                        {/* {Platform.OS !== 'web' && (
+                            <SettingsDrawer.Screen name="Tutorial" component={Tutorial} />
+                        )} */}
 
                     </SettingsDrawer.Navigator>
                 </View>

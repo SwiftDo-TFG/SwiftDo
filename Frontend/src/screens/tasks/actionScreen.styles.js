@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    trashIcon: {
+    flagCheckeredIcon: {
         marginLeft: 'auto',
         marginRight: 10,
     },

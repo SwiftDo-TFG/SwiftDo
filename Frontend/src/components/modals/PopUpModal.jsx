@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, useColorScheme, Platform } from "react-native"
+import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import Colors from "../../styles/colors";
 import ThemeContext from "../../services/theme/ThemeContext";
 
@@ -23,6 +23,7 @@ function PopUpModal(props) {
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
 
     useEffect(() => {
         animateModal()
@@ -42,17 +43,17 @@ function PopUpModal(props) {
 
     return (
         <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={props.onCloseModal} >
-            <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <View style={{ flex: 1, backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end', alignItems: 'center' }}>
                 <OutSide onCloseModal={props.onCloseModal} isModalOpen={props.isModalOpen} width={'100%'} />
                 <View style={{width: '100%', flexDirection: 'row'}}>
-                    {Platform.OS === 'web' && (
+                    {Platform.OS === 'web' && dimensions.width >= 768 && (
                         <OutSide onCloseModal={props.onCloseModal} isModalOpen={props.isModalOpen} width={'30%'}/>
                     )}
                     <Animated.View
                         style={{
                             transform: [{ translateY }],
                             backgroundColor: '#FFFFFF',
-                            width: Platform.OS === 'web' ? '40%' : '100%',
+                            width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',
                             borderTopLeftRadius: 20,
                             borderTopRightRadius: 20,
                             paddingHorizontal: 10,
@@ -68,7 +69,7 @@ function PopUpModal(props) {
                     >
                         {props.children}
                     </Animated.View>
-                    {Platform.OS === 'web' && (
+                    {Platform.OS === 'web' && dimensions.width >= 768 && (
                         <OutSide onCloseModal={props.onCloseModal} isModalOpen={props.isModalOpen} width={'30%'}/>
                     )}
                 </View>

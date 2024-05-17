@@ -26,7 +26,7 @@ const ActionScheme = ({ navigation, onPress, icon, iconColor, text, totalTasks, 
                 <View style={[sideBar.countContainer, { justifyContent: importantTasks !== undefined && importantTasks !== 0 ? 'space-around' : 'flex-end' }]}>
                     {importantTasks !== undefined && importantTasks !== 0 && (
                         <View style={[sideBar.count, {backgroundColor: Colors[theme].red}]}>
-                            <Text style={{color: theme === 'dark' ? Colors[theme].black : Colors[theme].softGrey, fontWeight: 'bold'}}>{importantTasks <= 99 ? importantTasks : '+99'}</Text>
+                            <Text style={{color: Colors[theme].softGrey, fontWeight: 'bold'}}>{importantTasks <= 99 ? importantTasks : '+99'}</Text>
                         </View>
                     )}
                     {totalTasks !== undefined && totalTasks !== 0 && (

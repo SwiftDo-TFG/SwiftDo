@@ -41,7 +41,7 @@ function SelectionPanel (props){
                         <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => deleteSelectedTask()}>
-                        <FontAwesome5 name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
+                        <FontAwesome5 name="flag-checkered" size={20} color="red" style={[styles.flagCheckeredIcon, { marginRight: 15 }]} />
                     </TouchableOpacity>
                     {/* <Menu
                         trigger={(triggerProps) => (

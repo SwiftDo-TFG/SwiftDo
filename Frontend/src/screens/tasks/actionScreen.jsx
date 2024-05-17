@@ -419,7 +419,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsFilterModalOpen}
             fiterState={filters}
           />
-          <SettingsModal isVisible={themeContext.isSettingsModalOpen} setVisible={themeContext.closeSettingsModal} />
+          <SettingsModal isVisible={themeContext.isSettingsModalOpen} setVisible={themeContext.closeSettingsModal} mainNavigator={props} />
         </NativeBaseProvider>
 
       </View>

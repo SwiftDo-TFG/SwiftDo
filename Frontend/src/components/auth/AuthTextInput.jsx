@@ -17,7 +17,7 @@ const AuthTextInput = (props) => {
                 placeholder={props.placeholder}
                 value={props.value}
                 onChangeText={props.onChangeText}
-                style={isError ? formStyle.textInputError : formStyle.textInput}
+                style={[isError ? formStyle.textInputError : formStyle.textInput, props.addstyle]}
                 onFocus={() => {
                     //Si tiene error, desaparece al hacer focus
                     if (isError) {

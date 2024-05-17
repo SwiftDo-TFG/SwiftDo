@@ -57,7 +57,7 @@ const RightSwipeActions = ({ showCompleteModal, id, translateX, isMenuVisible })
     >
       <Text>
         <FontAwesome5
-          name="trash"
+          name="flag-checkered"
           size={20}
           color="white"
         />

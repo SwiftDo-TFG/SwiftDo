@@ -1,4 +1,4 @@
-import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Platform } from "react-native"
+import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../../screens/tasks/actionScreen.styles'
 import Colors from "../../styles/colors";
@@ -12,6 +12,7 @@ const AddTypeModal = (props) =>{
   const themeContext = useContext(ThemeContext);
   // const theme = useColorScheme();
   const theme = themeContext.theme;
+  const dimensions = useWindowDimensions();
   
     return(
         <Modal
@@ -21,9 +22,9 @@ const AddTypeModal = (props) =>{
             
           >
             <TouchableWithoutFeedback onPress={() => props.setIsModalVisible(false)}>
-              <View style={[styles.modalContainer, {alignItems: Platform.OS === 'web' ? 'center' : '', justifyContent: 'center'}]}>
+              <View style={[styles.modalContainer, {alignItems: (Platform.OS === 'web' && dimensions.width >= 768) ? 'center' : '', justifyContent: 'center', backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
               {/* , {backgroundColor: Colors[theme].paper} */}
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '40%' : '90%'}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '90%'}]}>
                   <TouchableOpacity onPress={() => {
                     props.setIsModalVisible(false)
                     props.showAddTaskPopUp()

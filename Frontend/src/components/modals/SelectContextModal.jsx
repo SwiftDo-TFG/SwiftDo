@@ -1,4 +1,4 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState, useContext } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
@@ -13,6 +13,8 @@ const SelectContextModal = (props) => {
     const [context, setContext] = useState([]);
     //Theme
     const themeContext = useContext(ThemeContext);
+    const dimensions = useWindowDimensions();
+
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     const contextModal = contextModalStyles(theme);
@@ -43,9 +45,9 @@ const SelectContextModal = (props) => {
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showContextSelector: false })}
         >
-            <View style={styles.stateModalContainer}>
+            <View style={[styles.stateModalContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '40%' : '100%',}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',}]}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>

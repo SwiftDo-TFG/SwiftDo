@@ -1,4 +1,4 @@
-import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator, useColorScheme, Platform } from "react-native"
+import { Modal, View, TextInput, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, ActivityIndicator, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { useEffect, useState, useContext } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
@@ -20,7 +20,7 @@ const AddTagModal = (props) => {
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
-
+    const dimensions = useWindowDimensions();
 
     const onNameChange = async (text) => {
         console.log("TESTING", tag, search, isSearching)
@@ -39,7 +39,7 @@ const AddTagModal = (props) => {
         console.log(search);
     };
     const OutSide = ({ onCloseModal, isModalOpen }) => {
-        const view = <View style={{ flex: 1, width: '100%' }} />;
+        const view = <View style={{ flex: 1, width: '100%'}} />;
         if (!isModalOpen) return view;
         return (
             <TouchableWithoutFeedback onPress={() => { onCloseModal() }} style={{ flex: 1, width: '100%' }}>
@@ -55,9 +55,9 @@ const AddTagModal = (props) => {
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showTagSelector: false })}
         >
-            <View style={styles.stateModalContainer}>
+            <View style={[styles.stateModalContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '35%' : '100%'}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '35%' : '100%'}]}>
 
                     <TextInput
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}

@@ -1,4 +1,4 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
 import { FontAwesome5, Ionicons, Entypo } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
@@ -11,6 +11,8 @@ const SelectStateModal = (props) => {
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
+
     const OutSide = ({ onCloseModal, isModalOpen }) => {
         const view = <View style={{ flex: 1, width: '100%' }} />;
         if (!isModalOpen) return view;
@@ -28,9 +30,9 @@ const SelectStateModal = (props) => {
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showStatusSelector: false })}
         >
-            <View style={styles.stateModalContainer}>
+            <View style={[styles.stateModalContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: Platform.OS === 'web' ? '40%' : '100%',}]}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',}]}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => props.handleSelectState("2")}>
                             <View style={styles.textContainer}>

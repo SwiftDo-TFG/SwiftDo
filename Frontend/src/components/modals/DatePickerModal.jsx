@@ -22,7 +22,7 @@ const DatePickerModal = (props) => {
             onRequestClose={() => props.setState({ ...props.state, showDatePicker: false })}
             // {...props}
         >
-            <View style={styles.modalDatePickerContainer}>
+            <View style={[styles.modalDatePickerContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
 
                 <TouchableWithoutFeedback onPress={() => props.setState({ ...props.state, showDatePicker: false })}>
                     <View style={styles.modalDatePickerBackground} />
