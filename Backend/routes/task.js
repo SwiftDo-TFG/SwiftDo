@@ -148,10 +148,11 @@ router.get('/info', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
+  const user_id = res.locals.oauth.token.user.id;
   console.log(id);
 
   try {
-    const task = await taskService.findTaskById(id);
+    const task = await taskService.findTaskById(id, user_id);
     res.send(task);
   } catch (error) {
     console.log('[Exception]:', error.message)

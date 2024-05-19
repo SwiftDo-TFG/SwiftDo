@@ -1,13 +1,18 @@
 import axios from "axios";
 import authUtils from "../auth/auth_utils"
 
-const instance = axios.create({
-    // baseURL: 'http://localhost:3000',
-    // baseURL: 'http://192.168.0.137:3000',
-    baseURL: 'http://ec2-16-16-226-94.eu-north-1.compute.amazonaws.com:3000',
-    timeout: 1000,
-    // headers: { Authorization: `Bearer d04d34bd905b677bc04d205cf3c3a4e7d91601da` }
+let apiConfig = {}
+
+let instance = axios.create({
+    baseURL: ''
 });
+
+authUtils.getSelectedApiConfig().then(config => {
+    if(config){
+        apiConfig = config;
+        instance.defaults.baseURL = config.url;
+    }
+})
 
 // Interceptor for request --> Set AuthHeaders
 instance.interceptors.request.use(authUtils.setAuthHeaders, function (error) {
@@ -81,4 +86,15 @@ const getAllTags = async () => {
     }
 }
 
-export default { getTags, createTag, searchTags, getAllTags }
+const deleteTag = async (tag) => {
+    try {
+        const dir = `/tag/${tag}`
+        const response = await instance.delete(dir);
+        const tagdata = response.data;
+        return tagdata;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return { error: 'Error', status: error.response.status }
+    }
+}
+export default { getTags, createTag, searchTags, getAllTags, deleteTag }

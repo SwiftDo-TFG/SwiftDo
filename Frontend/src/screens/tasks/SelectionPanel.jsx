@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Animated, TouchableOpacity, useColorScheme } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Checkbox, Icon } from "native-base";
 import styles from './actionScreen.styles'
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function SelectionPanel (props){
     const [selectAll, setSelectAll] = useState(false);
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    
     const archiveSelectedTask = () => {
         props.setIsMoveModalOpen(true);
     }
@@ -37,7 +41,7 @@ function SelectionPanel (props){
                         <Entypo name="archive" size={20} color="#15ba53" style={{ marginRight: 15 }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => deleteSelectedTask()}>
-                        <FontAwesome5 name="trash" size={20} color="red" style={[styles.trashIcon, { marginRight: 15 }]} />
+                        <FontAwesome5 name="flag-checkered" size={20} color="red" style={[styles.flagCheckeredIcon, { marginRight: 15 }]} />
                     </TouchableOpacity>
                     {/* <Menu
                         trigger={(triggerProps) => (

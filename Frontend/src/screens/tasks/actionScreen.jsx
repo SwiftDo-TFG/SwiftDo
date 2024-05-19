@@ -20,6 +20,8 @@ import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 import deviceStorage from "../../offline/deviceStorage";
 import OfflineContext from "../../offline/offlineContext/OfflineContext";
+import ThemeContext from "../../services/theme/ThemeContext";
+import SettingsModal from "../../components/modals/settings/SettingsModal";
 
 
 function ActionScreen(props) {
@@ -39,12 +41,16 @@ function ActionScreen(props) {
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
-  const theme = useColorScheme();
+  
+  //Theme
+  const themeContext = useContext(ThemeContext)
+  const theme = themeContext.theme;
+  // const theme = useColorScheme();
 
   //Filters
   const filterContext = useContext(FilterContext)
   const [filters, setFilters] = useState({})
-  console.log("PROPS: ", props.route)
+  console.log("PROPS: ", props.route, theme)
 
   //Offline
   const offlineContext = useContext(OfflineContext);
@@ -377,6 +383,7 @@ function ActionScreen(props) {
             <TaskList
               tasks={tasks}
               navigation={props.navigation}
+              route={props.route}
               showEditPopUp={showEditPopUp}
               showMovePopUp={showMovePopUp}
               showCompleteModal={showCompleteModal}
@@ -453,6 +460,7 @@ function ActionScreen(props) {
             setIsModalOpen={setIsFilterModalOpen}
             fiterState={filters}
           />
+          <SettingsModal isVisible={themeContext.isSettingsModalOpen} setVisible={themeContext.closeSettingsModal} mainNavigator={props} />
         </NativeBaseProvider>
 
       </View>

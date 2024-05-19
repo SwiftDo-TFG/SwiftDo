@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { TextInput, View, Button, Text, ActivityIndicator, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native';
 import AuthContext from '../../services/auth/context/authContext';
 import authService from "../../services/auth/auth"
@@ -8,6 +8,10 @@ import ConfirmButton from '../../components/common/ConfirmButton';
 import AuthTextInput from '../../components/auth/AuthTextInput';
 import ErrorBadge from '../../components/auth/ErrorBadge';
 import Colors from '../../styles/colors';
+import ThemeContext from '../../services/theme/ThemeContext';
+import InitialConfigModal from './InitialConfigModal';
+import { FontAwesome5, Feather } from '@expo/vector-icons';
+
 
 
 function parseErrors(errors) {
@@ -26,7 +30,13 @@ function SingUpScren({ navigation }) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
-    const theme = useColorScheme();
+    const [isServerModalVisible, setIsServerModalVisible] = useState(false)
+
+    
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const textStyle = textStyles(theme);
     const formStyle = formStyles(theme);
 
@@ -154,6 +164,10 @@ function SingUpScren({ navigation }) {
                 </View>
 
                 <ConfirmButton onPress={handlePress} text="Registrar" />
+                <TouchableOpacity style={{flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}} onPress={()=>{setIsServerModalVisible(true)}}>
+                    <Feather name="settings" size={24} color={'#d2b48c'} />
+                </TouchableOpacity>
+                <InitialConfigModal isVisible={isServerModalVisible} setVisible={setIsServerModalVisible} navigation={navigation}/>
             </SafeAreaView>
         </View>
     )

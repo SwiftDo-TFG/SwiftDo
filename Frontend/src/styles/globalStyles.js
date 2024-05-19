@@ -210,7 +210,6 @@ const formStyles = (theme) => {
             borderRadius: 10,
             fontSize: 16,
             marginBottom: 14,
-
         },
         textInputError: {
             padding: 10,

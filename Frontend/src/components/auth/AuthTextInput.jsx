@@ -1,10 +1,15 @@
-import { Text, TextInput, useColorScheme } from "react-native";
+import { Platform, Text, TextInput, useColorScheme } from "react-native";
 import { formStyles } from "../../styles/globalStyles";
+import { useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 const AuthTextInput = (props) => {
     const isError = props.error.isError && props.error.errors[props.inputKey];
     const errMsg = isError ? props.error.errors[props.inputKey] : '';
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const formStyle = formStyles(theme);
     return (
         <>
@@ -12,7 +17,7 @@ const AuthTextInput = (props) => {
                 placeholder={props.placeholder}
                 value={props.value}
                 onChangeText={props.onChangeText}
-                style={isError ? formStyle.textInputError : formStyle.textInput}
+                style={[isError ? formStyle.textInputError : formStyle.textInput, props.addstyle]}
                 onFocus={() => {
                     //Si tiene error, desaparece al hacer focus
                     if (isError) {

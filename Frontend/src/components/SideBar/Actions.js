@@ -2,10 +2,14 @@ import { TouchableOpacity, View, Text, useColorScheme } from "react-native";
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { sidebarStyles } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 const ActionScheme = ({ navigation, onPress, icon, iconColor, text, totalTasks, importantTasks, type }) => {
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme);
 
     return (
@@ -22,7 +26,7 @@ const ActionScheme = ({ navigation, onPress, icon, iconColor, text, totalTasks, 
                 <View style={[sideBar.countContainer, { justifyContent: importantTasks !== undefined && importantTasks !== 0 ? 'space-around' : 'flex-end' }]}>
                     {importantTasks !== undefined && importantTasks !== 0 && (
                         <View style={[sideBar.count, {backgroundColor: Colors[theme].red}]}>
-                            <Text style={{color: theme === 'dark' ? Colors[theme].black : Colors[theme].softGrey, fontWeight: 'bold'}}>{importantTasks <= 99 ? importantTasks : '+99'}</Text>
+                            <Text style={{color: Colors[theme].softGrey, fontWeight: 'bold'}}>{importantTasks <= 99 ? importantTasks : '+99'}</Text>
                         </View>
                     )}
                     {totalTasks !== undefined && totalTasks !== 0 && (

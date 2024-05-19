@@ -1,13 +1,17 @@
 import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, ScrollView, useColorScheme } from "react-native"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styles from '../../screens/tasks/actionScreen.styles'
 
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 function MoveTaskModal(props) {
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     const Title = () => {
         return (
@@ -66,13 +70,13 @@ function MoveTaskModal(props) {
                     <ScrollView>
                         <View>
                             <View style={styles.moveContainer}>
-                                <View style={styles.moveStyle}>
+                                <View style={[styles.moveStyle, {backgroundColor: Colors[theme].themeColor,}]}>
                                     <TouchableOpacity onPress={() => {
                                         onAcceptFunction("2");
                                     }}>
                                         <View style={styles.textContainer}>
                                             <FontAwesome5 name="bolt" size={20} color={'#ffd700'} style={{ width: '15%' }} />
-                                            <Text style={styles.moveTextStyle}>Cuanto Antes</Text>
+                                            <Text style={{fontSize: 17, color: Colors[theme].white}}>Cuanto Antes</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => {
@@ -80,7 +84,7 @@ function MoveTaskModal(props) {
                                     }}>
                                         <View style={styles.textContainer}>
                                             <Ionicons name="calendar-outline" size={20} color={'#008080'} style={{ width: '15%' }} />
-                                            <Text style={styles.moveTextStyle}>Programada</Text>
+                                            <Text style={{fontSize: 17, color: Colors[theme].white}}>Programada</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => {
@@ -88,7 +92,7 @@ function MoveTaskModal(props) {
                                     }}>
                                         <View style={styles.textContainer}>
                                             <Entypo name="archive" size={20} color="#d2b48c" style={{ width: '15%' }} />
-                                            <Text style={styles.moveTextStyle}>Archivadas</Text>
+                                            <Text style={{fontSize: 17, color: Colors[theme].white}}>Archivadas</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => {
@@ -96,7 +100,7 @@ function MoveTaskModal(props) {
                                     }}>
                                         <View style={styles.textContainer}>
                                             <FontAwesome5 name="inbox" size={20} color="#f39f18" style={{ width: '15%' }} />
-                                            <Text style={styles.moveTextStyle}>Inbox</Text>
+                                            <Text style={{fontSize: 17, color: Colors[theme].white}}>Inbox</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>

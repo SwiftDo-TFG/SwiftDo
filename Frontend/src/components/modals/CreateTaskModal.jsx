@@ -1,7 +1,7 @@
 import PopUpModal from "./PopUpModal"
 import { View, TextInput, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, ScrollView, useColorScheme } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import DatePickerModal from "./DatePickerModal";
 import SelectStateModal from "./SelectStateModal"
@@ -12,6 +12,7 @@ import TaskStates from "../../utils/enums/taskStates"
 import projectService from "../../services/project/projectService";
 import ContextBadge from "../common/ContextBadge";
 import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function CreateTaskModal(props) {
@@ -34,7 +35,10 @@ function CreateTaskModal(props) {
     const [showTagSelector, setShowTagSelector] = useState(false)
     const [colorIndex, setcolorIndex] = useState(0)
 
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
 
     async function openModalInProject() {
         if (!state.project) {
@@ -121,7 +125,13 @@ function CreateTaskModal(props) {
         }
 
         const handleSelectState = (stateAux) => {
-            setState({ ...state, state: stateAux });
+            if(stateAux === "3"){
+                const auxFecha = new Date();
+                const fecha = `${auxFecha.getFullYear()}/${(auxFecha.getMonth() + 1).toString().padStart(2, '0')}/${auxFecha.getDate().toString().padStart(2, '0')} ${"23".padStart(2, '0')}:${"59".padStart(2, '0')}`
+                setState({ ...state, state: stateAux , date_name: fecha});
+            }else{
+                setState({ ...state, state: stateAux });
+            }
             setShowStatusSelector(false);
         }
 
@@ -174,13 +184,17 @@ function CreateTaskModal(props) {
 
 
         const ProjectBadgeSelectable = ({ project }) => {
+            //Theme
+            const themeContext = useContext(ThemeContext);
+            // const theme = useColorScheme();
+            const theme = themeContext.theme;
             return (
                 <TouchableOpacity onPress={() => {
                     const newState = { ...state, project_id: null }
                     setState(newState)
                 }}>
-                    <View style={[styles.selectionProjectPanel, {borderColor: project.color}]}>
-                        <Text style={{ color: theme === 'light' ? '#272c34': Colors[theme].white, fontWeight: 600 }}>
+                    <View style={[styles.selectionProjectPanel, { borderColor: project.color, backgroundColor: Colors[theme].themeColor }]}>
+                        <Text style={{ color: theme === 'light' ? '#272c34' : Colors[theme].white, fontWeight: 600 }}>
                             <MaterialCommunityIcons name="circle-outline" size={14} color={project.color} /> {(project.title.length > 8 ? `${project.title.substring(0, 8)}...` : project.title)} <MaterialCommunityIcons name="close" size={14} color={project.color} />
                         </Text>
                     </View>
@@ -189,12 +203,16 @@ function CreateTaskModal(props) {
         }
 
         const SelectProjectPanel = () => {
+            //Theme
+            const themeContext = useContext(ThemeContext);
+            // const theme = useColorScheme();
+            const theme = themeContext.theme;
             return (
                 <TouchableOpacity onPress={() => {
                     setState({ ...state, editedTitle: title, editedDescription: description })
                     setShowAssProjectSelector(true)
                 }}>
-                    <View style={styles.selectionProjectPanel}>
+                    <View style={[styles.selectionProjectPanel, {backgroundColor: Colors[theme].themeColor}]}>
                         <Text style={{ color: 'lightgrey', fontWeight: 600 }}><MaterialCommunityIcons name="circle-outline" size={16} color='lightgrey' /> Proyecto</Text>
                     </View>
                 </TouchableOpacity>
@@ -206,7 +224,7 @@ function CreateTaskModal(props) {
                 {/* Title */}
                 <View style={{ alignItems: 'flex-start', marginLeft: 20, marginRight: 8, height: '20%' }}>
                     <TextInput
-                        style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
+                        style={{ color: theme === 'light' ? '#182E44' : Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
                         placeholder="Nueva Tarea"
                         placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
@@ -222,7 +240,7 @@ function CreateTaskModal(props) {
                         <View style={styles.editStyle}>
                             <View style={{ height: '60%', width: '100%', flexDirection: 'column' }}>
                                 <TextInput
-                                    style={styles.textInput}
+                                    style={[styles.textInput, { color: theme === 'light' ? '#182E44' : Colors[theme].white }]}
                                     value={description}
                                     placeholder="Descripcion..."
                                     placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
@@ -263,13 +281,13 @@ function CreateTaskModal(props) {
                                                 <FontAwesome5 name="user" size={22} color="#a0a0a0" />
                                             )}
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
+                                        {/* <TouchableOpacity onPress={() => {
 
                                         }}>
                                             <Text>
                                                 <MaterialCommunityIcons name="file-document-outline" size={23} color="#a0a0a0" />
                                             </Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                         <TouchableOpacity onPress={toggleImportant}>
                                             <Text>
                                                 {state.isImportant ? (

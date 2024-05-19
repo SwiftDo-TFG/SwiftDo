@@ -1,5 +1,6 @@
 import authService from "./auth"
 import tokenStorage from "./token_store/storage"
+import configStorage from "../configStorage/configStorage";
 
 let authtoken = null;
 
@@ -33,4 +34,15 @@ const parseError = function (error){
     return { error: {status: error.response ? error.response.status : 'timeout'}}
 }
 
-export default { setAuthHeaders, clearToken, parseError }
+async function getSelectedApiConfig(){
+    const apiConfig = await configStorage.getUserConfig();
+    console.log("THIS IS CONFIG API", apiConfig)
+
+    if(apiConfig && apiConfig.servers){
+        const selectedApi = apiConfig.servers.selected;
+        return apiConfig.servers.list[selectedApi];
+    }
+    return null;
+}
+
+export default { setAuthHeaders, clearToken, getSelectedApiConfig, parseError}

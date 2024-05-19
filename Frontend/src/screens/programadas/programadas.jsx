@@ -21,6 +21,7 @@ import FilterContext from "../../services/filters/FilterContext";
 import ContextBadge from "../../components/common/ContextBadge";
 import CalendarStrip from 'react-native-calendar-strip';
 import SettingsModal from "../../components/modals/settings/SettingsModal";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const ProgramadasScreen = (props) => {
@@ -43,7 +44,9 @@ const ProgramadasScreen = (props) => {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
 
-    const theme = useColorScheme();
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
     const marked = useRef(utils.getMarkedDates(tasks));
     const [showCalendar, setShowCalendar] = useState(true);
@@ -180,9 +183,10 @@ const ProgramadasScreen = (props) => {
 
     const updateTask = async (updatedTask) => {
         console.log(updatedTask)
-        for (let tag of updatedTask.tags) {
-            await tagService.createTag(tag);
-            await taskService.addTag(updatedTask.task_id, tag)
+        if (updatedTask.tags) {
+            for (let tag of updatedTask.tags) {
+                await taskService.addTag(updatedTask.task_id, tag)
+            }
         }
         const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
         console.log("ID: ", updatedTaskResult)
@@ -417,6 +421,7 @@ const ProgramadasScreen = (props) => {
                                 <View style={item.index === 0 ? styles.taskContainerFirst : styles.taskContainer}>
                                     <SelectableTask
                                         navigation={props.navigation}
+                                        route={props.route}
                                         task={item.item} selectedTasks={selectedTasks}
                                         showEditPopUp={showEditPopUp}
                                         showMovePopUp={showMovePopUp}
@@ -547,7 +552,7 @@ const ProgramadasScreen = (props) => {
                         {/* <TouchableOpacity style={stylesAction.area} onPress={() => setShowCalendar(!showCalendar)}>
                             <Text style={{ color: Colors[theme].white }}>Toggle calendar</Text>
                         </TouchableOpacity> */}
-                        
+
                     </View>
                     <TasksCalendar />
                 </CalendarProvider>

@@ -1,11 +1,18 @@
-import { Modal, View, Text, TouchableWithoutFeedback, TouchableOpacity, ScrollView } from "react-native";
+import { Modal, View, Text, TouchableWithoutFeedback, TouchableOpacity, ScrollView, Platform, useWindowDimensions } from "react-native";
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import projectService from "../../services/project/projectService";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Colors from "../../styles/colors";
+import ThemeContext from "../../services/theme/ThemeContext";
+
 
 
 const AssignToProjectModal = (props) => {
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
 
     const [projects, setProjects] = useState([]);
 
@@ -30,6 +37,7 @@ const AssignToProjectModal = (props) => {
     }
 
     const ProjectsSelection = () => {
+
         return (
             <View>
                 {projects.map(pro => {
@@ -37,7 +45,7 @@ const AssignToProjectModal = (props) => {
                         <TouchableOpacity key={pro.project_id} onPress={() => props.handleSelectProject(pro.project_id, pro)}>
                             <View style={styles.textContainer}>
                                 <MaterialCommunityIcons style={{ width: '15%' }} name="circle-slice-8" size={26} color={pro.color} />
-                                <Text style={styles.defaultTextModal}>{pro.title}</Text>
+                                <Text style={{fontSize: 17,color: Colors[theme].white}}>{pro.title}</Text>
                             </View>
                         </TouchableOpacity>
                     )
@@ -53,9 +61,9 @@ const AssignToProjectModal = (props) => {
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showAssProjectSelector: false })}
         >
-            <View style={styles.stateModalContainer}>
+            <View style={[styles.stateModalContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',}]}>
                     <ScrollView>
                         <ProjectsSelection />
                     </ScrollView>

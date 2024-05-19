@@ -1,15 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { TouchableOpacity, View, Platform, useColorScheme  } from "react-native"
 import { addButtonStyle } from "../../styles/globalStyles"
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
+import ThemeContext from "../../services/theme/ThemeContext";
 
 const AddButton = ({onPress, onLongPress}) => {
     const [isPressed, setIsPressed] = useState(false)
     const drawerStatus = useDrawerStatus();
     const timerRef = useRef(null);
-    
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const addButton = addButtonStyle(theme);
 
     const activePress = () => {
@@ -54,7 +57,7 @@ const AddButton = ({onPress, onLongPress}) => {
                 })}]}>
                 <View style={addButton.iconContainer}>
                     <FontAwesome5 name={'plus'} size={20} color="white" />
-                    {drawerStatus === 'open' && <FontAwesome5 name="question" size={10} color="white" style={addButton.questionIcon} />}
+                    {/* {drawerStatus === 'open' && <FontAwesome5 name="question" size={10} color="white" style={addButton.questionIcon} />} */}
                 </View>
         </TouchableOpacity>
     )

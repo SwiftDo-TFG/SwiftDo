@@ -9,6 +9,7 @@ import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import Colors from "../../styles/colors";
 import deviceStorage from "../../offline/deviceStorage";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 function Project(props) {
@@ -21,7 +22,9 @@ function Project(props) {
     //Modal states
     const [editingProject, setEditingProject] = React.useState({});
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-    const theme = useColorScheme();
+    const themeContext = React.useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const actStyle = actStyles(theme);
 
     console.log("props de project***", props)

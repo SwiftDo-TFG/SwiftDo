@@ -1,16 +1,22 @@
-import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme } from "react-native"
+import { Modal, View, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView, useColorScheme, Platform, useWindowDimensions } from "react-native"
 import styles from '../../screens/tasks/actionScreen.styles'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { contextModalStyles } from '../../styles/globalStyles'
 import contextService from "../../services/context/contextService";
 import Colors from "../../styles/colors";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const SelectContextModal = (props) => {
 
     const [context, setContext] = useState([]);
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    const dimensions = useWindowDimensions();
+
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
     const contextModal = contextModalStyles(theme);
     useEffect(() => {
         async function fetchProjects() {
@@ -39,14 +45,14 @@ const SelectContextModal = (props) => {
             visible={props.modalVisible}
             onRequestClose={() => props.setState({ ...props.state, showContextSelector: false })}
         >
-            <View style={styles.stateModalContainer}>
+            <View style={[styles.stateModalContainer, {backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
                 <OutSide isModalOpen={props.modalVisible} onCloseModal={props.onCloseModal} />
-                <View style={styles.modalStyle}>
+                <View style={[styles.modalStyle, {backgroundColor: theme === 'light' ? 'white' : 'black', borderColor: theme === 'dark' ? Colors[theme].white : '', borderWidth: theme === 'dark' ? 0.5 : 0, width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',}]}>
                     <ScrollView>
                         {Object.keys(context).map((key, index) => (
                             <TouchableOpacity key={context[key].context_id} onPress={() => props.handleContextAction(context[key].context_id, context[key].name)}>
                                 <View key={index} style={contextModal.context}>
-                                <Text style={styles.contextTextModal}>
+                                <Text style={{fontSize: 16, marginLeft: 15, color: Colors[theme].white}}>
                                     <MaterialCommunityIcons name="home-city-outline" size={16} color={theme === 'light' ? '#272c34': Colors[theme].white} /> {context[key].name}
                                 </Text>
                                 {/* <AntDesign name="caretdown" size={16} color="#272c34" /> */}

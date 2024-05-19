@@ -33,7 +33,8 @@ router.get('/', async(req, res) => {
 router.delete('/:id', async (req, res)=>{//delete
     try{
         const id = req.params.id;
-        const t = contextService.deleteContext(id);
+        const user_id = res.locals.oauth.token.user.id;
+        const t = contextService.deleteContext(id, user_id);
         res.send(t);
     }catch(err){
         console.log('[Exception]:',err.message)

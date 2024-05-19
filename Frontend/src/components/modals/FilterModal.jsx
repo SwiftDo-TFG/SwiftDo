@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity, SafeAreaView } from "react-native"
+import { Animated, View, TouchableWithoutFeedback, Modal, Dimensions, Text, useColorScheme, TouchableOpacity, SafeAreaView, Platform, useWindowDimensions } from "react-native"
 import { AntDesign } from '@expo/vector-icons';
 import { filterModal } from "../../styles/globalStyles";
 import Colors from "../../styles/colors";
@@ -7,6 +7,7 @@ import contextService from '../../services/context/contextService';
 import projectService from '../../services/project/projectService';
 import tagService from "../../services/tag/tagService";
 import FilterContext from "../../services/filters/FilterContext";
+import ThemeContext from "../../services/theme/ThemeContext";
 
 
 const dvHeight = Dimensions.get('window').height;
@@ -29,7 +30,11 @@ function FilterModal(props) {
     const [selectedProjects, setSelectedProjects] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
 
-    const theme = useColorScheme();
+    //Theme
+    const themeContext = useContext(ThemeContext);
+    // const theme = useColorScheme();
+    const theme = themeContext.theme;
+    const dimensions = useWindowDimensions();
     const filterStyle = filterModal(theme);
     const filterContext = useContext(FilterContext);
 
@@ -53,7 +58,7 @@ function FilterModal(props) {
         getTags()
         console.log("ESTO ESTA CUANDO ABRRES FILTER MODAL", selectedProjects)
 
-        if(filterContext.isFiltered){
+        if (filterContext.isFiltered) {
             setSelectedContexts([...selectedContexts, filterContext.context_id])
         }
 
@@ -189,143 +194,158 @@ function FilterModal(props) {
         props.setIsModalOpen(false);
     }
 
+    function OutSide({ onCloseModal, isModalOpen, width }) {
+        const view = <View style={{ flex: 1, width: '100%' }} />;
+        if (!isModalOpen) return view;
+        return (
+            <TouchableWithoutFeedback onPress={() => { onCloseModal() }} style={{ flex: 1, width: width }}>
+                {view}
+            </TouchableWithoutFeedback>
+        );
+    }
+
     return (
-       
+
 
         <Modal {...props} animationType={'fade'} transparent={true} visible={props.isModalOpen} onCloseModal={onCloseModal} >
-             <SafeAreaView>
-                <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', height: '100%' }}>
-                <Animated.View
-                    style={{
-                        transform: [{ translateY }],
-                        backgroundColor: Colors[theme].themeColor,
-                        width: '100%',
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        paddingHorizontal: 18,
-                        paddingTop: 20,
-                        maxHeight: dvHeight,
-                        minHeight: dvHeight,
-                        height: '100%'
-                    }}
-                >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: 7, marginBottom: 10, height: '5%' }}>
-                        <Text style={{ fontSize: 26, fontWeight: 'bold', color: Colors[theme].white }}>Filtros</Text>
-                        <TouchableOpacity onPress={onCloseModal}>
-                            <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ height: '80%' }}>
-                        <TouchableOpacity onPress={() => toggleArea()}>
-                            <View style={filterStyle.filterContainer}>
-                                <Text style={[filterStyle.filterText, { color: (!mostrarAreas) ? Colors[theme].white : Colors[theme].orange }]}>Contextos</Text>
-                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationArea) }] }}>
-                                    <AntDesign name="caretright" size={22} color={(!mostrarAreas) ? Colors[theme].white : Colors[theme].orange} />
+            <SafeAreaView>
+                <View style={{ flex: 1, backgroundColor: theme === 'dark' ? 'rgba(54, 49, 53, 0.5)' : 'rgba(0, 0, 0, 0.5)', height: '100%', flexDirection: 'row' }}>
+                    {Platform.OS === 'web' && dimensions.width >= 768 && (
+                        <OutSide onCloseModal={onCloseModal} isModalOpen={props.isModalOpen} width={'60%'}/>
+                    )}
+                    <Animated.View
+                        style={{
+                            transform: [{ translateY }],
+                            backgroundColor: Colors[theme].themeColor,
+                            width: (Platform.OS === 'web' && dimensions.width >= 768) ? '40%' : '100%',
+                            borderColor: theme === 'dark' ? Colors[theme].white : '',
+                            borderTopLeftRadius: (Platform.OS === 'web' && dimensions.width >= 768) ? 0 : 20,
+                            borderTopRightRadius: (Platform.OS === 'web' && dimensions.width >= 768) ? 0 : 20,
+                            borderLeftWidth: (Platform.OS === 'web' && theme === 'dark' && dimensions.width >= 768) ? 0.5 : 0,
+                            paddingHorizontal: 18,
+                            paddingTop: 20,
+                            maxHeight: dvHeight,
+                            minHeight: dvHeight,
+                            height: '100%'
+                        }}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: 7, marginBottom: 10, height: '5%' }}>
+                            <Text style={{ fontSize: 26, fontWeight: 'bold', color: Colors[theme].white }}>Filtros</Text>
+                            <TouchableOpacity onPress={onCloseModal}>
+                                <AntDesign name="closecircle" size={24} color={Colors[theme].softGrey} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ height: '80%' }}>
+                            <TouchableOpacity onPress={() => toggleArea()}>
+                                <View style={filterStyle.filterContainer}>
+                                    <Text style={[filterStyle.filterText, { color: (!mostrarAreas) ? Colors[theme].white : Colors[theme].orange }]}>Contextos</Text>
+                                    <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationArea) }] }}>
+                                        <AntDesign name="caretright" size={22} color={(!mostrarAreas) ? Colors[theme].white : Colors[theme].orange} />
+                                    </Animated.View>
+                                </View>
+                            </TouchableOpacity>
+                            {mostrarAreas && (
+                                <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightArea }]}>
+                                    {Object.keys(contexts).map((key, index) => (
+                                        <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%' }, selectedContexts.includes(contexts[key].context_id) && filterStyle.selectedTag]}>
+                                            <TouchableOpacity onPress={() => {
+                                                handleContextSelection(contexts[key])
+                                            }}>
+                                                <Text style={{ paddingBottom: 3, color: Colors[theme].white }}>{contexts[key].name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
                                 </Animated.View>
-                            </View>
-                        </TouchableOpacity>
-                        {mostrarAreas && (
-                            <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightArea }]}>
-                                {Object.keys(contexts).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%' }, selectedContexts.includes(contexts[key].context_id) && filterStyle.selectedTag]}>
-                                        <TouchableOpacity onPress={() => {
-                                            handleContextSelection(contexts[key])
-                                        }}>
-                                            <Text style={{ paddingBottom: 3 , color: Colors[theme].white}}>{contexts[key].name}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ))}
-                            </Animated.View>
-                        )}
-                        <View style={filterStyle.separator} />
-                        <TouchableOpacity onPress={() => toggleProject()}>
-                            <View style={filterStyle.filterContainer}>
-                                {/* {selectedProjects.length > 0 ? '(' +selectedProjects.length + ')' : ''} */}
-                                <Text style={[filterStyle.filterText, { color: (!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange }]}>Proyectos</Text>
-                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationProject) }] }}>
-                                    <AntDesign name="caretright" size={22} color={(!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange} />
+                            )}
+                            <View style={filterStyle.separator} />
+                            <TouchableOpacity onPress={() => toggleProject()}>
+                                <View style={filterStyle.filterContainer}>
+                                    {/* {selectedProjects.length > 0 ? '(' +selectedProjects.length + ')' : ''} */}
+                                    <Text style={[filterStyle.filterText, { color: (!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange }]}>Proyectos</Text>
+                                    <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationProject) }] }}>
+                                        <AntDesign name="caretright" size={22} color={(!mostrarProyectos) ? Colors[theme].white : Colors[theme].orange} />
+                                    </Animated.View>
+                                </View>
+                            </TouchableOpacity>
+                            {mostrarProyectos && (
+                                <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightProject }]}>
+                                    {Object.keys(projects).map((key, index) => (
+                                        <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key].project_id) && filterStyle.selectedTag]}>
+                                            <TouchableOpacity onPress={() => { handleProjectSelection(projects[key]) }}>
+                                                <Text style={{ paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
                                 </Animated.View>
-                            </View>
-                        </TouchableOpacity>
-                        {mostrarProyectos && (
-                            <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightProject }]}>
-                                {Object.keys(projects).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { flexBasis: '32.5%', borderColor: (theme === 'light') ? projects[key].color : '#e3e4e5', backgroundColor: (theme === 'dark') ? projects[key].color : null }, selectedProjects.includes(projects[key].project_id) && filterStyle.selectedTag]}>
-                                        <TouchableOpacity onPress={() => { handleProjectSelection(projects[key]) }}>
-                                            <Text style={{ paddingBottom: 3, color: (theme === 'light') ? projects[key].color : 'white' }}>{(projects[key].title.length > 13) ? `${projects[key].title.substring(0, 10)}...` : projects[key].title}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ))}
-                            </Animated.View>
-                        )}
-                        <View style={filterStyle.separator} />
-                        <TouchableOpacity onPress={() => toggleTags()}>
-                            <View style={filterStyle.filterContainer}>
-                                <Text style={[filterStyle.filterText, { color: (!mostrarTags) ? Colors[theme].white : Colors[theme].orange }]}>Etiquetas</Text>
-                                <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationTags) }] }}>
-                                    <AntDesign name="caretright" size={22} color={(!mostrarTags) ? Colors[theme].white : Colors[theme].orange} />
+                            )}
+                            <View style={filterStyle.separator} />
+                            <TouchableOpacity onPress={() => toggleTags()}>
+                                <View style={filterStyle.filterContainer}>
+                                    <Text style={[filterStyle.filterText, { color: (!mostrarTags) ? Colors[theme].white : Colors[theme].orange }]}>Etiquetas</Text>
+                                    <Animated.View style={{ transform: [{ rotate: rotateIcon(iconRotationTags) }] }}>
+                                        <AntDesign name="caretright" size={22} color={(!mostrarTags) ? Colors[theme].white : Colors[theme].orange} />
+                                    </Animated.View>
+                                </View>
+                            </TouchableOpacity>
+                            {mostrarTags && (
+                                <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightTags }]}>
+                                    {Object.keys(tags).map((key, index) => (
+                                        <View key={index} style={[filterStyle.tags, { backgroundColor: tags[key].colour, flexBasis: '24%' }, selectedTags.includes(tags[key].name) && filterStyle.selectedTag]}>
+                                            <TouchableOpacity onPress={() => { handleTagsSelection(tags[key]) }}>
+                                                <Text style={{ paddingBottom: 3, color: 'white' }}>{tags[key].name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
                                 </Animated.View>
-                            </View>
-                        </TouchableOpacity>
-                        {mostrarTags && (
-                            <Animated.View style={[filterStyle.sectionContainer, { height: animatedHeightTags }]}>
-                                {Object.keys(tags).map((key, index) => (
-                                    <View key={index} style={[filterStyle.tags, { backgroundColor: tags[key].colour, flexBasis: '24%' }, selectedTags.includes(tags[key].name) && filterStyle.selectedTag]}>
-                                        <TouchableOpacity onPress={() => { handleTagsSelection(tags[key]) }}>
-                                            <Text style={{ paddingBottom: 3, color: 'white' }}>{tags[key].name}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ))}
-                            </Animated.View>
-                        )}
-                        <View style={filterStyle.separator} />
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
-                        <TouchableOpacity onPress={() => {
-                            const newContexts = [];
+                            )}
+                            <View style={filterStyle.separator} />
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 'auto', alignItems: 'flex-end', paddingBottom: 15 }}>
+                            <TouchableOpacity onPress={() => {
+                                const newContexts = [];
 
-                            if(filterContext.isFiltered){
-                                newContexts.push(filterContext.context_id);
-                            }
-                            
-                            setSelectedContexts(newContexts)
-                            setSelectedProjects([])
-                            setSelectedTags([])
-                            props.onAccept();
-                            onCloseModal()
-                        }}>
-                            <View style={filterStyle.button}>
-                                <Text style={{ color: '#b4b6b9' }}>Limpiar filtros</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            const newFilter = {...props.filerState};
+                                if (filterContext.isFiltered) {
+                                    newContexts.push(filterContext.context_id);
+                                }
 
-                            if(selectedProjects.length !== 0){
-                                newFilter.project_id = selectedProjects
-                            }
+                                setSelectedContexts(newContexts)
+                                setSelectedProjects([])
+                                setSelectedTags([])
+                                props.onAccept();
+                                onCloseModal()
+                            }}>
+                                <View style={filterStyle.button}>
+                                    <Text style={{ color: '#b4b6b9' }}>Limpiar filtros</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                const newFilter = { ...props.filerState };
 
-                            if(selectedContexts.length !== 0){
-                                newFilter.context_id = selectedContexts
-                            }
+                                if (selectedProjects.length !== 0) {
+                                    newFilter.project_id = selectedProjects
+                                }
 
-                            if(selectedTags.length !== 0){
-                                newFilter.tags = selectedTags
-                            }
+                                if (selectedContexts.length !== 0) {
+                                    newFilter.context_id = selectedContexts
+                                }
 
-                            props.onAccept(newFilter);
-                            onCloseModal()
-                        }}>
-                            <View style={[filterStyle.button, { backgroundColor: Colors[theme].orange }]}>
-                                <Text style={{ color: 'white', fontWeight: 'bold' }}>Aplicar filtros</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </Animated.View>
-            </View>
+                                if (selectedTags.length !== 0) {
+                                    newFilter.tags = selectedTags
+                                }
+
+                                props.onAccept(newFilter);
+                                onCloseModal()
+                            }}>
+                                <View style={[filterStyle.button, { backgroundColor: Colors[theme].orange }]}>
+                                    <Text style={{ color: 'white', fontWeight: 'bold' }}>Aplicar filtros</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </Animated.View>
+                </View>
             </SafeAreaView>
         </Modal>
-        
+
     )
 }
 
