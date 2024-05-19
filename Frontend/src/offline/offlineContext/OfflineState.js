@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import OfflineContext from "./OfflineContext";
+import deviceStorage from "../deviceStorage";
 
 const OfflineState = props =>{
 
@@ -9,27 +10,68 @@ const OfflineState = props =>{
 
                 case 'SET_OFFLINEMODE':
                     return {
+                        ...prevState,
                         isOffline: true,
                     };
-                // case 'CLEAR_FILTER':
-                //     return {
-                //         context_id: null,
-                //         context_name: null,
-                //         isFiltered: false
-                //     };
+
+                case 'ADD_TASKS_TO_QUEUE':
+                    return {
+                        ...prevState,
+                        createTaskQueue: action.newtasksqueue
+                    };
+                case 'SET_TASKS_QUEUE':
+                    return {
+                        ...prevState,
+                        createTaskQueue: action.tasksqueue
+                    };
+
+                case 'UPDATE_CATCHED_CONTENT':
+                    return {
+                        ...prevState,
+                        catchedContent: action.newCatchedContent
+                    };
             }
         },
         {
             isOffline: false,
+            createTaskQueue: [],
+            catchedContent: {}
         }
     );
-
+    
     const offlineModeFunctions = React.useMemo(
         () => ({
             setOfflineMode: ()=> {
-                console.log("PASAMOS A MODO OFFLINE")
-
                 dispatch({ type: 'SET_OFFLINEMODE'})
+            },
+            addTaskToQueue: (task)=> {
+                const queue = state.createTaskQueue;
+
+                queue.append(task);
+
+                dispatch({ type: 'ADD_TASKS_TO_QUEUE', newtasksqueue: queue})
+            },
+            updateCatchedContext: (key, value, project_id) => {
+                const newCatched = state.catchedContent;
+                if(!project_id){
+                    newCatched[key] = value;
+                }else{
+                    newCatched.projects[project_id].tasks = value;
+                }
+                console.log("CALLING UPDATE CONTENT", newCatched)
+                dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
+            },
+            setInitialCatchedContext: async () =>{
+                const data = await deviceStorage.getCatchedData();
+                
+                if(data != null){
+                    console.log("THIS IS THE DATA STORAGED", data)
+                    dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
+                }
+            },
+            storeCatchedIndevice: async () =>{
+                console.log("WE ARE STORING THISSS", state.catchedContent)
+                await deviceStorage.storeCatchedData(state.catchedContent);
             }
         }),
         []
@@ -39,7 +81,12 @@ const OfflineState = props =>{
         <OfflineContext.Provider
             value={{
                 setOfflineMode: offlineModeFunctions.setOfflineMode,
-                isOffline: state.isOffline,
+                addTaskToQueue: offlineModeFunctions.addTaskToQueue,
+                updateCatchedContext: offlineModeFunctions.updateCatchedContext,
+                setInitialCatchedContext: offlineModeFunctions.setInitialCatchedContext,
+                storeCatchedIndevice: offlineModeFunctions.storeCatchedIndevice,
+                catchedContent: state.catchedContent,
+                isOffline: state.isOffline
             }}
         >
             {props.children}

@@ -18,6 +18,7 @@ import deviceStorage from '../../offline/deviceStorage';
 import { useContext } from 'react';
 import ThemeContext from '../../services/theme/ThemeContext';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
+import OfflineContext from '../../offline/offlineContext/OfflineContext';
 
 
 const today = new Date();
@@ -46,6 +47,9 @@ export default ({ navigation }) => {
     const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
 
+    const offlineContext = useContext(OfflineContext);
+
+
 
     if (dimensions.width >= 768 && !isDrawerOpen) {
         navigation.openDrawer();
@@ -63,6 +67,7 @@ export default ({ navigation }) => {
                 setDataInSidebar(userAndTasks)
                 deviceStorage.storeSidebarData(userAndTasks);
             }
+            offlineContext.storeCatchedIndevice();
         }
 
         const setDataInSidebar = (userAndTasks) => {

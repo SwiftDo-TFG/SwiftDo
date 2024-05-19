@@ -3,15 +3,19 @@ import projectService from '../../services/project/projectService';
 
 import AuthContext from '../../services/auth/context/authContext';
 import AppNavigator from './AppNavigator';
-
+import { AppState } from 'react-native';
+import OfflineContext from '../../offline/offlineContext/OfflineContext';
+import deviceStorage from '../../offline/deviceStorage';
 
 
 export default function Router(theme) {
 
     const state = React.useContext(AuthContext);
-    
+    const offlineContext = React.useContext(OfflineContext);
+
     const [projects, setProjects] = React.useState([])
     console.log("THIS IS THE AUTH STATE", state, state.userToken != null)
+
     React.useEffect(() => {
         // Fetch the token from storage then navigate to our appropriate place
         const bootstrapAsync = async () => {
@@ -32,6 +36,7 @@ export default function Router(theme) {
           if(isConfig){
             state.checkSession();
           }
+          await offlineContext.setInitialCatchedContext();
         };
         bootstrapAsync();
     

@@ -5,6 +5,16 @@ async function storeActionScreenData(action, data){
     await storeData(action, data);
 }
 
+async function storeCatchedData(catchedData){
+    await storeData("offlineData", catchedData);
+}
+
+async function getCatchedData (){
+    const data = await AsyncStorage.getItem("offlineData");
+
+    return data != null ? JSON.parse(data) : null;
+}
+
 //Hacerlo para cada usuario
 async function getActionScreenData(action){
     const data = await AsyncStorage.getItem(action);
@@ -53,4 +63,4 @@ async function getProjectTasks(project_id){
     return data != null ? JSON.parse(data) : null;
 }
 
-export default{storeActionScreenData, getActionScreenData, storeSidebarData, getSidebarData, storeProjectData, getProjectData, storeProjectTasks, getProjectTasks}
+export default{storeActionScreenData, getActionScreenData, storeSidebarData, getSidebarData, storeProjectData, getProjectData, storeProjectTasks, getProjectTasks, storeCatchedData, getCatchedData}

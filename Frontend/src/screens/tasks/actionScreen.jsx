@@ -41,7 +41,7 @@ function ActionScreen(props) {
 
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const authState = useContext(AuthContext);
-  
+
   //Theme
   const themeContext = useContext(ThemeContext)
   const theme = themeContext.theme;
@@ -112,30 +112,29 @@ function ActionScreen(props) {
       } else if (tasksDB.error.status === 'timeout') {
         console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION", tasksDB.error.status)
         //AQUI RECARGAMOS CON LO QUE HAY OFFLINE SI HAY
+        if(tasks.length !== 0){
+          await storeDataInDevice(tasksDB)
+        }
         offlineContext.setOfflineMode();
         let offLineTasks;
-        if(props.state === 5){
+        if (props.state === 5) {
           //Es de proyecto
-          
           offLineTasks = await deviceStorage.getProjectTasks(props.project_id);
           console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION Y ES UN PROYECTO", props.state, props.project_id, offLineTasks)
-        }else{
-          offLineTasks = await deviceStorage.getActionScreenData(props.state);
+        } else {
+          // offLineTasks = await deviceStorage.getActionScreenData(props.state);
+          offLineTasks = offlineContext.catchedContent[props.state];
+          console.log("THIS ARE THE OFFLINE TASKSS", offLineTasks, offlineContext.catchedContent)
         }
-        if(offLineTasks){
+        if (offLineTasks) {
           setDataInScreen(offLineTasks)
         }
       }
     } else {
       console.log("Estas son las tareas que se devuelven", tasksDB)
       setDataInScreen(tasksDB)
-      if(tasksDB.length > 0){
-        if(props.state === 5){
-          //ES de proyecto
-          deviceStorage.storeProjectTasks(props.project_id, tasksDB);
-        }else{
-          deviceStorage.storeActionScreenData(props.state, tasksDB);
-        }
+      if (tasksDB.length > 0) {
+        storeDataInDevice(tasksDB)
       }
     }
 
@@ -154,6 +153,18 @@ function ActionScreen(props) {
     setDataLoaded(true)
   }
 
+  const storeDataInDevice = async (tasks) => {
+    if (props.state === 5) {
+      //ES de proyecto
+      // deviceStorage.storeProjectTasks(props.project_id, tasks);
+      offlineContext.updateCatchedContext(props.state, tasks, props.project_id);
+    } else {
+      // deviceStorage.storeActionScreenData(props.state, tasks);
+      offlineContext.updateCatchedContext(props.state, tasks);
+    }
+  }
+
+
   const reloadData = () => {
     setDataLoaded(false)
     fetchData()
@@ -167,19 +178,23 @@ function ActionScreen(props) {
   const addTask = async (task) => {
     console.log("Nueva task", task)
     if (task.title.trim() !== "") {
-      const newTask = await taskService.createTask(task);
-      if (newTask.task_id !== -1) {
-        task.task_id = newTask.task_id;
-        if (task.tags) {
-          for (let tag of task.tags) {
-            await taskService.addTag(task.task_id, tag)
+      if (!offlineContext.isOffline) {
+        const newTask = await taskService.createTask(task);
+        if (newTask.task_id !== -1) {
+          task.task_id = newTask.task_id;
+          if (task.tags) {
+            for (let tag of task.tags) {
+              await taskService.addTag(task.task_id, tag)
+            }
           }
+          // setTasks([...tasks, task]);
+          setIsCreateModalOpen(false);
+          reloadData();
+        } else {
+          console.error("Error al agregar tarea a la base de datos");
         }
-        // setTasks([...tasks, task]);
-        setIsCreateModalOpen(false);
-        reloadData();
       } else {
-        console.error("Error al agregar tarea a la base de datos");
+        offlineContext.addTaskToQueue(task);
       }
     }
   };
