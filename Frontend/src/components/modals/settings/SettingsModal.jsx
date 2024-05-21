@@ -65,28 +65,27 @@ const DatosPersonales = ({ navigation }) => {
     };
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('Sidebar');
-                    }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                    </TouchableOpacity>
-                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                        Datos personales
-                    </Text>
-                </View>
+            <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row', marginHorizontal: 20 }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Datos personales
+                </Text>
+            </View>
+
+            <View style={{ width: '100%', flex: 1, justifyContent: 'start', alignItems: 'center', marginTop: 20 }}>
                 <Image
-                    style={{ width: 65, height: 65, borderRadius: 15, marginBottom: 15 }}
+                    style={{ width: 100, height: 100, borderRadius: 15, marginBottom: 15 }}
                     source={require('../../../assets/icon.png')}
                 />
-            </View>
-            <View style={{ width: '100%', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <AuthTextInput
                     placeholder="User"
                     // value={user}
                     // onChangeText={setUser}
-                    addstyle={{ width: '70%' }}
+                    addstyle={{ width: '80%' }}
                     secureTextEntry
                     inputKey="user"
                     error={error}
@@ -96,7 +95,7 @@ const DatosPersonales = ({ navigation }) => {
                     placeholder="Email"
                     // value={email}
                     // onChangeText={setEmail}
-                    addstyle={{ width: '70%' }}
+                    addstyle={{ width: '80%' }}
                     inputKey="email"
                     error={error}
                     setError={setError}
@@ -318,7 +317,7 @@ const TareasCompletadas = ({ navigation }) => {
     return (
 
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row', marginTop: 20 }}>
                 <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
@@ -366,16 +365,37 @@ const AcercaGTD = ({ navigation }) => {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     return (
-        <View style={{ padding: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('Sidebar');
-            }}>
-                <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-            </TouchableOpacity>
-            <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                Acerca GTD
-            </Text>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center', padding: 20 }}>
+            <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('Sidebar');
+                }}>
+                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                </TouchableOpacity>
+                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                    Acerca GTD
+                </Text>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Image
+                    style={{ marginBottom: 15 }}
+                    source={require('../../../assets/GTD.png')}
+                />
+                    <Text style={{ color: Colors[theme].white }}>
+                        Getting Things Done o método GTD es un método de autogestión desarrollado por el consultor David Allen que consiste en registrar todas las tareas de la vida laboral y privada en listas. {'\n'}
+                        Como el usuario ya no tiene que realizar el esfuerzo de recordar estos asuntos, puede concentrarse más en la tarea que realmente está haciendo en cada momento, aumentando de esta manera 
+                        su productividad. {'\n'}
+                        GTD, asegura que cuanta más información intentes retener en tu memoria, menos productividad y concentración lograrás. {'\n'}
+                        En lugar de depender completamente de la capacidad de tu cerebro, la metodología GTD te anima a almacenar toda la información relacionada con tu trabajo en una fuente de referencias externa y organizada.
+                        De esa manera, siempre sabrás qué debes hacer a continuación, sin tener que preocuparte de que se te pase por alto algún detalle.
+                    </Text>
+                </View>
+            </ScrollView>
         </View>
+
     )
 }
 const Alexa = ({ navigation }) => {
@@ -572,7 +592,7 @@ const SettingsModal = (props) => {
                         <SettingsDrawer.Screen name="AdminTag" component={AdminTag} />
                         <SettingsDrawer.Screen name="TareasCompletadas" component={TareasCompletadas} />
                         <SettingsDrawer.Screen name="Alexa" component={Alexa} />
-                        {/* <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} /> */}
+                        <SettingsDrawer.Screen name="AcercaGTD" component={AcercaGTD} />
                         {/* {Platform.OS !== 'web' && (
                             <SettingsDrawer.Screen name="Tutorial" component={Tutorial} />
                         )} */}
