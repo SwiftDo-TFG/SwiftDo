@@ -10,37 +10,47 @@ import deviceStorage from '../../offline/deviceStorage';
 
 export default function Router(theme) {
 
-    const state = React.useContext(AuthContext);
-    const offlineContext = React.useContext(OfflineContext);
+  const state = React.useContext(AuthContext);
+  const offlineContext = React.useContext(OfflineContext);
 
-    const [projects, setProjects] = React.useState([])
-    console.log("THIS IS THE AUTH STATE", state, state.userToken != null)
+  const [projects, setProjects] = React.useState([])
+  console.log("THIS IS THE AUTH STATE", state, state.userToken != null)
 
-    React.useEffect(() => {
-        // Fetch the token from storage then navigate to our appropriate place
-        const bootstrapAsync = async () => {
-          let userToken;
-    
-          try {
-            // Restore token stored in `SecureStore` or any other encrypted storage
-            // userToken = await SecureStore.getItemAsync('userToken');
-          } catch (e) {
-            // Restoring token failed
-          }
-    
-          // After restoring token, we may need to validate it in production apps
-    
-          // This will switch to the App screen or Auth screen and this loading
-          // screen will be unmounted and thrown away.
-          const isConfig = await state.checkServerConfigured();
-          if(isConfig){
-            state.checkSession();
-          }
-          await offlineContext.setInitialCatchedContext();
-        };
-        bootstrapAsync();
-    
-    }, []);
+  React.useEffect(() => {
+    // Fetch the token from storage then navigate to our appropriate place
 
-    return ( <AppNavigator theme={theme} projects={projects} state={state}/> );
+    // const subscription = AppState.addEventListener('change', nextAppState => {
+    //   console.log('AppState', nextAppState);
+    //   if(nextAppState === 'background'){
+    //     offlineContext.storeCatchedIndevice(offlineContext.catchedContent);
+    //   }
+    // });
+
+    const bootstrapAsync = async () => {
+      let userToken;
+
+      try {
+        // Restore token stored in `SecureStore` or any other encrypted storage
+        // userToken = await SecureStore.getItemAsync('userToken');
+      } catch (e) {
+        // Restoring token failed
+      }
+
+      // After restoring token, we may need to validate it in production apps
+
+      // This will switch to the App screen or Auth screen and this loading
+      // screen will be unmounted and thrown away.
+      const isConfig = await state.checkServerConfigured();
+      if (isConfig) {
+        state.checkSession();
+      }
+      await offlineContext.setInitialCatchedContext();
+    };
+    bootstrapAsync();
+    // return () => {
+    //   subscription.remove();
+    // };
+  }, []);
+
+  return (<AppNavigator theme={theme} projects={projects} state={state} />);
 }

@@ -10,6 +10,7 @@ import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import Colors from "../../styles/colors";
 import deviceStorage from "../../offline/deviceStorage";
 import ThemeContext from "../../services/theme/ThemeContext";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 function Project(props) {
@@ -26,6 +27,10 @@ function Project(props) {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     const actStyle = actStyles(theme);
+
+    //offline mode
+    const offlineContext = React.useContext(OfflineContext);
+
 
     console.log("props de project***", props)
     React.useEffect(() => {
@@ -48,12 +53,33 @@ function Project(props) {
         const project = await projectService.showContent(props.route.params.project_id);
 
         if (project.error && project.error.status === 'timeout') {
-            const offlineData = await deviceStorage.getProjectData(props.route.params.project_id)
-            setDataInScreen(offlineData);
-        }else{
+            
+            // const offlineData = await deviceStorage.getProjectData(props.route.params.project_id)
+            if (projectData.project.title !== 0) {
+                // await storeDataInDevice(projectData.project)
+            }
+            offlineContext.setOfflineMode();
+            const offlineData = await getOfflineProjectData(props.route.params.project_id);
+            console.log("ERRRORR EN PROYECTOSSS", project.error, offlineData, props.route.params.project_id)
+            // console.log("THIS IS RETURNEDDDDD XLDSDSD", offlineData)
+            setDataInScreen({project: offlineData});
+        } else {
             setDataInScreen(project)
-            deviceStorage.storeProjectData(project.project.project_id, project)
+            if (project.project.title !== 0) {
+                await storeDataInDevice(project.project)
+            }
+            // deviceStorage.storeProjectData(project.project.project_id, project)
         }
+    }
+
+    const storeDataInDevice = async (project_data) => {
+        offlineContext.updateCatchedContextProjectData(project_data);
+    }
+
+    const getOfflineProjectData = async (project_id) => {
+        let offLineData = offlineContext.catchedContent;
+        console.log("getOfflineProjectData RETURNED", offLineData)
+        return offLineData.projects && offLineData.projects[project_id] ? offLineData.projects[project_id].project : { project: { project_id: project_id } }
     }
 
     const setDataInScreen = (project) => {
@@ -137,12 +163,12 @@ function Project(props) {
                         <TouchableOpacity onPress={handlePress}>
                             <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={projectData.project.color} />
                         </TouchableOpacity>
-                        <Text style={[actStyle.actionTitle, {color: Colors[theme].white}]}>{projectData.project.title}</Text>
+                        <Text style={[actStyle.actionTitle, { color: Colors[theme].white }]}>{projectData.project.title}</Text>
                         <TouchableOpacity onPress={() => showEditPopUp(projectData.project.project_id)}>
                             <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={[actStyle.description, {color: Colors[theme].white}]}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
+                    <Text style={[actStyle.description, { color: Colors[theme].white }]}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
                 </>}
             <CompleteTaskModal
                 title={completeModalTitle}

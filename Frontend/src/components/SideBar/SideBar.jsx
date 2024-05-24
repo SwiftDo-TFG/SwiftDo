@@ -56,19 +56,23 @@ export default ({ navigation }) => {
     }
 
     React.useEffect(() => {
-
+        console.log("THIS IS THE OFFLINE CONTEXTT", offlineContext.catchedContent)
         async function fetchData() {
             const userAndTasks = await taskService.getInfo();
             
             if (userAndTasks.error && userAndTasks.error.status === 'timeout') {
-                const offlineSidebar = await deviceStorage.getSidebarData();
-                setDataInSidebar(offlineSidebar)
+                // const offlineSidebar = await deviceStorage.getSidebarData();
+                const offlineSidebar = offlineContext.catchedSidebarData;
+                if(Object.keys(offlineSidebar).length !== 0){
+                    setDataInSidebar(offlineSidebar)
+                }
             } else {
                 setDataInSidebar(userAndTasks)
-                deviceStorage.storeSidebarData(userAndTasks);
+                offlineContext.updateSideBarCatcheData(userAndTasks);
+                // deviceStorage.storeSidebarData(userAndTasks);
             }
-            offlineContext.storeCatchedIndevice();
         }
+        offlineContext.storeCatchedIndevice(offlineContext.catchedContent);
 
         const setDataInSidebar = (userAndTasks) => {
             setUsername(userAndTasks.userName);

@@ -119,11 +119,12 @@ function ActionScreen(props) {
         let offLineTasks;
         if (props.state === 5) {
           //Es de proyecto
-          offLineTasks = await deviceStorage.getProjectTasks(props.project_id);
+          // offLineTasks = await deviceStorage.getProjectTasks(props.project_id);
           console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION Y ES UN PROYECTO", props.state, props.project_id, offLineTasks)
+          offLineTasks = await getOfflineTasksProject(props.project_id);
         } else {
           // offLineTasks = await deviceStorage.getActionScreenData(props.state);
-          offLineTasks = offlineContext.catchedContent[props.state];
+          offLineTasks = await getOfflineTasks();
           console.log("THIS ARE THE OFFLINE TASKSS", offLineTasks, offlineContext.catchedContent)
         }
         if (offLineTasks) {
@@ -138,6 +139,17 @@ function ActionScreen(props) {
       }
     }
 
+  }
+
+  const getOfflineTasksProject = async (project_id) => {
+    let offLineTasks = offlineContext.catchedContent;
+    return offLineTasks.projects && offLineTasks.projects[project_id] ? offLineTasks.projects[project_id].tasks : []
+  }
+
+  const getOfflineTasks = async () => {
+    let offLineTasks = offlineContext.catchedContent;
+    console.log("getOfflineTasks RESULTA", offLineTasks)
+    return offLineTasks[props.state] ? offLineTasks[props.state] : []
   }
 
   const setDataInScreen = (tasksDB) => {

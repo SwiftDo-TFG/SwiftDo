@@ -30,12 +30,18 @@ const OfflineState = props =>{
                         ...prevState,
                         catchedContent: action.newCatchedContent
                     };
+                case 'UPDATE_CATCHED_SIDEBAR':
+                    return {
+                        ...prevState,
+                        catchedSidebarData: action.newCatchedSidebarData
+                    };
             }
         },
         {
             isOffline: false,
             createTaskQueue: [],
-            catchedContent: {}
+            catchedContent: {},
+            catchedSidebarData: {}
         }
     );
     
@@ -56,9 +62,31 @@ const OfflineState = props =>{
                 if(!project_id){
                     newCatched[key] = value;
                 }else{
-                    newCatched.projects[project_id].tasks = value;
+                    console.log("UPDATINGG PROYECT DATA TASKSSS", newCatched.projects)
+                    if(!newCatched.projects){
+                        newCatched.projects = {};
+                    }
+                    if(newCatched.projects[project_id]){
+                        newCatched.projects[project_id].tasks = value;
+                    }else{
+                        newCatched.projects[project_id] = {tasks: value};
+                    }
                 }
-                console.log("CALLING UPDATE CONTENT", newCatched)
+                dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
+            },
+            updateCatchedContextProjectData: (project_info) => {
+                const newCatched = state.catchedContent;
+                const project_id = project_info.project_id;
+                if(newCatched && !newCatched.projects){
+                    newCatched.projects = {};
+                }
+                if(newCatched && newCatched.projects[project_id]){
+                    newCatched.projects[project_id].project = project_info;
+                }else{
+                    newCatched.projects[project_id] = {project: project_info};
+                }
+                console.log("UPDATINGG PROYECT DATA", newCatched)
+
                 dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
             },
             setInitialCatchedContext: async () =>{
@@ -69,9 +97,23 @@ const OfflineState = props =>{
                     dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
                 }
             },
-            storeCatchedIndevice: async () =>{
-                console.log("WE ARE STORING THISSS", state.catchedContent)
-                await deviceStorage.storeCatchedData(state.catchedContent);
+            setAllCatchedContext: async (data) => {
+                dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
+            },
+            storeCatchedIndevice: async (data) =>{
+                console.log("WE ARE STORING THISSS", data)
+                if(data){
+                    console.log("ACTUALLY STORED", data)
+                    await deviceStorage.storeCatchedData(data);
+                }
+                if(Object.keys(state.catchedSidebarData).length !== 0){
+                    await deviceStorage.storeSidebarData(catchedSidebarData);
+                }
+            },
+            updateSideBarCatcheData: async (data) =>{
+                console.log("WE ARE STORING THISSS SIDEBAR", data)
+                dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedSidebarData: data})
+                // await deviceStorage.storeCatchedData(data);
             }
         }),
         []
@@ -85,7 +127,11 @@ const OfflineState = props =>{
                 updateCatchedContext: offlineModeFunctions.updateCatchedContext,
                 setInitialCatchedContext: offlineModeFunctions.setInitialCatchedContext,
                 storeCatchedIndevice: offlineModeFunctions.storeCatchedIndevice,
+                setAllCatchedContext: offlineModeFunctions.setAllCatchedContext,
+                updateCatchedContextProjectData: offlineModeFunctions.updateCatchedContextProjectData,
+                updateSideBarCatcheData: offlineModeFunctions.updateSideBarCatcheData,
                 catchedContent: state.catchedContent,
+                catchedSidebarData: state.catchedSidebarData,
                 isOffline: state.isOffline
             }}
         >

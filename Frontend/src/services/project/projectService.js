@@ -10,7 +10,7 @@ let instance = axios.create({
 authUtils.getSelectedApiConfig().then(config => {
     if(config){
         apiConfig = config;
-        instance.defaults.baseURL = config.url;
+        instance.defaults.baseURL = config.url+'s';
     }
 })
 
