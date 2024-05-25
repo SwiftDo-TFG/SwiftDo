@@ -22,6 +22,8 @@ import ContextBadge from "../../components/common/ContextBadge";
 import CalendarStrip from 'react-native-calendar-strip';
 import SettingsModal from "../../components/modals/settings/SettingsModal";
 import ThemeContext from "../../services/theme/ThemeContext";
+import TaskStates from "../../utils/enums/taskStates";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 const ProgramadasScreen = (props) => {
@@ -43,7 +45,10 @@ const ProgramadasScreen = (props) => {
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
+    //Offline
+    const offlineContext = useContext(OfflineContext);
 
+    //Theme
     const themeContext = useContext(ThemeContext);
     // const theme = useColorScheme();
     const theme = themeContext.theme;
@@ -96,9 +101,38 @@ const ProgramadasScreen = (props) => {
 
         let tasksDB = await taskService.getTasks(filter);
         if (tasksDB.error) {
-            return authState.signOut();
+            if (tasksDB.error.status === 401) {
+                return authState.signOut();
+            } else if (tasksDB.error.status === 'timeout') {
+                console.log("[PROGRAMADAS] A UN TIMEOUT, OSEA NO TIENES CONEXION", tasksDB.error.status)
+                //AQUI RECARGAMOS CON LO QUE HAY OFFLINE SI HAY
+                if (tasks.length !== 0) {
+                    await storeDataInDevice(tasksDB)
+                }
+                offlineContext.setOfflineMode();
+
+                const offLineTasks = getOfflineTasks();
+                setDataInScreen(offLineTasks);
+            }
+        } else {
+            setDataInScreen(tasksDB);
+            if (tasksDB.length > 0) {
+                storeDataInDevice(tasksDB)
+            }
         }
 
+    }
+
+    const getOfflineTasks = () => {
+        let offLineTasks = offlineContext.catchedContent;
+        return offLineTasks[TaskStates.PROGRAMADAS] ? offLineTasks[TaskStates.PROGRAMADAS] : []
+    }
+
+    const storeDataInDevice = async (tasks) => {
+        offlineContext.updateCatchedContext(TaskStates.PROGRAMADAS, tasks);
+    }
+
+    const setDataInScreen = (tasksDB) => {
         const seletedAux = {}
         tasksDB.forEach(task => {
             seletedAux[task.task_id] = false;
@@ -530,6 +564,9 @@ const ProgramadasScreen = (props) => {
                             {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
                                 <Feather name="sidebar" size={28} color={Colors[theme].white} />
                             </TouchableOpacity>)}
+
+                            {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
+
                             <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                                 <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
                                     {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {

@@ -42,9 +42,9 @@ export default function Router(theme) {
       // screen will be unmounted and thrown away.
       const isConfig = await state.checkServerConfigured();
       if (isConfig) {
+        await offlineContext.setInitialCatchedContext();
         state.checkSession();
       }
-      await offlineContext.setInitialCatchedContext();
     };
     bootstrapAsync();
     // return () => {

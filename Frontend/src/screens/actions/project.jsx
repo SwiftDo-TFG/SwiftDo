@@ -59,7 +59,7 @@ function Project(props) {
                 // await storeDataInDevice(projectData.project)
             }
             offlineContext.setOfflineMode();
-            const offlineData = await getOfflineProjectData(props.route.params.project_id);
+            const offlineData = await getOfflineProjectData(props.route.params);
             console.log("ERRRORR EN PROYECTOSSS", project.error, offlineData, props.route.params.project_id)
             // console.log("THIS IS RETURNEDDDDD XLDSDSD", offlineData)
             setDataInScreen({project: offlineData});
@@ -76,10 +76,11 @@ function Project(props) {
         offlineContext.updateCatchedContextProjectData(project_data);
     }
 
-    const getOfflineProjectData = async (project_id) => {
+    const getOfflineProjectData = async (projectDataSidebar) => {
         let offLineData = offlineContext.catchedContent;
-        console.log("getOfflineProjectData RETURNED", offLineData)
-        return offLineData.projects && offLineData.projects[project_id] ? offLineData.projects[project_id].project : { project: { project_id: project_id } }
+        const project_id = projectDataSidebar.project_id;
+        console.log("getOfflineProjectData RETURNED", offLineData, projectDataSidebar)
+        return offLineData.projects && offLineData.projects[project_id] ? offLineData.projects[project_id].project : { ...projectDataSidebar } 
     }
 
     const setDataInScreen = (project) => {

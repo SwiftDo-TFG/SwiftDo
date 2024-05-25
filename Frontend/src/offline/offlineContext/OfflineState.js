@@ -96,23 +96,33 @@ const OfflineState = props =>{
                     console.log("THIS IS THE DATA STORAGED", data)
                     dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
                 }
+
+                const sideBarData = await deviceStorage.getSidebarData();
+
+                if(sideBarData != null){
+                    console.log("THIS IS THE DATA STORAGED OF SIDEBAR", sideBarData)
+                    dispatch({ type: 'UPDATE_CATCHED_SIDEBAR', newCatchedSidebarData: sideBarData})
+                }
             },
             setAllCatchedContext: async (data) => {
                 dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
             },
-            storeCatchedIndevice: async (data) =>{
-                console.log("WE ARE STORING THISSS", data)
+            storeCatchedIndevice: async (data, sideBarData) =>{
+                console.log("WE ARE STORING THISSS", data, sideBarData)
                 if(data){
                     console.log("ACTUALLY STORED", data)
                     await deviceStorage.storeCatchedData(data);
                 }
-                if(Object.keys(state.catchedSidebarData).length !== 0){
-                    await deviceStorage.storeSidebarData(catchedSidebarData);
+                if(Object.keys(sideBarData).length !== 0){
+                    console.log("ACTUALLY STORED THIS OF SIDEBAR",sideBarData)
+                    await deviceStorage.storeSidebarData(sideBarData);
+                }else{
+                    console.log("ACTUALLY NOT STORED THIS OF SIDEBAR", sideBarData)
                 }
             },
             updateSideBarCatcheData: async (data) =>{
-                console.log("WE ARE STORING THISSS SIDEBAR", data)
-                dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedSidebarData: data})
+                console.log("WE ARE UPDATINGG THISSS SIDEBAR", data)
+                dispatch({ type: 'UPDATE_CATCHED_SIDEBAR', newCatchedSidebarData: data})
                 // await deviceStorage.storeCatchedData(data);
             }
         }),

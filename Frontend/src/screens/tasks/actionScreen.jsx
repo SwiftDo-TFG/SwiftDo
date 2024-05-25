@@ -148,7 +148,7 @@ function ActionScreen(props) {
 
   const getOfflineTasks = async () => {
     let offLineTasks = offlineContext.catchedContent;
-    console.log("getOfflineTasks RESULTA", offLineTasks)
+    console.log("getOfflineTasks RESULTA", offlineContext.catchedContent)
     return offLineTasks[props.state] ? offLineTasks[props.state] : []
   }
 

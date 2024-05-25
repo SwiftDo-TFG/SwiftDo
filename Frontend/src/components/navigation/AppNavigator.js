@@ -37,7 +37,7 @@ const AppNavigator = ({ projects, state }) => {
         if (state.userToken !== null) {
             themeContext.setThemeOnInit();
         }
-        
+
     }, [state])
 
     return (
@@ -67,13 +67,6 @@ const AppNavigator = ({ projects, state }) => {
                 <>
                     {/* Actions: */}
                     <Drawer.Screen
-                        name="CuantoAntes"
-                        component={CuantoAntes}
-                        options={{
-                            headerShown: false
-                        }}
-                    />
-                    <Drawer.Screen
                         name="Inbox"
                         component={Inbox}
                         options={{
@@ -84,6 +77,13 @@ const AppNavigator = ({ projects, state }) => {
                     <Drawer.Screen
                         name="Today"
                         component={Today}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="CuantoAntes"
+                        component={CuantoAntes}
                         options={{
                             headerShown: false
                         }}
