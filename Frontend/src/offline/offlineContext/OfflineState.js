@@ -17,6 +17,7 @@ const OfflineState = props =>{
                 case 'ADD_TASKS_TO_QUEUE':
                     return {
                         ...prevState,
+                        nextNewIndex: action.nextNewIndex,
                         createTaskQueue: action.newtasksqueue
                     };
                 case 'SET_TASKS_QUEUE':
@@ -35,27 +36,83 @@ const OfflineState = props =>{
                         ...prevState,
                         catchedSidebarData: action.newCatchedSidebarData
                     };
+                case 'UPDATE_NEXTNEWINDEX':
+                    return {
+                        ...prevState,
+                        nextNewIndex: action.nextNewIndex,
+                    };
             }
         },
         {
             isOffline: false,
             createTaskQueue: [],
             catchedContent: {},
-            catchedSidebarData: {}
+            catchedSidebarData: {},
+            nextNewIndex: -1,
         }
     );
+
+    const completeNotCatchedNewTaskData = (task, nextIndex)=>{
+        const newTask = {...task};
+
+        if(!newTask.task_id){
+            newTask.task_id = nextIndex;
+        }
+        if(!newTask.project_id){
+            newTask.project_id = null;
+        }
+        if(!newTask.context_id){
+            newTask.context_id = null;
+        }
+        if(!newTask.important_fixed){
+            newTask.important_fixed = null;
+        }
+        if(!newTask.description){
+            newTask.description = null;
+        }
+        if(!newTask.tags){
+            newTask.tags = [];
+        }
+        if(!newTask.completed){
+            newTask.completed = false;
+        }
+
+        console.log("THIS IS THE NEW TASKSSS", newTask)
+
+        newTask.offline = true;
+        
+        return newTask;
+    }
     
     const offlineModeFunctions = React.useMemo(
         () => ({
             setOfflineMode: ()=> {
                 dispatch({ type: 'SET_OFFLINEMODE'})
             },
-            addTaskToQueue: (task)=> {
-                const queue = state.createTaskQueue;
+            addTaskToQueue: (task, realState)=> {
+                const newCatched = realState.catchedContent;
+                const stateAux = task.state;
 
-                queue.append(task);
+                const taksToPush = completeNotCatchedNewTaskData(task, realState.nextNewIndex);
+                let indexInState = null;
 
-                dispatch({ type: 'ADD_TASKS_TO_QUEUE', newtasksqueue: queue})
+                if(task.state){
+                    const stateTasks = newCatched[stateAux];
+                    console.log("THIS IS THE QUEUE AFTER ADDD", state.createTaskQueue, stateTasks, realState);
+                    stateTasks.push(taksToPush);
+                    newCatched[stateAux] = stateTasks;
+                    indexInState = stateTasks.length-1;
+                    dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
+                }
+                const queue = realState.createTaskQueue;
+
+                if(indexInState){
+                    taksToPush.indexInState = indexInState
+                }
+
+                queue.push(taksToPush);
+                dispatch({ type: 'ADD_TASKS_TO_QUEUE', newtasksqueue: queue, nextNewIndex: realState.nextNewIndex - 1})
+                
             },
             updateCatchedContext: (key, value, project_id) => {
                 const newCatched = state.catchedContent;
@@ -95,6 +152,10 @@ const OfflineState = props =>{
                 if(data != null){
                     console.log("THIS IS THE DATA STORAGED", data)
                     dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
+                    const nextNewIndex = data.nextNewIndex
+                    if(nextNewIndex){
+                        dispatch({ type: 'UPDATE_NEXTNEWINDEX', nextNewIndex: nextNewIndex})
+                    }
                 }
 
                 const sideBarData = await deviceStorage.getSidebarData();
@@ -107,10 +168,13 @@ const OfflineState = props =>{
             setAllCatchedContext: async (data) => {
                 dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: data})
             },
-            storeCatchedIndevice: async (data, sideBarData) =>{
+            storeCatchedIndevice: async (data, sideBarData, nextNewIndex) =>{
                 console.log("WE ARE STORING THISSS", data, sideBarData)
                 if(data){
                     console.log("ACTUALLY STORED", data)
+                    if(nextNewIndex){
+                        data.nextNewIndex = nextNewIndex
+                    }
                     await deviceStorage.storeCatchedData(data);
                 }
                 if(Object.keys(sideBarData).length !== 0){
@@ -123,7 +187,34 @@ const OfflineState = props =>{
             updateSideBarCatcheData: async (data) =>{
                 console.log("WE ARE UPDATINGG THISSS SIDEBAR", data)
                 dispatch({ type: 'UPDATE_CATCHED_SIDEBAR', newCatchedSidebarData: data})
-                // await deviceStorage.storeCatchedData(data);
+            },
+            updateOfflineTask: async(task, lastState, realState) => {
+                if(task.state){
+                    const newCatched = realState.catchedContent;
+                    const offlineState = newCatched[task.state];
+                    console.log("THIS WAS THE TASK STATE", lastState)
+                    console.log("THIS IS THE NEW STATE", task.state)
+                    if(newCatched){
+                        // const newTask = Object.assign(oldTask, task);
+                        if(task.state === lastState){
+                            const oldTask = offlineState[task.indexInState];
+                            offlineState[task.indexInState] = Object.assign(oldTask, task);
+                            dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
+                        }else{
+                            const lastStateList = newCatched[lastState];
+                            lastStateList.splice(task.indexInState, 1);
+                            if(!offlineState){
+                                task.indexInState = 0;
+                                newCatched[task.state] = [task]
+                            }else{
+                                task.indexInState = offlineState.length;
+                                offlineState.push(task);
+                                newCatched[task.state] = offlineState;
+                            }
+                            dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
+                        }
+                    }
+                }
             }
         }),
         []
@@ -140,9 +231,12 @@ const OfflineState = props =>{
                 setAllCatchedContext: offlineModeFunctions.setAllCatchedContext,
                 updateCatchedContextProjectData: offlineModeFunctions.updateCatchedContextProjectData,
                 updateSideBarCatcheData: offlineModeFunctions.updateSideBarCatcheData,
+                updateOfflineTask: offlineModeFunctions.updateOfflineTask,
                 catchedContent: state.catchedContent,
                 catchedSidebarData: state.catchedSidebarData,
-                isOffline: state.isOffline
+                createTaskQueue: state.createTaskQueue,
+                isOffline: state.isOffline,
+                nextNewIndex: state.nextNewIndex,
             }}
         >
             {props.children}

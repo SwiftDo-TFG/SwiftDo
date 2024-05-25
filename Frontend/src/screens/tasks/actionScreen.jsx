@@ -206,7 +206,9 @@ function ActionScreen(props) {
           console.error("Error al agregar tarea a la base de datos");
         }
       } else {
-        offlineContext.addTaskToQueue(task);
+        offlineContext.addTaskToQueue(task, offlineContext);
+        setIsCreateModalOpen(false);
+        //TODO ver que se hace con las tags
       }
     }
   };

@@ -145,7 +145,7 @@ export default ({ navigation }) => {
         return sideProjects.map((project, i) => (
             <View key={i}>
                 <ActionScheme onPress={() => {
-                    offlineContext.storeCatchedIndevice(offlineContext.catchedContent, userAndTasks);
+                    offlineContext.storeCatchedIndevice(offlineContext.catchedContent, userAndTasks, offlineContext.nextNewIndex);
                     navigateFromProjectToProject(navigation, project)
                 }} icon={progressIcon(project.percentage)} type={'M'} iconColor={project.color !== null ? project.color : Colors.paper} text={project.title} />
             </View>
@@ -153,7 +153,11 @@ export default ({ navigation }) => {
     };
 
     const navigateToScreen = (key) => {
-        offlineContext.storeCatchedIndevice(offlineContext.catchedContent, userAndTasks);
+        // if(!offlineContext.isOffline){
+        offlineContext.storeCatchedIndevice(offlineContext.catchedContent, userAndTasks, offlineContext.nextNewIndex);
+        // }else{
+            // console.log("WE ARE NOT STORING ANYTHING IN DEVICE")
+        // }
         navigation.navigate(key);
     }
 

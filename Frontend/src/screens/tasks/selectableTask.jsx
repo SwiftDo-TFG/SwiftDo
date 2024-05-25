@@ -235,6 +235,7 @@ const SelectableTask = ({ navigation, route, task, onPress, onDelete, scale, opa
           </View>
           {!isMenuVisible && (
             <View style={{ flexDirection: 'row', alignItems: 'center', width: '12%', justifyContent: 'flex-end' }}>
+              {task.offline && <MaterialCommunityIcons name="cloud-sync-outline" size={20} color={Colors[theme].white} style={{ marginRight: 7 }} />}
               {task.important_fixed && (
                 <Ionicons name="flag" size={15} color="#be201c" />
               )}

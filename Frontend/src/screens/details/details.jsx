@@ -11,6 +11,7 @@ import taskService from "../../services/task/taskService";
 import ThemeContext from '../../services/theme/ThemeContext';
 import CreateTaskModal from "../../components/modals/CreateTaskModal";
 import ProjectBadge from "../../components/common/ProjectBadge";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 const DetailScreen = ({ navigation, route }) => {
@@ -34,6 +35,9 @@ const DetailScreen = ({ navigation, route }) => {
     const [content, setContent] = useState(initialText)
     const [editing, toggleEdit] = useState(false);
 
+    //Offline
+    const offlineContext = useContext(OfflineContext);
+
     useEffect(() => {
         setTask(route.params.task);
         if (mdtext !== null)
@@ -45,16 +49,21 @@ const DetailScreen = ({ navigation, route }) => {
 
 
     const updateTaskDescription = async () => {
-        const tempTask = { task_id: task.task_id, description: content }
+        let tempTask = { task_id: task.task_id, description: content }
         console.log()
         //actualizamos la tarea con la nueva descripcion
         if (tempTask.description !== null) {
-            const updatedTaskResult = await taskService.updateTask(tempTask.task_id, tempTask);
-            if (updatedTaskResult !== -1) {
-                console.log("Se ha guardado la nueva descripcion")
+            if(!offlineContext.isOffline){
+                const updatedTaskResult = await taskService.updateTask(tempTask.task_id, tempTask);
+                if (updatedTaskResult !== -1) {
+                    console.log("Se ha guardado la nueva descripcion")
+                }
+            }else{
+                tempTask={...task, description: content }
+                tempTask.offline = true;
+                await offlineContext.updateOfflineTask(tempTask, task.state, offlineContext)
             }
         }
-
 
     }
     const handlePress = () => {
@@ -117,22 +126,34 @@ const DetailScreen = ({ navigation, route }) => {
 
     const updateTask = async (updatedTask) => {
         console.log("UPDATING TASK", updatedTask)
-        if (updatedTask.tags) {
-            for (let tag of updatedTask.tags) {
-                await taskService.addTag(updatedTask.task_id, tag)
+
+        if(!offlineContext.isOffline){
+            if (updatedTask.tags) {
+                for (let tag of updatedTask.tags) {
+                    await taskService.addTag(updatedTask.task_id, tag)
+                }
             }
-        }
-        const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
-        console.log("ID: ", updatedTaskResult)
-        if (updatedTaskResult !== -1) {
-            // const updatedTasks = tasks.map((task) =>
-            //   task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
-            // );
+            const updatedTaskResult = await taskService.updateTask(updatedTask.task_id, updatedTask);
+            console.log("ID: ", updatedTaskResult)
+            if (updatedTaskResult !== -1) {
+                // const updatedTasks = tasks.map((task) =>
+                //   task.task_id === updatedTask.task_id ? { ...task, ...updatedTask } : task
+                // );
+                isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
+                
+                reloadData();
+            } else {
+                console.error("Error al actualizar la tarea en la base de datos");
+            }
+        }else{
+            updatedTask.offline = true;
+            await offlineContext.updateOfflineTask(updatedTask, task.state, offlineContext)
             isEditModalOpen ? setIsEditModalOpen(false) : setIsMoveModalOpen(false);
-            
-            reloadData();
-        } else {
-            console.error("Error al actualizar la tarea en la base de datos");
+            console.log("TASK FINALLY UPDATED", updatedTask)
+            setTask(updatedTask);
+            if(updatedTask.description){
+                setContent(updatedTask.description);
+            }
         }
     };
 
