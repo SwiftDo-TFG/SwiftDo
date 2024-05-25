@@ -12,9 +12,9 @@ contextService.createContext = async (context) => {
 }
 
 contextService.deleteContext = async (context_id, user_id) => {
-    if (id !== null) {
+    if (context_id !== null) {
         let res = await db.query('DELETE FROM areas_contexts WHERE context_id = $1 AND user_id = $2', [context_id, user_id]);
-        let res2 = await db.query('UPDATE tasks SET context_id = $1', [null]);
+        let res2 = await db.query('UPDATE tasks SET context_id = $1 WHERE context_id = $1 AND user_id = $2', [context_id, user_id]);
         return true;
     } else {
         throw new Error("Tienen que estar rellenos los campos indicados");
