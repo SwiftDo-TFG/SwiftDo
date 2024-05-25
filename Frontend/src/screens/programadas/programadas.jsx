@@ -560,10 +560,12 @@ const ProgramadasScreen = (props) => {
 
 
                     <View style={styles.container}>
-                        <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-                            {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 25 }}>
+
+                            {/* Sidebar icon */}
+                            {Dimensions.get('window').width <= 768 ? (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
                                 <Feather name="sidebar" size={28} color={Colors[theme].white} />
-                            </TouchableOpacity>)}
+                            </TouchableOpacity>) : <View></View>}
 
                             {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
 

@@ -129,12 +129,12 @@ function Today(props) {
         console.log("AMOUNT TASK: ", amountDB)
 
 
-        if(tasksDB.error || delayDB.error || amountDB.error){
+        if (tasksDB.error || delayDB.error || amountDB.error) {
             const whatError = tasksDB.error ? tasksDB : (delayDB.error ? delayDB : amountDB);
             console.log("THIS CALLL WAS THE ERROR", whatError)
-            if(whatError.error.status === 401){
+            if (whatError.error.status === 401) {
                 return authState.signOut();
-            }else if(whatError.error.status === 'timeout'){
+            } else if (whatError.error.status === 'timeout') {
                 //AQUII OFFLINE
                 if (tasks.length !== 0 || delayTask.length !== 0 || amountTask.length !== 0) {
                     storeDataInDevice(tasksDB, delayDB, amountDB);
@@ -144,13 +144,13 @@ function Today(props) {
                 const offLineTasks = await getOfflineTasks();
                 console.log("THIS IS WHAT WE GET FROM OFFLINE TODAY TASKSS", offLineTasks)
 
-                if(offLineTasks){
+                if (offLineTasks) {
                     setDataInScreen(offLineTasks.tasksDB, offLineTasks.delayDB, offLineTasks.amountDB);
                 }
             }
-        }else{
+        } else {
             setDataInScreen(tasksDB, delayDB, amountDB);
-    
+
             if (tasksDB.length !== 0 || delayDB.length !== 0 || amountDB.length !== 0) {
                 storeDataInDevice(tasksDB, delayDB, amountDB);
             }
@@ -398,10 +398,11 @@ function Today(props) {
         <SafeAreaView style={{ flex: 1 }}>
             <NativeBaseProvider>
                 <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 20, }}>
-                    <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-                        {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 25 }}>
+                        {/* Sidebar icon */}
+                        {Dimensions.get('window').width <= 768 ? (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
                             <Feather name="sidebar" size={28} color={Colors[theme].white} />
-                        </TouchableOpacity>)}
+                        </TouchableOpacity>) : <View></View>}
 
                         {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
 
