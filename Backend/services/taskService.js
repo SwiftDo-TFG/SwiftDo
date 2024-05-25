@@ -225,7 +225,7 @@ taskService.newgetInfo = async (user_id, state) => {
         4: { total: 0, important: 0 },
     }
     res.rows.forEach(e => {
-        if (e.state != null) {
+        if (e.state != null && e.state < 5) {
             e.important_fixed ? info[e.state].important = parseInt(e.total) : info[e.state].total = parseInt(e.total);
         }
     })
