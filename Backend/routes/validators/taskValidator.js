@@ -7,7 +7,7 @@ taskValidators.validateCreate = () => {
         title: { notEmpty: true, isLength: { options: { max: 50 } } },
         description: { optional: true, notEmpty: false, isLength: { options: { min: 1, max: 200 } } },
         important_fixed: { optional: true, isBoolean: true },
-        state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
+        state: { optional: true, isIn: { options: [[1, 2, 3, 4, 5]] } }, //Revisar
         context_id: {optional: true, isInt: { min: 0 }},
         project_id: {optional: true, isInt: { min: 0 } },
         date_limit: {optional: true, isISO8601: true},
@@ -21,7 +21,7 @@ taskValidators.validateModify = () => {
         title: { optional: true, notEmpty: true, isLength: { options: { max: 50 } } },
         description: { optional: true, notEmpty: false, isLength: { options: { min: 1, max: 200 } } },
         important_fixed: { optional: true, isBoolean: true },
-        state: { optional: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
+        state: { optional: true, isIn: { options: [[1, 2, 3, 4, 5]] } }, //Revisar
         context_id: {optional: {options: {values: 'null'}}, isInt: { min: 0 }},
         project_id: {optional: {options: {values: 'null'}}, isInt: { min: 0 }},
         date_limit: {optional: true, isISO8601: true},
@@ -34,7 +34,7 @@ taskValidators.validateModify = () => {
 taskValidators.validateMoveList = () => {
     return checkSchema({
         list_ids: {notEmpty: true, isArray: true},
-        state: { notEmpty: true, isIn: { options: [[1, 2, 3, 4]] } }, //Revisar
+        state: { notEmpty: true, isIn: { options: [[1, 2, 3, 4, 5]] } }, //Revisar
     })
 }
 
