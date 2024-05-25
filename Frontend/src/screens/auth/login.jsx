@@ -20,11 +20,12 @@ function LoadingIndicator(style) {
     );
 }
 
-function SignInScreen({ navigation }) {
+function SignInScreen({ navigation, route }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState({ isError: false, msg: '' })
     const [isServerModalVisible, setIsServerModalVisible] = useState(false)
+    const [firstConfig, setfirstConfig] = useState(false)
 
 
     //Theme
@@ -34,6 +35,9 @@ function SignInScreen({ navigation }) {
     const textStyle = textStyles(theme);
     const formStyle = formStyles(theme);
     const authState = useContext(AuthContext);
+    if(route.params && !firstConfig){
+        setfirstConfig(true);
+    }
 
 
     function emptyValuesError() {
@@ -78,6 +82,9 @@ function SignInScreen({ navigation }) {
 
                 {authState.isLoading && <LoadingIndicator style={formStyle}/>}
                 {error.isError && error.msg.length > 0 && <ErrorBadge msg={error.msg} />}
+                {firstConfig && (
+                    <Text style={textStyle.textError}>Información: Al haber configurado el servidor, por favor reinicie la aplicación</Text>
+                )}
                 <View style={{ justifyContent: 'center' }}>
                     <AuthTextInput
                         placeholder="Email"

@@ -27,11 +27,11 @@ const AppNavigator = ({ projects, state }) => {
     const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
 
-    useEffect(()=>{
-        if(state.userToken !== null){
+    useEffect(() => {
+        if (state.userToken !== null) {
             themeContext.setThemeOnInit();
         }
-    },[state])
+    }, [state])
 
     return (
         <Drawer.Navigator
@@ -46,7 +46,7 @@ const AppNavigator = ({ projects, state }) => {
                 },
             }}
             backBehavior="history"
-            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"} 
+            defaultStatus={(state.userToken != null && dimensions.width >= 768) ? "open" : "closed"}
         >
             {state.userToken == null ? (
                 // No token found, user isn't signed in
@@ -97,7 +97,7 @@ const AppNavigator = ({ projects, state }) => {
                         }}
                     />
                     {/* Detalles */}
-                    <Drawer.Screen 
+                    <Drawer.Screen
                         name={"Details"}
                         component={DetailScreen}
                         options={{
@@ -105,18 +105,18 @@ const AppNavigator = ({ projects, state }) => {
                             animationTypeForReplace: 'push',
                         }}
                     />
-                    {/* {addProjects} */}
-                    <Drawer.Screen
-                        name={"project"}
-                        component={Project}
-                        options={{
-                            headerShown: false
-                        }}
-                    />
                     {/* Tutorial */}
                     <Drawer.Screen
                         name={"Tutorial"}
                         component={Tutorial}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    {/* {addProjects} */}
+                    <Drawer.Screen
+                        name={"project"}
+                        component={Project}
                         options={{
                             headerShown: false
                         }}

@@ -16,7 +16,9 @@ const ConfigServer = ({ navigation, initialConfig }) => {
     const [servers, setServers] = useState({ list: [] });
     const [isCreating, setIsCreating] = useState(false);
     const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+    const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
     const [deleteIndex, setDeleteIndex] = useState(-1);
+    const [changeIndex, setChangeIndex] = useState(-1);
     const [showTest, setShowTest] = useState({ show: false });
 
     //Form crear conexión
@@ -48,6 +50,15 @@ const ConfigServer = ({ navigation, initialConfig }) => {
             setIsCompleteModalOpen(false);
         }
     }
+
+    const handleChangeServer = async () => {
+        if(changeIndex != -1){
+            const newServers = { ...servers, selected: changeIndex }
+            await configStorage.storeConfig("servers", newServers)
+            authContext.signOut();
+        }
+    }
+    
 
     return (
         <View>
@@ -91,10 +102,9 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[settingStyles.connectServerButton, { backgroundColor: Colors[theme].themeColor, borderColor: index === servers.selected ? 'green' : Colors[theme].white }]}
-                                            onPress={async () => {
-                                                const newServers = { ...servers, selected: index }
-                                                await configStorage.storeConfig("servers", newServers)
-                                                authContext.signOut();
+                                            onPress={() => {
+                                                setChangeIndex(index);
+                                                setIsChangeModalOpen(true)
                                             }}
                                             disabled={index === servers.selected}
                                         >
@@ -116,13 +126,15 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                         </Text>
                         <TextInput
                             style={[settingStyles.createServerTextInput, { color: theme === 'light' ? '#182E44' : Colors[theme].white }]}
-                            placeholder="Nombre del servidor..."
+                            placeholder="Introduce el nombre del servidor..."
+                            placeholderTextColor={Colors[theme].configInput}
                             value={serverName}
                             onChangeText={setServerName}
                         />
                         <TextInput
                             style={[settingStyles.createServerTextInput, { color: theme === 'light' ? '#182E44' : Colors[theme].white }]}
-                            placeholder="Url del servidor..."
+                            placeholder="Introduce la Url del servidor..."
+                            placeholderTextColor={Colors[theme].configInput}
                             value={serverUrl}
                             onChangeText={setServerUrl}
                         />
@@ -170,7 +182,7 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                                         setIsCreating(false);
 
                                         if (initialConfig) {
-                                            navigation.navigate("SignIn");
+                                            navigation.navigate("SignIn", { firstConfig: true });
                                         }
                                     } else {
                                         setShowTest({ show: true, result: false, loading: false })
@@ -191,6 +203,13 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                 onAccept={handleDeleteServer}
                 isModalOpen={isCompleteModalOpen}
                 setIsModalOpen={setIsCompleteModalOpen}
+            />
+            <CompleteTaskModal
+                title="Cambiar servidor"
+                texto={"IMPORTANTE!!! Le informamos que va a proceder a cambiar de servidor. Recuerde que tiene que reiniciar la aplicación en caso de producirse el cambio."}
+                onAccept={handleChangeServer}
+                isModalOpen={isChangeModalOpen}
+                setIsModalOpen={setIsChangeModalOpen}
             />
         </View>
     )

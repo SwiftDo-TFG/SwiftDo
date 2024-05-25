@@ -24,7 +24,8 @@ function CreateTaskModal(props) {
         date_name: 'Fecha',
         showDatePicker: false,
         state: "1",
-        tags: []
+        tags: [],
+        project_id: null
     });
     const colours = ['#c93c20', '#6455d2', '#337474', '#5b6597', '#926442', '#490085', '#2c73c5', '#184bc0', '#b5541b', '#d32778', '#6e1249', '#20825b', '#ae2a32', '#11680c', '#3b7a5c']
 
@@ -119,8 +120,12 @@ function CreateTaskModal(props) {
             updatedTask.state = stateAux;
             if (state.project) {
                 updatedTask.project_id = state.project_id;
+                if (updatedTask.state === "1"){
+                    updatedTask.state = 5;
+                }
             }
             console.log("UPDATED TASK", updatedTask)
+            onCloseModal()
             props.onAccept(updatedTask);
         }
 
@@ -226,8 +231,8 @@ function CreateTaskModal(props) {
                     <TextInput
                         style={{ color: theme === 'light' ? '#182E44' : Colors[theme].white, fontSize: 23, fontWeight: '500', marginTop: 15, marginBottom: 10, width: '100%' }}
                         value={title}
-                        placeholder="Nueva Tarea"
-                        placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
+                        placeholder="Introducir título tarea..."
+                        placeholderTextColor={Colors[theme].configInput}
                         onChangeText={onTitleChange}
                         onEndEditing={() => { console.log("THIS END") }}
                         maxLength={50}
@@ -242,8 +247,8 @@ function CreateTaskModal(props) {
                                 <TextInput
                                     style={[styles.textInput, { color: theme === 'light' ? '#182E44' : Colors[theme].white }]}
                                     value={description}
-                                    placeholder="Descripcion..."
-                                    placeholderTextColor={theme === 'light' ? '#182E44' : Colors[theme].white}
+                                    placeholder="Escribe aquí la descripcion..."
+                                    placeholderTextColor={Colors[theme].configInput}
                                     onChangeText={onDescriptionChange}
                                     multiline={true}
                                     maxLength={200}
@@ -377,7 +382,8 @@ function CreateTaskModal(props) {
                 date_name: 'Fecha',
                 showDatePicker: false,
                 state: "1",
-                tags: []
+                tags: [],
+                project_id: null
             }
         )
     }

@@ -454,11 +454,11 @@ const Alexa = ({ navigation }) => {
     )
 }
 
-const SideComponent = ({ theme, OnClose, navigation }) => {
+const SideComponent = ({ theme, navigation }) => {
     const authContext = useContext(AuthContext);
 
+    const themeContext = useContext(ThemeContext);
     if (!theme) {
-        const themeContext = useContext(ThemeContext);
         // const theme = useColorScheme();
         theme = themeContext.theme;
     }
@@ -518,7 +518,7 @@ const SideComponent = ({ theme, OnClose, navigation }) => {
                 {Platform.OS !== 'web' && (
                     <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
                         onPress={() => {
-                            OnClose
+                            themeContext.closeSettingsModal();
                             navigation.navigate('Tutorial')
                         }}>
                         <Ionicons name="library" size={20} color=/*"#272c34"*/ {Colors[theme].white} />
@@ -543,6 +543,7 @@ const SideComponent = ({ theme, OnClose, navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={[settingStyles.sideSettingContainer, theme === 'light' ? settingStyles.sideContainerBackgrLight : settingStyles.sideContainerBackgrDark]}
                     onPress={() => {
+                        themeContext.closeSettingsModal();
                         authContext.signOut()
                     }}>
                     <MaterialIcons name="logout" size={20} color={Colors[theme].white} />
@@ -580,7 +581,7 @@ const SettingsModal = (props) => {
                         drawerType: (dimensions.width >= 768) ? 'permanent' : 'front',
                         drawerStyle: { width: '40%' }
                     }}
-                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} OnClose={() => props.setVisible(false)} {...props} /> : <></>}
+                        drawerContent={(props) => (dimensions.width >= 768) ? <SideComponent theme={theme} {...props} /> : <></>}
                         defaultStatus={"closed"}
                         detachInactiveScreens={Platform.OS === 'web'}
                     >

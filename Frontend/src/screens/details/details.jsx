@@ -151,7 +151,7 @@ const DetailScreen = ({ navigation, route }) => {
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : null}
             style={{ flex: 1 }}>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1}}>
                 <View style={{ padding: 18 }}>
                     {/* TITLE + TAGS + CONTEXT */}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -199,8 +199,8 @@ const DetailScreen = ({ navigation, route }) => {
                     </View>
                 </View>
                 {/* Markdown && Edit Description */}
-                <View style={{ height: '55%' }}>
-                    <View style={{margin: 15, marginBottom: 25}}>
+                <View style={{ height: '55%'}}>
+                    <View style={{margin: 15, marginBottom: 25, height: '5%'}}>
                         <TouchableOpacity style={[{backgroundColor: Colors[theme].themeColor, borderColor: "#ffa540", position: 'absolute', left: 0 }, style.stopEditingButton]} onPress={() => showEditPopUp()}>
                             <MaterialCommunityIcons name="layers-edit" size={24} color="#ffa540" />
                             {/* <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" /> */}
@@ -222,19 +222,19 @@ const DetailScreen = ({ navigation, route }) => {
                     {editing ?
                         (
                             <TextInput
-                                style={{ padding: 16, marginTop: 35, color: Colors[theme].white }}
+                                style={{ padding: 16, marginTop: 35, color: Colors[theme].white, height: '95%' }}
                                 inputAccessoryViewID={inputAccessoryViewID}
                                 onChangeText={setContent}
                                 value={content}
                                 multiline
-                                placeholder="¡Prueba a añadir detalles a la tarea!"
+                                placeholder="Añade aqui los detalles con estilo Markdown..."
                                 placeholderTextColor={Colors[theme].softGrey}
-
+                                maxLength={2000}
                             />
 
                         ) :
                         (
-                            <View style={{ height: '125%', padding: 16, marginTop: 20 }}>
+                            <View style={{ height: '95%', padding: 16, marginTop: 20 }}>
                                 <ScrollView
                                     contentInsetAdjustmentBehavior="automatic"
                                     style={{ height: '100%' }}>
