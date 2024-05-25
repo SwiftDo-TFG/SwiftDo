@@ -275,7 +275,7 @@ function updateTaskDefValues(task, newTask) {
         task.date_completed = new Date();
     }
 
-    if (newTask.state !== task.state && parseInt(task.state) === 3) {
+    if (newTask.state && newTask.state !== task.state && parseInt(task.state) === 3) {
         task.date_limit = null;
         newTask.date_limit = null;
     }
