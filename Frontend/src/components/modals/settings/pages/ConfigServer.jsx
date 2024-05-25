@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, TextInput, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity, Text, TextInput, ActivityIndicator, Platform } from "react-native";
 import { useState, useEffect, useContext } from 'react';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import configStorage from "../../../../services/configStorage/configStorage";
@@ -66,7 +66,7 @@ const ConfigServer = ({ navigation, initialConfig }) => {
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Sidebar');
                 }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                 </TouchableOpacity>
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Configuración servidor

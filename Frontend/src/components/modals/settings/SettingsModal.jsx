@@ -69,7 +69,7 @@ const DatosPersonales = ({ navigation }) => {
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Sidebar');
                 }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                    {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                 </TouchableOpacity>
                 <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                     Datos personales
@@ -124,7 +124,7 @@ const Tema = ({ navigation }) => {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
                     }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                     </TouchableOpacity>
                     <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                         Tema
@@ -185,7 +185,7 @@ const AdminContext = ({ navigation }) => {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
                     }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                     </TouchableOpacity>
                     <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                         Administrar contextos
@@ -253,7 +253,7 @@ const AdminTag = ({ navigation }) => {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
                     }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                     </TouchableOpacity>
                     <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                         Administrar Etiquetas
@@ -317,12 +317,12 @@ const TareasCompletadas = ({ navigation }) => {
     return (
 
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
-            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row', marginTop: 20 }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
                     }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                     </TouchableOpacity>
                     <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                         Tareas completadas
@@ -365,28 +365,31 @@ const AcercaGTD = ({ navigation }) => {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     return (
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center', padding: 20 }}>
-            <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignContent: 'center' }}>
+            <View style={{ marginHorizontal: 20, justifyContent: 'space-between', alignContent: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ marginTop: 20, justifyContent: 'start', alignContent: 'center', flexDirection: 'row' }}>
 
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('Sidebar');
-                }}>
-                    <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
-                </TouchableOpacity>
-                <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
-                    Acerca GTD
-                </Text>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Sidebar');
+                    }}>
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
+                    </TouchableOpacity>
+                    <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
+                        Acerca GTD
+                    </Text>
+                </View>
             </View>
+
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ flex: 1, paddingHorizontal: 20, paddingVertical: 10, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Image
-                    style={{ marginBottom: 15 }}
-                    source={require('../../../assets/GTD.png')}
-                />
+                    <Image
+                        style={{ marginBottom: 15 }}
+                        source={require('../../../assets/GTD.png')}
+                    />
                     <Text style={{ color: Colors[theme].white }}>
                         Getting Things Done o método GTD es un método de autogestión desarrollado por el consultor David Allen que consiste en registrar todas las tareas de la vida laboral y privada en listas. {'\n'}
-                        Como el usuario ya no tiene que realizar el esfuerzo de recordar estos asuntos, puede concentrarse más en la tarea que realmente está haciendo en cada momento, aumentando de esta manera 
+                        Como el usuario ya no tiene que realizar el esfuerzo de recordar estos asuntos, puede concentrarse más en la tarea que realmente está haciendo en cada momento, aumentando de esta manera
                         su productividad. {'\n'}
                         GTD, asegura que cuanta más información intentes retener en tu memoria, menos productividad y concentración lograrás. {'\n'}
                         En lugar de depender completamente de la capacidad de tu cerebro, la metodología GTD te anima a almacenar toda la información relacionada con tu trabajo en una fuente de referencias externa y organizada.
@@ -395,7 +398,6 @@ const AcercaGTD = ({ navigation }) => {
                 </View>
             </ScrollView>
         </View>
-
     )
 }
 const Alexa = ({ navigation }) => {
@@ -430,7 +432,7 @@ const Alexa = ({ navigation }) => {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('Sidebar');
                     }}>
-                        <Ionicons name="arrow-back" size={20} color={Colors[theme].white} />
+                        {Platform.OS !== 'web' && (<Ionicons name="arrow-back" size={20} color={Colors[theme].white} />)}
                     </TouchableOpacity>
                     <Text style={[settingStyles.sideSettingsText, { color: Colors[theme].white }]}>
                         Vincular con Alexa
@@ -465,7 +467,7 @@ const SideComponent = ({ theme, navigation }) => {
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: Colors[theme].themeColor }}>
             <View style={settingStyles.topContainer}>
-                <Text style={{ color: Colors[theme].white, fontSize: 20, marginBottom: 15, marginLeft: 5 }}>Ajustes</Text>
+                <Text style={{ color: Colors[theme].white, fontSize: 20, marginBottom: 15, marginLeft: 5 }}><Feather name="settings" size={23} color={Colors[theme].white} /> Ajustes</Text>
                 <Image
                     style={settingStyles.icon}
                     source={require('../../../assets/icon.png')}
