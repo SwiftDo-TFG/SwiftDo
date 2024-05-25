@@ -95,6 +95,20 @@ router.get('/:id/tags', async (req, res) => {
   }
 })
 
+router.post('/synchronize', async (req, res) => {
+  const user_id = res.locals.oauth.token.user.id;
+  const task_list = req.body.task_list
+  console.log("[SYNCHRONIZE]", task_list);
+
+  try {
+    const task = await taskService.synchronizeOffline(task_list, user_id);
+    res.send(task);
+  } catch (error) {
+    console.log('[Exception]:', error.message)
+    res.sendStatus(404);
+  }
+})
+
 router.post('/:id', taskValidator.validateModify(), checkValidations, async (req, res) => {
   try {
     const task_id = req.params.id;
