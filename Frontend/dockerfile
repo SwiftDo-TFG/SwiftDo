@@ -5,7 +5,7 @@ add ./ /project
 RUN apt update
 RUN apt install curl -y
 RUN apt install git -y
-RUN apt install default-jre
+RUN apt install openjdk-17-jdk openjdk-17-jre -y
 RUN mkdir /usr/local/nvm
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 18.18.2
@@ -17,4 +17,28 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
 
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+ARG android=34
+ENV ANDROID_SDK_ROOT /opt/android-sdk-linux
+ENV PATH $PATH:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${ANDROID_SDK_ROOT}/emulator
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        git-lfs \
+        gnupg \
+        openssl \
+        unzip
+
+RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/tools.zip && \
+    unzip -q /tmp/tools.zip -d /tmp && \
+    yes | /tmp/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses && \
+    /tmp/cmdline-tools/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "cmdline-tools;latest" && \
+    rm -r /tmp/tools.zip /tmp/cmdline-tools && \
+    mkdir -p /root/.android/ && touch /root/.android/repositories.cfg
+RUN yes | sdkmanager --licenses >/dev/null && \
+    sdkmanager --install \
+        "platforms;android-${android}" \
+        "platform-tools"
 RUN npm install -g eas-cli
+RUN npm install
