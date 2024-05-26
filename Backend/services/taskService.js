@@ -236,42 +236,44 @@ taskService.newgetInfo = async (user_id, state) => {
 //Ofline Mode Syncronize
 taskService.synchronizeOffline = async (task_list, user_id) => {
     const task_ids = []
+    const remainingTasks = [];
 
-    task_list.forEach(async (task, index) => {
+    for(let index = 0; index < task_list.length; index++){
+        const task = task_list[index]
         if (task.task_id && task.task_id > 0) {
             task_ids.push(task.task_id);
+            remainingTasks.push(task);
         } else {
             //Se crea
             task.user_id = user_id;
             await taskService.createTask(task);
-            task_list.splice(index, 1);
         }
-    })
+    }
 
     const res = await db.query("SELECT * FROM tasks WHERE task_id = ANY($1) AND user_id = $2 ", [task_ids, user_id])
 
     const returnedTask = res.rows;
     const taskMap = {}
 
-    returnedTask.forEach(oldTask => {
+    for(let oldTask of returnedTask){
         taskMap[oldTask.task_id] = oldTask;
-    })
+    }
 
-    task_list.forEach(async task => {
+    for(let task of remainingTasks){
         const oldTask = taskMap[task.task_id];
         
         if (oldTask && oldTask.num_version === task.num_version) {
             //AQUI SE UPDATEA TAL CUAL
             const updatedTask = updateTaskDefValues(oldTask, task);
             const returnedId = await updateOnly(updatedTask, oldTask.task_id);
-
+    
             if(returnedId === -1){
                 throw new Error('Synchronizing Error');
             }
         }
-    })
-
-    return {TotalSync: task_ids.length + task_list.length};
+    }
+    
+    return {TotalSync: task_list.length};
 }
 
 async function updateOnly(task, task_id) {

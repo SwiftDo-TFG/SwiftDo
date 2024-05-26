@@ -98,6 +98,7 @@ router.get('/:id/tags', async (req, res) => {
 router.post('/synchronize', async (req, res) => {
   const user_id = res.locals.oauth.token.user.id;
   const task_list = req.body.task_list
+  console.log("[SYNCHRONIZE BODY]", req.body);
   console.log("[SYNCHRONIZE]", task_list);
 
   try {
