@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { View, Text, useColorScheme, SafeAreaView, Dimensions, TouchableOpacity, Animated } from "react-native";
+import { View, Text, useColorScheme, SafeAreaView, Dimensions, TouchableOpacity, Animated, ActivityIndicator } from "react-native";
 import { NativeBaseProvider, ScrollView } from "native-base"
 import { FontAwesome5, Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
@@ -60,6 +60,9 @@ function Today(props) {
 
     //Offline
     const offlineContext = useContext(OfflineContext);
+    const [syncMessage, setSyncMessage] = useState("");
+    const [justSync, setJustSync] = useState(false);
+
 
     useEffect(() => {
 
@@ -82,7 +85,7 @@ function Today(props) {
         }
 
         return unsubscribe;
-    }, [authState, filterContext, props.navigation]);
+    }, [authState, filterContext, props.navigation, justSync]);
 
 
     async function fetchData(fetchFilters) {
@@ -149,13 +152,42 @@ function Today(props) {
                 }
             }
         } else {
-            setDataInScreen(tasksDB, delayDB, amountDB);
-
-            if (tasksDB.length !== 0 || delayDB.length !== 0 || amountDB.length !== 0) {
-                storeDataInDevice(tasksDB, delayDB, amountDB);
+            if (offlineContext.isOffline) {
+                setSyncMessage("Sincronizando")
+                offlineContext.endOfflineMode();
+                await synchronizeOfflineProcess(offlineContext.createTaskQueue);
+                const tasksDB = await taskService.getTasks(filter);
+                const delayDB = await taskService.getTasks(filter);
+                const amountDB = await taskService.getTasks(filter);
+                setDataInScreen(tasksDB, delayDB, amountDB);
+            } else {
+                setDataInScreen(tasksDB, delayDB, amountDB);
+                if (tasksDB.length !== 0 || delayDB.length !== 0 || amountDB.length !== 0) {
+                    storeDataInDevice(tasksDB, delayDB, amountDB);
+                }
             }
         }
 
+    }
+
+    const synchronizeOfflineProcess = async (tasks_list) => {
+        offlineContext.synchrozineOffline(true);
+        const numSyncTasks = await taskService.synchronizeTasks(tasks_list);
+
+        await offlineContext.clearCatchedData();
+        offlineContext.synchrozineOffline(false);
+
+        setTimeout(() => {
+            setSyncMessage(numSyncTasks + " tareas sincronizadas")
+        }, 2500);
+
+        setTimeout(() => {
+            setSyncMessage("")
+        }, 5000);
+
+        setJustSync(true);
+
+        return numSyncTasks;
     }
 
     const setDataInScreen = (tasksDB, delayDB, amountDB) => {
@@ -405,6 +437,15 @@ function Today(props) {
                         </TouchableOpacity>) : <View></View>}
 
                         {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
+                        {!offlineContext.isOffline && (offlineContext.isSynchronizing || syncMessage != "") &&
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialCommunityIcons name="cloud-sync-outline" size={24} color={Colors[theme].white} />
+                                <Text style={{ color: Colors[theme].white, textAlignVertical: 'center', textAlign: 'center', marginHorizontal: 5, fontSize: 17 }}>
+                                    {syncMessage}
+                                </Text>
+                                {syncMessage === 'Sincronizando' && <ActivityIndicator size={'small'} />}
+                            </View>
+                        }
 
                         <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                             <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>

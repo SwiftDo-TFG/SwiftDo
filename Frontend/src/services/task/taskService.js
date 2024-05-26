@@ -3,7 +3,7 @@ import authUtils from "../auth/auth_utils"
 
 let apiConfig = {}
 
-let instance = axios.create({timeout: 1000});
+let instance = axios.create({timeout: 3000});
 
 authUtils.getSelectedApiConfig().then(config => {
     if(config){
@@ -166,4 +166,23 @@ const findTags = async (taskId) => {
 }
 
 
-export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag, findTags }
+const synchronizeTasks = async (task_list) => {
+    try {
+        const dir = '/task/synchronize'
+        const data = {
+            task_list: task_list,
+        }
+
+        const response = await instance.post(dir, data);
+        const res = response.data;
+
+        console.log('[SYNCHRONIZE RESPONSE]', res, task_list)
+
+        return res.TotalSync;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return authUtils.parseError(error)
+    }
+}
+
+export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag, findTags, synchronizeTasks}

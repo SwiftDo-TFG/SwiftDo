@@ -19,12 +19,12 @@ export default function Router(theme) {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
 
-    // const subscription = AppState.addEventListener('change', nextAppState => {
-    //   console.log('AppState', nextAppState);
-    //   if(nextAppState === 'background'){
-    //     offlineContext.storeCatchedIndevice(offlineContext.catchedContent);
-    //   }
-    // });
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      console.log('AppState', nextAppState);
+      if(nextAppState === 'background'){
+        offlineContext.storeCatchedIndevice(offlineContext.catchedContent, {}, offlineContext.nextNewIndex);
+      }
+    });
 
     const bootstrapAsync = async () => {
       let userToken;
@@ -47,9 +47,9 @@ export default function Router(theme) {
       }
     };
     bootstrapAsync();
-    // return () => {
-    //   subscription.remove();
-    // };
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (<AppNavigator theme={theme} projects={projects} state={state} />);

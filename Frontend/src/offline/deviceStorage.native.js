@@ -15,6 +15,10 @@ async function getCatchedData() {
     return data != null ? JSON.parse(data) : null;
 }
 
+async function removeCatchedData() {
+    const data = await SecureStore.deleteItemAsync("offlineData");
+}
+
 //Hacerlo para cada usuario
 async function getActionScreenData(action) {
     const data = await SecureStore.getItemAsync(action);
@@ -63,4 +67,4 @@ async function getProjectTasks(project_id) {
     return data != null ? JSON.parse(data) : null;
 }
 
-export default { storeActionScreenData, getActionScreenData, storeSidebarData, getSidebarData, storeProjectData, getProjectData, storeProjectTasks, getProjectTasks, storeCatchedData, getCatchedData }
+export default { storeActionScreenData, getActionScreenData, storeSidebarData, getSidebarData, storeProjectData, getProjectData, storeProjectTasks, getProjectTasks, storeCatchedData, getCatchedData, removeCatchedData}

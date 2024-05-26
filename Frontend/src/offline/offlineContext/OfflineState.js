@@ -14,6 +14,12 @@ const OfflineState = props =>{
                         isOffline: true,
                     };
 
+                case 'END_OFFLINEMODE':
+                    return {
+                        ...prevState,
+                        isOffline: false,
+                    };
+
                 case 'ADD_TASKS_TO_QUEUE':
                     return {
                         ...prevState,
@@ -41,10 +47,26 @@ const OfflineState = props =>{
                         ...prevState,
                         nextNewIndex: action.nextNewIndex,
                     };
+                case 'SET_SYNCHRONIZE':
+                    return {
+                        ...prevState,
+                        isOffline: false,
+                        isSynchronizing: action.isSynchronizing,
+                    };
+
+                case 'CLEAR_CATCHED_DATA':
+                    return {
+                        ...prevState,
+                        createTaskQueue: [],
+                        catchedContent: {},
+                        catchedSidebarData: {},
+                        nextNewIndex: -1,
+                    };
             }
         },
         {
             isOffline: false,
+            isSynchronizing: false,
             createTaskQueue: [],
             catchedContent: {},
             catchedSidebarData: {},
@@ -88,6 +110,9 @@ const OfflineState = props =>{
         () => ({
             setOfflineMode: ()=> {
                 dispatch({ type: 'SET_OFFLINEMODE'})
+            },
+            endOfflineMode: ()=> {
+                dispatch({ type: 'END_OFFLINEMODE'})
             },
             addTaskToQueue: (task, realState)=> {
                 const newCatched = realState.catchedContent;
@@ -194,10 +219,18 @@ const OfflineState = props =>{
                     const offlineState = newCatched[task.state];
                     console.log("THIS WAS THE TASK STATE", lastState)
                     console.log("THIS IS THE NEW STATE", task.state)
+
+                    
                     if(newCatched){
-                        // const newTask = Object.assign(oldTask, task);
+                        if(!task.indexInState){
+                            const index = offlineState.findIndex((findTask)=>{
+                                return task.task_id === findTask.task_id;
+                            })
+                            task.indexInState = index;
+                        }
                         if(task.state === lastState){
                             const oldTask = offlineState[task.indexInState];
+                            console.log("THIS IS THE OLDTASK PLACE", offlineState, task.indexInState)
                             offlineState[task.indexInState] = Object.assign(oldTask, task);
                             dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
                         }else{
@@ -214,8 +247,18 @@ const OfflineState = props =>{
                             dispatch({ type: 'UPDATE_CATCHED_CONTENT', newCatchedContent: newCatched})
                         }
                     }
+                    const queue = realState.createTaskQueue;
+                    queue.push(task);
+                    dispatch({ type: 'ADD_TASKS_TO_QUEUE', newtasksqueue: queue, nextNewIndex: realState.nextNewIndex - 1})
                 }
-            }
+            },
+            synchrozineOffline: async (value) => {
+                dispatch({ type: 'SET_SYNCHRONIZE', isSynchronizing: value})
+            },
+            clearCatchedData: async () =>{
+                await deviceStorage.removeCatchedData();
+                dispatch({ type: 'CLEAR_CATCHED_DATA'})
+            },
         }),
         []
     );
@@ -224,6 +267,7 @@ const OfflineState = props =>{
         <OfflineContext.Provider
             value={{
                 setOfflineMode: offlineModeFunctions.setOfflineMode,
+                endOfflineMode: offlineModeFunctions.endOfflineMode,
                 addTaskToQueue: offlineModeFunctions.addTaskToQueue,
                 updateCatchedContext: offlineModeFunctions.updateCatchedContext,
                 setInitialCatchedContext: offlineModeFunctions.setInitialCatchedContext,
@@ -232,11 +276,14 @@ const OfflineState = props =>{
                 updateCatchedContextProjectData: offlineModeFunctions.updateCatchedContextProjectData,
                 updateSideBarCatcheData: offlineModeFunctions.updateSideBarCatcheData,
                 updateOfflineTask: offlineModeFunctions.updateOfflineTask,
+                synchrozineOffline: offlineModeFunctions.synchrozineOffline,
+                clearCatchedData: offlineModeFunctions.clearCatchedData,
                 catchedContent: state.catchedContent,
                 catchedSidebarData: state.catchedSidebarData,
                 createTaskQueue: state.createTaskQueue,
                 isOffline: state.isOffline,
                 nextNewIndex: state.nextNewIndex,
+                isSynchronizing: state.isSynchronizing
             }}
         >
             {props.children}

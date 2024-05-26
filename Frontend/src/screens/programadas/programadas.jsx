@@ -1,4 +1,4 @@
-import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme, SafeAreaView } from "react-native";
+import { View, Text, Animated, TouchableOpacity, Platform, Dimensions, useColorScheme, SafeAreaView, ActivityIndicator } from "react-native";
 import { Agenda, AgendaList, ExpandableCalendar, CalendarProvider, WeekCalendar, Calendar } from "react-native-calendars";
 import SelectableTask from "../tasks/selectableTask";
 import styles from './programadas.styles'
@@ -47,6 +47,9 @@ const ProgramadasScreen = (props) => {
 
     //Offline
     const offlineContext = useContext(OfflineContext);
+    const [syncMessage, setSyncMessage] = useState("");
+    const [justSync, setJustSync] = useState(false);
+
 
     //Theme
     const themeContext = useContext(ThemeContext);
@@ -77,7 +80,7 @@ const ProgramadasScreen = (props) => {
         }
 
         return unsubscribe;
-    }, [props.navigation, filterContext])
+    }, [props.navigation, filterContext, justSync])
 
     async function fetchData(fetchFilters) {
         let filter = { date_limit: '?', completed: false }
@@ -115,12 +118,39 @@ const ProgramadasScreen = (props) => {
                 setDataInScreen(offLineTasks);
             }
         } else {
-            setDataInScreen(tasksDB);
-            if (tasksDB.length > 0) {
-                storeDataInDevice(tasksDB)
+            if (offlineContext.isOffline) {
+                setSyncMessage("Sincronizando")
+                offlineContext.endOfflineMode();
+                await synchronizeOfflineProcess(offlineContext.createTaskQueue);
+                let tasksDB = await taskService.getTasks(filter);
+                setDataInScreen(tasksDB);
+            } else {
+                setDataInScreen(tasksDB);
+                if (tasksDB.length > 0) {
+                    storeDataInDevice(tasksDB)
+                }
             }
         }
+    }
 
+    const synchronizeOfflineProcess = async (tasks_list) => {
+        offlineContext.synchrozineOffline(true);
+        const numSyncTasks = await taskService.synchronizeTasks(tasks_list);
+
+        await offlineContext.clearCatchedData();
+        offlineContext.synchrozineOffline(false);
+
+        setTimeout(() => {
+            setSyncMessage(numSyncTasks + " tareas sincronizadas")
+        }, 2500);
+
+        setTimeout(() => {
+            setSyncMessage("")
+        }, 5000);
+
+        setJustSync(true);
+
+        return numSyncTasks;
     }
 
     const getOfflineTasks = () => {
@@ -568,7 +598,15 @@ const ProgramadasScreen = (props) => {
                             </TouchableOpacity>) : <View></View>}
 
                             {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
-
+                            {!offlineContext.isOffline && (offlineContext.isSynchronizing || syncMessage != "") &&
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <MaterialCommunityIcons name="cloud-sync-outline" size={24} color={Colors[theme].white} />
+                                    <Text style={{ color: Colors[theme].white, textAlignVertical: 'center', textAlign: 'center', marginHorizontal: 5, fontSize: 17 }}>
+                                        {syncMessage}
+                                    </Text>
+                                    {syncMessage === 'Sincronizando' && <ActivityIndicator size={'small'} />}
+                                </View>
+                            }
                             <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                                 <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
                                     {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {

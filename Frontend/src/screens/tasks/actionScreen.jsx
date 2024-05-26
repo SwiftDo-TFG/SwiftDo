@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import taskService from "../../services/task/taskService";
 import projectService from "../../services/project/projectService";
-import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme } from "react-native";
+import { View, Text, Animated, TextInput, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, SafeAreaView, Dimensions, useColorScheme, ActivityIndicator } from "react-native";
 import { FontAwesome5, Entypo, FontAwesome, MaterialCommunityIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { NativeBaseProvider, VStack, Box, Menu, extendTheme, Icon } from "native-base";
 import TaskList from "./TaskList";
@@ -54,11 +54,14 @@ function ActionScreen(props) {
 
   //Offline
   const offlineContext = useContext(OfflineContext);
+  const [syncMessage, setSyncMessage] = useState("");
+  const [justSync, setJustSync] = useState(false);
 
   useEffect(() => {
-    console.log("OFFLINE STATUS", offlineContext.isOffline)
+    // console.log("OFFLINE STATUS", offlineContext.isOffline, justSync)
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (!isDataLoaded) {
+        console.log("OFFLINE STATUS", offlineContext.isOffline, justSync)
         fetchData()
       }
     });
@@ -76,7 +79,7 @@ function ActionScreen(props) {
     }
 
     return unsubscribe;
-  }, [authState, filterContext, props.navigation]);
+  }, [authState, filterContext, props.navigation, justSync]);
 
   async function fetchData(fetchFilters) {
 
@@ -112,7 +115,7 @@ function ActionScreen(props) {
       } else if (tasksDB.error.status === 'timeout') {
         console.log("A UN TIMEOUT, OSEA NO TIENES CONEXION", tasksDB.error.status)
         //AQUI RECARGAMOS CON LO QUE HAY OFFLINE SI HAY
-        if(tasks.length !== 0){
+        if (tasks.length !== 0) {
           await storeDataInDevice(tasksDB)
         }
         offlineContext.setOfflineMode();
@@ -132,14 +135,44 @@ function ActionScreen(props) {
         }
       }
     } else {
-      console.log("Estas son las tareas que se devuelven", tasksDB)
-      setDataInScreen(tasksDB)
-      if (tasksDB.length > 0) {
-        storeDataInDevice(tasksDB)
+      console.log("OFFLINE STATUS FETCH DATAS", offlineContext.isOffline, justSync)
+      if (offlineContext.isOffline && !justSync) {
+        setSyncMessage("Sincronizando")
+        offlineContext.endOfflineMode();
+        await synchronizeOfflineProcess(offlineContext.createTaskQueue);
+        const tasksDB = await taskService.getTasks(filter);
+        setDataInScreen(tasksDB)
+      } else {
+        console.log("Estas son las tareas que se devuelven", tasksDB)
+        // synchronizeOfflineProcess();
+        setDataInScreen(tasksDB)
+        if (tasksDB.length > 0) {
+          storeDataInDevice(tasksDB)
+        }
       }
     }
-
   }
+
+  const synchronizeOfflineProcess = async (tasks_list) => {
+    console.log("WE ARE SYNCRONIZING THIS", tasks_list)
+    offlineContext.synchrozineOffline(true);
+    const numSyncTasks = await taskService.synchronizeTasks(tasks_list);
+
+    await offlineContext.clearCatchedData();
+    offlineContext.synchrozineOffline(false);
+
+    setTimeout(() => {
+      setSyncMessage(numSyncTasks + " tareas sincronizadas")
+    }, 2500);
+
+    setTimeout(() => {
+      setSyncMessage("")
+    }, 5000);
+    setJustSync(true);
+    
+    return numSyncTasks;
+  }
+
 
   const getOfflineTasksProject = async (project_id) => {
     let offLineTasks = offlineContext.catchedContent;
@@ -378,14 +411,23 @@ function ActionScreen(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' , alignItems: 'flex-end', marginTop: 25 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 25 }}>
 
           {/* Sidebar icon */}
           {Dimensions.get('window').width <= 768 ? (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
             <Feather name="sidebar" size={28} color={Colors[theme].white} />
-          </TouchableOpacity>): <View></View>}
+          </TouchableOpacity>) : <View></View>}
 
           {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
+          {!offlineContext.isOffline && (offlineContext.isSynchronizing || syncMessage != "") &&
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <MaterialCommunityIcons name="cloud-sync-outline" size={24} color={Colors[theme].white} />
+              <Text style={{ color: Colors[theme].white, textAlignVertical: 'center', textAlign: 'center', marginHorizontal: 5, fontSize: 17 }}>
+                {syncMessage}
+              </Text>
+              {syncMessage === 'Sincronizando' && <ActivityIndicator size={'small'} />}
+            </View>
+          }
 
           {/* Filter Context / tag */}
           <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
