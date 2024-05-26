@@ -17,6 +17,7 @@ const light = {
     red: '#DE5E69',
     activeColor: '#FFFFFF',
     selectColor: '#FCC89D',
+    configInput: '#9e9e9e',
     ...commonColor,
 };
 
@@ -26,6 +27,7 @@ const dark = {
     red: '#831a23',
     activeColor: '#1C1F21', /*Gris antracita*/
     selectColor: '#FCC89D',
+    configInput: '#9e9e9e',
     ...commonColor,
 };
 

@@ -73,8 +73,9 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const handleNewContextSubmit = async () => {
         if(newContextName.length > 0){
             setIsSaving(true);
-            await contextService.createContext({ name: newContextName });
-            setUserContext([...userContext, { name: newContextName }]);
+            const returned_object = await contextService.createContext({ name: newContextName });
+            console.log("RETURNED COTNEXT_ID", returned_object);
+            setUserContext([...userContext, { name: newContextName, context_id: returned_object.context_id}]);
             setNewContextName('');
             setIsSaving(false);
             Animated.timing(animatedHeight, {

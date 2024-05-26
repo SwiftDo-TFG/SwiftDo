@@ -30,14 +30,10 @@ const AppNavigator = ({ projects, state }) => {
     const theme = themeContext.theme;
     const sideBar = sidebarStyles(theme)
 
-    const offlineContext = useContext(OfflineContext);
-
     useEffect(() => {
-
         if (state.userToken !== null) {
             themeContext.setThemeOnInit();
         }
-
     }, [state])
 
     return (
@@ -112,18 +108,18 @@ const AppNavigator = ({ projects, state }) => {
                             animationTypeForReplace: 'push',
                         }}
                     />
-                    {/* {addProjects} */}
-                    <Drawer.Screen
-                        name={"project"}
-                        component={Project}
-                        options={{
-                            headerShown: false
-                        }}
-                    />
                     {/* Tutorial */}
                     <Drawer.Screen
                         name={"Tutorial"}
                         component={Tutorial}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    {/* {addProjects} */}
+                    <Drawer.Screen
+                        name={"project"}
+                        component={Project}
                         options={{
                             headerShown: false
                         }}

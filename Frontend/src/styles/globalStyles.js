@@ -183,7 +183,7 @@ const textStyles = (theme) => {
             alignSelf: 'center'
         },
         linkText: {
-            color: Colors[theme].noir,
+            color: Colors[theme].orange,
             textDecorationLine: 'underline'
         },
     })
