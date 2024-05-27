@@ -1,4 +1,4 @@
-# TFG-GTD
+# SwiftDo
 
 ## About the project
 This is the repository of the final degree project *Implementation of a privacy-aware REST infrastructure for GTD*.
