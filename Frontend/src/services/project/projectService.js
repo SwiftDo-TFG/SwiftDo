@@ -4,7 +4,7 @@ import authUtils from "../auth/auth_utils"
 let apiConfig = {}
 
 let instance = axios.create({
-    timeout: 1000,
+    timeout: 3000,
 });
 
 authUtils.getSelectedApiConfig().then(config => {
@@ -24,7 +24,7 @@ instance.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     console.log("EL ERROR", error)
-    if (error.response.status === 401) {
+    if (!error.code === 'ECONNABORTED' && error.response.status === 401) {
         authUtils.clearToken();
     }
     return Promise.reject(error);
@@ -40,7 +40,7 @@ const showContent = async (projectId) => {
         return project;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -52,7 +52,7 @@ const showProjectsByUser = async () => {
         return projects;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -64,7 +64,7 @@ const createProject = async (project_data) => {
         return project;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -77,7 +77,7 @@ const modifyProject = async (projectId, project_data) => {
         return project_id;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -91,7 +91,7 @@ const completeProject = async (projectId) => {
         return project.project_id;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 

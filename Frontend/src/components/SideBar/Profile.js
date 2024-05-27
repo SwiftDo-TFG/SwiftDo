@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Image, Text, TouchableOpacity, Animated, TextInput, ActivityIndicator, useColorScheme } from "react-native";
 import { sidebarStyles, textStyles } from "../../styles/globalStyles";
-import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
 import contextService from '../../services/context/contextService';
 import FilterContext from "../../services/filters/FilterContext";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 import ThemeContext from "../../services/theme/ThemeContext";
 
 
@@ -24,6 +25,9 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const sideBar = sidebarStyles(theme);
     const textStyle = textStyles(theme);
 
+
+    //offline Mode
+    const offlineContext = useContext(OfflineContext);
 
     useEffect(() => {
         async function getAreas() {
@@ -69,8 +73,9 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
     const handleNewContextSubmit = async () => {
         if(newContextName.length > 0){
             setIsSaving(true);
-            await contextService.createContext({ name: newContextName });
-            setUserContext([...userContext, { name: newContextName }]);
+            const returned_object = await contextService.createContext({ name: newContextName });
+            console.log("RETURNED COTNEXT_ID", returned_object);
+            setUserContext([...userContext, { name: newContextName, context_id: returned_object.context_id}]);
             setNewContextName('');
             setIsSaving(false);
             Animated.timing(animatedHeight, {
@@ -96,6 +101,12 @@ const Profile = ({ name, formattedDate, contexts, navigation }) => {
                     <Text style={[textStyle.smallText, { color: Colors[theme].white }]}>{formattedDate}</Text>
                 </View>
             </View>
+            {offlineContext.isOffline && 
+                <View style={sideBar.offLineTextContainer}>
+                    <Text style={{color: Colors[theme].white, textAlign: 'center', marginRight: 5}}>Modo sin conexión</Text>
+                    <Ionicons name="cloud-offline" size={16} color={Colors[theme].white} style={{alignSelf: 'center'}}/>
+                </View>
+            }
             <View style={{ flexDirection: 'column' }}>
                 <TouchableOpacity onPress={toggleAreas}>
                     <View style={sideBar.areaContainer}>

@@ -8,7 +8,9 @@ import { actStyles } from "../../styles/globalStyles";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import CreateProjectModal from "../../components/modals/CreateProjectModal";
 import Colors from "../../styles/colors";
+import deviceStorage from "../../offline/deviceStorage";
 import ThemeContext from "../../services/theme/ThemeContext";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 function Project(props) {
@@ -25,6 +27,10 @@ function Project(props) {
     // const theme = useColorScheme();
     const theme = themeContext.theme;
     const actStyle = actStyles(theme);
+
+    //offline mode
+    const offlineContext = React.useContext(OfflineContext);
+
 
     console.log("props de project***", props)
     React.useEffect(() => {
@@ -45,10 +51,44 @@ function Project(props) {
 
     async function fetchData() {
         const project = await projectService.showContent(props.route.params.project_id);
+
+        if (project.error && project.error.status === 'timeout') {
+            
+            // const offlineData = await deviceStorage.getProjectData(props.route.params.project_id)
+            if (projectData.project.title !== 0) {
+                // await storeDataInDevice(projectData.project)
+            }
+            offlineContext.setOfflineMode();
+            const offlineData = await getOfflineProjectData(props.route.params);
+            console.log("ERRRORR EN PROYECTOSSS", project.error, offlineData, props.route.params.project_id)
+            // console.log("THIS IS RETURNEDDDDD XLDSDSD", offlineData)
+            setDataInScreen({project: offlineData});
+        } else {
+            setDataInScreen(project)
+            if (project.project.title !== 0) {
+                await storeDataInDevice(project.project)
+            }
+            // deviceStorage.storeProjectData(project.project.project_id, project)
+        }
+    }
+
+    const storeDataInDevice = async (project_data) => {
+        offlineContext.updateCatchedContextProjectData(project_data);
+    }
+
+    const getOfflineProjectData = async (projectDataSidebar) => {
+        let offLineData = offlineContext.catchedContent;
+        const project_id = projectDataSidebar.project_id;
+        console.log("getOfflineProjectData RETURNED", offLineData, projectDataSidebar)
+        return offLineData.projects && offLineData.projects[project_id] ? offLineData.projects[project_id].project : { ...projectDataSidebar } 
+    }
+
+    const setDataInScreen = (project) => {
         setData(project);
         setDataLoaded(true);
         console.log("ID PROJECT, ", project);
     }
+
     const progressIcon = () => {
         let slice = Math.ceil(projectData.percentage / 12.5);
         if (isNaN(slice)) slice = 0
@@ -124,12 +164,12 @@ function Project(props) {
                         <TouchableOpacity onPress={handlePress}>
                             <MaterialCommunityIcons name={progressIcon()} style={actStyle.iconAction} color={projectData.project.color} />
                         </TouchableOpacity>
-                        <Text style={[actStyle.actionTitle, {color: Colors[theme].white}]}>{projectData.project.title}</Text>
+                        <Text style={[actStyle.actionTitle, { color: Colors[theme].white }]}>{projectData.project.title}</Text>
                         <TouchableOpacity onPress={() => showEditPopUp(projectData.project.project_id)}>
                             <MaterialCommunityIcons name="circle-edit-outline" size={22} color="#ffa540" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={[actStyle.description, {color: Colors[theme].white}]}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
+                    <Text style={[actStyle.description, { color: Colors[theme].white }]}> {projectData.project.description === null ? "Descripcion" : projectData.project.description} </Text>
                 </>}
             <CompleteTaskModal
                 title={completeModalTitle}

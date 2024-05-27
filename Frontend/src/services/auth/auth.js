@@ -17,7 +17,7 @@ if (Platform.OS !== 'web') {
 let apiConfig = {}
 
 let instance = axios.create({
-    timeout: 1000,
+    timeout: 3000,
 });
 
 auth_utils.getSelectedApiConfig().then(config => {

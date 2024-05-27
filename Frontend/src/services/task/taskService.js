@@ -3,7 +3,7 @@ import authUtils from "../auth/auth_utils"
 
 let apiConfig = {}
 
-let instance = axios.create({timeout: 1000});
+let instance = axios.create({timeout: 3000});
 
 authUtils.getSelectedApiConfig().then(config => {
     if(config){
@@ -23,7 +23,8 @@ instance.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     console.log("EL ERROR", error)
-    if (error.response.status === 401) {
+   
+    if (!error.code === 'ECONNABORTED' && error.response.status === 401) {
         authUtils.clearToken();
     }
     return Promise.reject(error);
@@ -40,7 +41,7 @@ const getTasks = async (filters) => {
         return tasks;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -64,7 +65,7 @@ const createTask = async (taskData) => {
         return taskid;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -78,7 +79,7 @@ const updateTask = async (taskId, taskData) => {
         return taskid;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -96,7 +97,7 @@ const moveTaskList = async (list_ids, state) => {
         return taskid;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -114,7 +115,7 @@ const completeTaskList = async (list_ids, completed) => {
         return taskid;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -125,9 +126,9 @@ const getInfo = async () => {
 
         return tasksAndUsername;
     }
-    catch (e) {
-        console.log("ERROR:", e)
-        return { e: 'Error', status: e.response.status }
+    catch (error) {
+        console.log("ERROR:", error)
+        return authUtils.parseError(error)
     }
 }
 
@@ -147,7 +148,7 @@ const addTag = async (taskId, tag) => {
         return taskid;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
@@ -160,9 +161,28 @@ const findTags = async (taskId) => {
         return tags;
     } catch (error) {
         console.log("[Axisos Error]", error)
-        return { error: 'Error', status: error.response.status }
+        return authUtils.parseError(error)
     }
 }
 
 
-export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag, findTags }
+const synchronizeTasks = async (task_list) => {
+    try {
+        const dir = '/task/synchronize'
+        const data = {
+            task_list: task_list,
+        }
+
+        const response = await instance.post(dir, data);
+        const res = response.data;
+
+        console.log('[SYNCHRONIZE RESPONSE]', res, task_list)
+
+        return res.TotalSync;
+    } catch (error) {
+        console.log("[Axisos Error]", error)
+        return authUtils.parseError(error)
+    }
+}
+
+export default { getInfo, getTasks, getTaskById, createTask, updateTask, moveTaskList, completeTaskList, addTag, findTags, synchronizeTasks}

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { View, Text, useColorScheme, SafeAreaView, Dimensions, TouchableOpacity, Animated } from "react-native";
+import { View, Text, useColorScheme, SafeAreaView, Dimensions, TouchableOpacity, Animated, ActivityIndicator } from "react-native";
 import { NativeBaseProvider, ScrollView } from "native-base"
 import { FontAwesome5, Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Colors from "../../styles/colors";
@@ -21,6 +21,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import AddTypeModal from "../../components/modals/AddTypeModal";
 import CompleteTaskModal from "../../components/modals/CompleteTaskModal";
 import FilterModal from "../../components/modals/FilterModal";
+import OfflineContext from "../../offline/offlineContext/OfflineContext";
 
 
 
@@ -57,6 +58,10 @@ function Today(props) {
     const [filters, setFilters] = useState({})
     const authState = useContext(AuthContext);
 
+    //Offline
+    const offlineContext = useContext(OfflineContext);
+    const [syncMessage, setSyncMessage] = useState("");
+    const [justSync, setJustSync] = useState(false);
 
 
     useEffect(() => {
@@ -80,7 +85,7 @@ function Today(props) {
         }
 
         return unsubscribe;
-    }, [authState, filterContext, props.navigation]);
+    }, [authState, filterContext, props.navigation, justSync]);
 
 
     async function fetchData(fetchFilters) {
@@ -102,17 +107,17 @@ function Today(props) {
 
         const tasksDB = await taskService.getTasks(filter);
 
-        if (tasksDB.error) {
-            return authState.signOut();
-        }
+        // if (tasksDB.error) {
+        //     return authState.signOut();
+        // }
 
         filter.state = 6;
 
         const delayDB = await taskService.getTasks(filter);
 
-        if (delayDB.error) {
-            return authState.signOut();
-        }
+        // if (delayDB.error) {
+        //     return authState.signOut();
+        // }
 
         console.log("DELAY TASK: ", delayDB)
 
@@ -121,13 +126,71 @@ function Today(props) {
 
         const amountDB = await taskService.getTasks(filter);
 
-        if (amountDB.error) {
-            return authState.signOut();
-        }
-
+        // if (amountDB.error) {
+        //     return authState.signOut();
+        // }
         console.log("AMOUNT TASK: ", amountDB)
 
 
+        if (tasksDB.error || delayDB.error || amountDB.error) {
+            const whatError = tasksDB.error ? tasksDB : (delayDB.error ? delayDB : amountDB);
+            console.log("THIS CALLL WAS THE ERROR", whatError)
+            if (whatError.error.status === 401) {
+                return authState.signOut();
+            } else if (whatError.error.status === 'timeout') {
+                //AQUII OFFLINE
+                if (tasks.length !== 0 || delayTask.length !== 0 || amountTask.length !== 0) {
+                    storeDataInDevice(tasksDB, delayDB, amountDB);
+                }
+                offlineContext.setOfflineMode();
+
+                const offLineTasks = await getOfflineTasks();
+                console.log("THIS IS WHAT WE GET FROM OFFLINE TODAY TASKSS", offLineTasks)
+
+                if (offLineTasks) {
+                    setDataInScreen(offLineTasks.tasksDB, offLineTasks.delayDB, offLineTasks.amountDB);
+                }
+            }
+        } else {
+            if (offlineContext.isOffline) {
+                setSyncMessage("Sincronizando")
+                offlineContext.endOfflineMode();
+                await synchronizeOfflineProcess(offlineContext.createTaskQueue);
+                const tasksDB = await taskService.getTasks(filter);
+                const delayDB = await taskService.getTasks(filter);
+                const amountDB = await taskService.getTasks(filter);
+                setDataInScreen(tasksDB, delayDB, amountDB);
+            } else {
+                setDataInScreen(tasksDB, delayDB, amountDB);
+                if (tasksDB.length !== 0 || delayDB.length !== 0 || amountDB.length !== 0) {
+                    storeDataInDevice(tasksDB, delayDB, amountDB);
+                }
+            }
+        }
+
+    }
+
+    const synchronizeOfflineProcess = async (tasks_list) => {
+        offlineContext.synchrozineOffline(true);
+        const numSyncTasks = await taskService.synchronizeTasks(tasks_list);
+
+        await offlineContext.clearCatchedData();
+        offlineContext.synchrozineOffline(false);
+
+        setTimeout(() => {
+            setSyncMessage(numSyncTasks + " tareas sincronizadas")
+        }, 2500);
+
+        setTimeout(() => {
+            setSyncMessage("")
+        }, 5000);
+
+        setJustSync(true);
+
+        return numSyncTasks;
+    }
+
+    const setDataInScreen = (tasksDB, delayDB, amountDB) => {
         const seletedAux = {}
         tasksDB.forEach(async (task) => {
             seletedAux[task.task_id] = false;
@@ -148,6 +211,17 @@ function Today(props) {
         setAllTasks([...tasksDB, ...delayDB, ...amountDB]);
         setSelectedTasks(seletedAux)
         setDataLoaded(true)
+    }
+
+    const storeDataInDevice = async (tasksDB, delayDB, amountDB) => {
+        console.log("THIS WHAT IS CATCHED IN TODAY SCREEENM", todayData)
+        const todayData = { tasksDB, delayDB, amountDB }
+        offlineContext.updateCatchedContext(5, todayData);
+    }
+
+    const getOfflineTasks = async () => {
+        let offLineTasks = offlineContext.catchedContent;
+        return offLineTasks[5] ? offLineTasks[5] : null
     }
 
     const reloadData = () => {
@@ -306,8 +380,8 @@ function Today(props) {
         console.log("Task to edit:", taskToEdit)
 
         if (taskToEdit) {
-            if(taskToEdit.state === '3') props.navigation.navigate('Programadas');
-            else if(taskToEdit.state === '2') props.navigation.navigate('CuantoAntes');
+            if (taskToEdit.state === '3') props.navigation.navigate('Programadas');
+            else if (taskToEdit.state === '2') props.navigation.navigate('CuantoAntes');
             else props.navigation.navigate('Inbox');
         } else {
             console.error(`No se encontró la tarea con ID: ${id}`);
@@ -356,10 +430,23 @@ function Today(props) {
         <SafeAreaView style={{ flex: 1 }}>
             <NativeBaseProvider>
                 <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 20, }}>
-                    <View style={{ flexDirection: 'row', justifyContent: Dimensions.get('window').width <= 768 ? 'space-between' : 'flex-end', alignItems: 'flex-end', marginTop: 25 }}>
-                        {Dimensions.get('window').width <= 768 && (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 25 }}>
+                        {/* Sidebar icon */}
+                        {Dimensions.get('window').width <= 768 ? (<TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
                             <Feather name="sidebar" size={28} color={Colors[theme].white} />
-                        </TouchableOpacity>)}
+                        </TouchableOpacity>) : <View></View>}
+
+                        {offlineContext.isOffline && <Ionicons name="cloud-offline" size={24} color={Colors[theme].white} />}
+                        {!offlineContext.isOffline && (offlineContext.isSynchronizing || syncMessage != "") &&
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <MaterialCommunityIcons name="cloud-sync-outline" size={24} color={Colors[theme].white} />
+                                <Text style={{ color: Colors[theme].white, textAlignVertical: 'center', textAlign: 'center', marginHorizontal: 5, fontSize: 17 }}>
+                                    {syncMessage}
+                                </Text>
+                                {syncMessage === 'Sincronizando' && <ActivityIndicator size={'small'} />}
+                            </View>
+                        }
+
                         <View style={{ minWidth: 50, justifyContent: 'flex-end' }}>
                             <TouchableOpacity style={stylesAction.area} onPress={() => setIsFilterModalOpen(true)}>
                                 {filterContext.isFiltered && <ContextBadge style={{ marginRight: 10 }} context_name={filterContext.context_name} handlePress={() => {
@@ -531,7 +618,7 @@ function Today(props) {
 
                             return (
                                 <Animated.View key={task.task_id}>
-                                {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
+                                    {/* <Animated.View key={task.task_id} style={{ transform: [{ scale }], opacity }}></Animated.View> */}
                                     <SelectableTask
                                         navigation={props.navigation}
                                         route={props.route}

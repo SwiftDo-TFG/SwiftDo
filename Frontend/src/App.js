@@ -4,6 +4,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import { registerRootComponent } from 'expo';
 import AuthState from './services/auth/context/authState';
 import FilterState from './services/filters/FilterState';
+import OfflineState from './offline/offlineContext/OfflineState';
 import ThemeState from './services/theme/ThemeState';
 import Router from './components/navigation/Router';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
@@ -15,11 +16,13 @@ export default function App() {
 
   return (
     <AuthState>
-      <FilterState>
-        <ThemeState>
-          <AppContainer/>
-        </ThemeState>
-      </FilterState>
+      <OfflineState>
+        <FilterState>
+          <ThemeState>
+            <AppContainer />
+          </ThemeState>
+        </FilterState>
+      </OfflineState>
     </AuthState>
   );
 }

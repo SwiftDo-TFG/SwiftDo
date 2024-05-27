@@ -30,6 +30,10 @@ const clearToken = function () {
     authtoken = null;
 }
 
+const parseError = function (error){
+    return { error: {status: error.response ? error.response.status : 'timeout'}}
+}
+
 async function getSelectedApiConfig(){
     const apiConfig = await configStorage.getUserConfig();
     console.log("THIS IS CONFIG API", apiConfig)
@@ -41,4 +45,4 @@ async function getSelectedApiConfig(){
     return null;
 }
 
-export default { setAuthHeaders, clearToken, getSelectedApiConfig }
+export default { setAuthHeaders, clearToken, getSelectedApiConfig, parseError}

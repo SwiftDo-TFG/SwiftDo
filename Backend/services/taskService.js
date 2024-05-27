@@ -56,7 +56,7 @@ taskService.findTaskById = async (id, user_id) => {
 
     if (res.rows.length !== 1) {
         throw new Error('The task does not exist');
-    }else{
+    } else {
         //Parse tags to list of tags
         res.rows.map((row) => {
             const tags = row.tags === null ? [] : row.tags.split(",");
@@ -225,12 +225,69 @@ taskService.newgetInfo = async (user_id, state) => {
         4: { total: 0, important: 0 },
     }
     res.rows.forEach(e => {
-        if (e.state != null) {
+        if (e.state != null && e.state < 5) {
             e.important_fixed ? info[e.state].important = parseInt(e.total) : info[e.state].total = parseInt(e.total);
         }
     })
 
     return info;
+}
+
+//Ofline Mode Syncronize
+taskService.synchronizeOffline = async (task_list, user_id) => {
+    const task_ids = []
+    const remainingTasks = [];
+
+    for(let index = 0; index < task_list.length; index++){
+        const task = task_list[index]
+        if (task.task_id && task.task_id > 0) {
+            task_ids.push(task.task_id);
+            remainingTasks.push(task);
+        } else {
+            //Se crea
+            task.user_id = user_id;
+            await taskService.createTask(task);
+        }
+    }
+
+    const res = await db.query("SELECT * FROM tasks WHERE task_id = ANY($1) AND user_id = $2 ", [task_ids, user_id])
+
+    const returnedTask = res.rows;
+    const taskMap = {}
+
+    for(let oldTask of returnedTask){
+        taskMap[oldTask.task_id] = oldTask;
+    }
+
+    for(let task of remainingTasks){
+        const oldTask = taskMap[task.task_id];
+        
+        if (oldTask && oldTask.num_version === task.num_version) {
+            //AQUI SE UPDATEA TAL CUAL
+            const updatedTask = updateTaskDefValues(oldTask, task);
+            const returnedId = await updateOnly(updatedTask, oldTask.task_id);
+    
+            if(returnedId === -1){
+                throw new Error('Synchronizing Error');
+            }
+        }
+    }
+    
+    return {TotalSync: task_list.length};
+}
+
+async function updateOnly(task, task_id) {
+    let res = await db.query("UPDATE tasks SET user_id = $1, context_id = $2, project_id = $3, title = $4, description = $5, state = $6, verification_list = $7, important_fixed = $8, date_added = $9, date_completed = $10, date_limit = $11, date_changed = $12, num_version = $13, completed = $14 WHERE task_id = $15 RETURNING task_id",
+        [task.user_id, task.context_id, task.project_id, task.title, task.description, task.state, task.verification_list, task.important_fixed, task.date_added, task.date_completed, task.date_limit, task.date_changed, task.num_version, task.completed, task_id]);
+    if (res.rowCount !== 1) {
+        throw new Error('The task does not exist');
+    } else {
+        return res.rowCount === 1 ? res.rows[0].task_id : -1;
+    }
+}
+
+function SyncronizeTask(oldTask, newTask) {
+
 }
 
 
@@ -342,7 +399,7 @@ function addFiltersToQuery(query, filters) {
             finalQuery = finalQuery.concat(" AND t.state = ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++]);
             finalFilters.state = filters.state;
-        } else if(filters.state === '6'){
+        } else if (filters.state === '6') {
             const fechaActual = new Date();
             finalQuery = finalQuery.concat(" AND t.date_limit < ")
             finalQuery = finalQuery.concat(paramNumbers[nextParam++])
@@ -398,16 +455,16 @@ function addFiltersToQuery(query, filters) {
     if (filters.date_limit) {
         finalQuery = finalQuery.concat(" order by t.date_limit, t.important_fixed DESC");
     }
-    else if (filters.state){
-        if(filters.state === '0'){
+    else if (filters.state) {
+        if (filters.state === '0') {
             finalQuery = finalQuery.concat(" group by p.project_id, t.task_id, t.title, c.name, t2.tags, t2.tagcolors order by case when p.project_id is null then 0 else 1 end, t.important_fixed DESC");
         }
     }
-    else{
+    else {
         finalQuery = finalQuery.concat(" order by t.important_fixed DESC");
     }
 
-    if (filters.limit){
+    if (filters.limit) {
         finalQuery = finalQuery.concat(" limit 6");
     }
 

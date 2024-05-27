@@ -62,7 +62,7 @@ const AddTagModal = (props) => {
                     <TextInput
                         style={{ color: theme === 'light' ? '#182E44': Colors[theme].white, fontSize: 16, fontWeight: 'normal', width: '100%', marginBottom: 10 }}
                         placeholder="Busca una etiqueta..."
-                        placeholderTextColor={theme === 'light' ? '#182E44': Colors[theme].white}
+                        placeholderTextColor={Colors[theme].configInput}
                         value={tag}
                         onChangeText={onNameChange}
                         maxLength={15}

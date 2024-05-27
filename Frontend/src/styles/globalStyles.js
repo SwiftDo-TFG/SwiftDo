@@ -93,6 +93,13 @@ const sidebarStyles = (theme) => {
             justifyContent: 'center',
             paddingHorizontal: 10,
             borderRadius: 10,
+        },
+        offLineTextContainer: {
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            marginTop: 10,
+            justifyContent: 'center',
+            alignContent: 'center'
         }
     })
 }
@@ -176,7 +183,7 @@ const textStyles = (theme) => {
             alignSelf: 'center'
         },
         linkText: {
-            color: Colors[theme].noir,
+            color: Colors[theme].orange,
             textDecorationLine: 'underline'
         },
     })
