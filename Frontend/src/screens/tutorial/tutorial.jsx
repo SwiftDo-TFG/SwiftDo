@@ -16,6 +16,7 @@ const tutorialImages = [
     require('../../assets/tutorial/tutorial_10.png'),
     require('../../assets/tutorial/tutorial_11.png'),
     require('../../assets/tutorial/tutorial_12.png'),
+    require('../../assets/tutorial/tutorial_13.png'),
 ];
 
 function Tutorial(props) {
